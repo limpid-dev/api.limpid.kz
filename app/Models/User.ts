@@ -25,11 +25,6 @@ export default class User extends BaseModel {
   @hasMany(() => Token)
   public tokens: HasMany<typeof Token>
 
-  @hasMany(() => Token, {
-    onQuery: (query) => query.where('type', 'RECOVERY'),
-  })
-  public recoveryTokens: HasMany<typeof Token>
-
   @beforeSave()
   public static async hashPassword(user: User) {
     if (user.$dirty.password) {
