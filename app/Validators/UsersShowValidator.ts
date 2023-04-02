@@ -25,7 +25,7 @@ export default class UsersShowValidator {
    */
   public schema = schema.create({
     params: schema.object().members({
-      id: schema.number([rules.exists({ table: 'users', column: 'id' })]),
+      userId: schema.number([rules.exists({ table: 'users', column: 'id' })]),
     }),
   })
 
