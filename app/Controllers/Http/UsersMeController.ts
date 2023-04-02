@@ -4,4 +4,6 @@ export default class UsersMeController {
   public async index({ auth }: HttpContextContract) {
     return auth.user
   }
+
+  public async update({}: HttpContextContract) {}
 }
