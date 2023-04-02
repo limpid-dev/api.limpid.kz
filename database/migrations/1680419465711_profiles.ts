@@ -13,10 +13,10 @@ export default class extends BaseSchema {
         .references('id')
         .inTable('users')
         .onDelete('CASCADE')
-      table.string('title', 64).notNullable()
-      table.string('description', 256).notNullable()
-      table.string('location', 64).nullable()
-      table.string('industry', 64).notNullable()
+      table.string('title', 256).notNullable()
+      table.string('description', 1024).notNullable()
+      table.string('location', 256).nullable()
+      table.string('industry', 256).notNullable()
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */
