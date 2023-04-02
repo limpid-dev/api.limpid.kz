@@ -5,6 +5,7 @@ import ProfilesIndexValidator from 'App/Validators/ProfilesIndexValidator'
 import ProfilesStoreValidator from 'App/Validators/ProfilesStoreValidator'
 import ProfilesShowValidator from 'App/Validators/ProfilesShowValidator'
 import ProfilesUpdateValidator from 'App/Validators/ProfilesUpdateValidator'
+import ProfilesDestroyValidator from 'App/Validators/ProfilesDestroyValidator'
 
 export default class ProfilesController {
   public async index({ request }: HttpContextContract) {
