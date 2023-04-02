@@ -24,8 +24,11 @@ export default class UsersMeUpdateValidator {
    *    ```
    */
   public schema = schema.create({
-    email: schema.string({}, [rules.email(), rules.unique({ table: 'users', column: 'email' })]),
-    password: schema.string({}, [
+    email: schema.string.optional({}, [
+      rules.email(),
+      rules.unique({ table: 'users', column: 'email' }),
+    ]),
+    password: schema.string.optional({}, [
       rules.minLength(8),
       rules.maxLength(128),
       rules.regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]+$/),
