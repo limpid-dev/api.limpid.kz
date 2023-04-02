@@ -35,7 +35,7 @@ export default class Profile extends BaseModel {
   public description: string
 
   @column()
-  public location: string
+  public location: string | null
 
   @column()
   public userId: number
