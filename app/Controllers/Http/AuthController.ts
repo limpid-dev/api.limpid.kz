@@ -13,7 +13,7 @@ export default class AuthController {
     const isValid = await Hash.verify(user.password, payload.password)
 
     if (!isValid) {
-      response.badRequest({
+      return response.badRequest({
         errors: [
           {
             message: 'E_INVALID_AUTH_PASSWORD: Password mis-match',
@@ -30,7 +30,7 @@ export default class AuthController {
       .first()
 
     if (isBanned) {
-      response.forbidden({
+      return response.forbidden({
         errors: [
           {
             message: 'E_AUTHORIZATION_FAILURE: Banned access',
