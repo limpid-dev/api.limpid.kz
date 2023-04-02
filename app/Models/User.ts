@@ -1,6 +1,6 @@
 import { DateTime } from 'luxon'
 import Hash from '@ioc:Adonis/Core/Hash'
-import { column, beforeSave, BaseModel, hasMany, HasMany } from '@ioc:Adonis/Lucid/Orm'
+import { column, beforeSave, BaseModel, hasMany, HasMany, computed } from '@ioc:Adonis/Lucid/Orm'
 import Token from './Token'
 
 export default class User extends BaseModel {
@@ -24,6 +24,11 @@ export default class User extends BaseModel {
 
   @column.dateTime({ serializeAs: null })
   public verifiedAt: DateTime | null
+
+  @computed()
+  public get isVerified() {
+    return !!this.verifiedAt
+  }
 
   @hasMany(() => Token)
   public tokens: HasMany<typeof Token>
