@@ -5,6 +5,7 @@ import User from 'App/Models/User'
 import RecoveryStoreValidator from 'App/Validators/RecoveryStoreValidator'
 import RecoveryUpdateValidator from 'App/Validators/RecoveryUpdateValidator'
 import { DateTime } from 'luxon'
+import { string } from '@ioc:Adonis/Core/Helpers'
 
 export default class RecoveryController {
   public async store({ request }: HttpContextContract) {
@@ -12,7 +13,13 @@ export default class RecoveryController {
 
     const user = await User.findByOrFail('email', payload.email)
 
-    const token = await Token.generate(user, 'RECOVERY')
+    const token = string.generateRandom(64)
+
+    await user.related('tokens').create({
+      expiresAt: DateTime.now().plus({ hours: 1 }),
+      type: 'RECOVERY',
+      token,
+    })
 
     await Mail.sendLater((message) => {
       message.from('info@limpid.kz').to(user.email).subject('Password recovery').text(token)
