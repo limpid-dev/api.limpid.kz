@@ -1,7 +1,7 @@
 {
     "_type": "export",
     "__export_format": 4,
-    "__export_date": "2023-04-02T16:19:20.986Z",
+    "__export_date": "2023-04-02T16:29:06.200Z",
     "__export_source": "insomnia.desktop.app:v2023.1.0",
     "resources": [
         {
@@ -73,7 +73,7 @@
         {
             "_id": "req_f7aa3dcbc4024a3294eef3c5a7f7d5b1",
             "parentId": "fld_b165991177504af9b459a07c6b59706f",
-            "modified": 1680429286438,
+            "modified": 1680452906812,
             "created": 1680395724905,
             "url": "{{ _.url }}/auth/logout",
             "name": "Logout",
@@ -85,10 +85,6 @@
                 {
                     "name": "Accept",
                     "value": "application/json"
-                },
-                {
-                    "name": "X-XSRF-TOKEN",
-                    "value": "{% request 'cookie', 'XSRF-TOKEN', 0 %}"
                 }
             ],
             "authentication": {},
@@ -105,7 +101,7 @@
         {
             "_id": "req_7f2177c827934fcd80625ef2286b2642",
             "parentId": "fld_78a6a7af0656487896e52dc5b4f8295b",
-            "modified": 1680429282829,
+            "modified": 1680452909157,
             "created": 1680407422939,
             "url": "{{ _.url }}/auth/verification",
             "name": "Store",
@@ -120,10 +116,6 @@
                 {
                     "name": "Content-Type",
                     "value": "application/json"
-                },
-                {
-                    "name": "X-XSRF-TOKEN",
-                    "value": "{% request 'cookie', 'XSRF-TOKEN', 0 %}"
                 }
             ],
             "authentication": {},
@@ -152,7 +144,7 @@
         {
             "_id": "req_d671eeaf51bb44ed958195634ddb1319",
             "parentId": "fld_78a6a7af0656487896e52dc5b4f8295b",
-            "modified": 1680429614505,
+            "modified": 1680452911402,
             "created": 1680407502578,
             "url": "{{ _.url }}/auth/verification/{% request 'parameter', 'token', 0 %}",
             "name": "Update",
@@ -174,19 +166,11 @@
             "headers": [
                 {
                     "name": "Content-Type",
-                    "value": "application/json",
-                    "id": "pair_37a57c639f744879b7cdc5cc48b63894"
+                    "value": "application/json"
                 },
                 {
-                    "name": "X-XSRF-TOKEN",
-                    "value": "{% request 'cookie', 'XSRF-TOKEN', 0 %}",
-                    "id": "pair_9954b41373f54f1083e50f6c81bebd86"
-                },
-                {
-                    "id": "pair_961b5978faa140b4b614aa781264a32e",
                     "name": "Accept",
-                    "value": "application/json",
-                    "description": ""
+                    "value": "application/json"
                 }
             ],
             "authentication": {},
@@ -252,7 +236,7 @@
         {
             "_id": "req_ed99695bc5384103a19ee5a94bc04c78",
             "parentId": "fld_746f3957024848ea892d180819597020",
-            "modified": 1680421675600,
+            "modified": 1680452913573,
             "created": 1680401786199,
             "url": "{{ _.url }}/auth/recovery/{% request 'parameter', 'token', 0 %}",
             "name": "Update",
@@ -279,10 +263,6 @@
                 {
                     "name": "Accept",
                     "value": "application/json"
-                },
-                {
-                    "name": "X-XSRF-TOKEN",
-                    "value": "{% request 'cookie', 'XSRF-TOKEN', 0 %}"
                 }
             ],
             "authentication": {},
@@ -299,7 +279,7 @@
         {
             "_id": "req_41b21129b0c74f0b96ec20702bfff214",
             "parentId": "fld_9fd8160c85854650867dce7e94d174c3",
-            "modified": 1680429308275,
+            "modified": 1680452916562,
             "created": 1680394536767,
             "url": "{{ _.url }}/users/1",
             "name": "Show",
@@ -311,10 +291,6 @@
                 {
                     "name": "Accept",
                     "value": "application/json"
-                },
-                {
-                    "name": "X-XSRF-TOKEN",
-                    "value": "{% request 'cookie', 'XSRF-TOKEN', 0 %}"
                 }
             ],
             "authentication": {},
@@ -378,7 +354,7 @@
         {
             "_id": "req_79eb1715cc94464283baa81a99fc93e6",
             "parentId": "fld_969da635d57a4f1c97c15005581be10b",
-            "modified": 1680421723949,
+            "modified": 1680452920608,
             "created": 1680403810370,
             "url": "{{ _.url }}/users/@me",
             "name": "Show",
@@ -390,10 +366,6 @@
                 {
                     "name": "Accept",
                     "value": "application/json"
-                },
-                {
-                    "name": "X-XSRF-TOKEN",
-                    "value": "{% request 'cookie', 'XSRF-TOKEN', 0 %}"
                 }
             ],
             "authentication": {},
@@ -422,7 +394,7 @@
         {
             "_id": "req_8cd0400e19ac4f32af5d9cd3bfcb60cb",
             "parentId": "fld_969da635d57a4f1c97c15005581be10b",
-            "modified": 1680429492415,
+            "modified": 1680452922812,
             "created": 1680405558021,
             "url": "{{ _.url }}/users/@me",
             "name": "Update",
@@ -441,10 +413,6 @@
                 {
                     "name": "Content-Type",
                     "value": "application/json"
-                },
-                {
-                    "name": "X-XSRF-TOKEN",
-                    "value": "{% request 'cookie', 'XSRF-TOKEN', 0 %}"
                 }
             ],
             "authentication": {},
