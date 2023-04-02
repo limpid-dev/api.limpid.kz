@@ -1,4 +1,12 @@
-import { BaseModel, BelongsTo, belongsTo, column, computed } from '@ioc:Adonis/Lucid/Orm'
+import {
+  BaseModel,
+  BelongsTo,
+  ModelQueryBuilderContract,
+  beforeFetch,
+  belongsTo,
+  column,
+  computed,
+} from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 import User from './User'
 
@@ -31,4 +39,9 @@ export default class Profile extends BaseModel {
 
   @belongsTo(() => User)
   public user: BelongsTo<typeof User>
+
+  @beforeFetch()
+  public static fetchOnlyVerified(query: ModelQueryBuilderContract<typeof Profile>) {
+    query.whereNotNull('verified_at')
+  }
 }
