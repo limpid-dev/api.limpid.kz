@@ -15,4 +15,8 @@ export default class AuthController {
       return attempt.toJSON()
     }
   }
+
+  public async logout({ auth }: HttpContextContract) {
+    await auth.logout()
+  }
 }
