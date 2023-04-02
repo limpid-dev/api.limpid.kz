@@ -34,3 +34,10 @@ Route.post('/auth/recovery/:token', 'RecoveryController.update')
 
 Route.post('/auth/verification', 'VerificationController.store').middleware('auth')
 Route.post('/auth/verification/:token', 'VerificationController.update').middleware('auth')
+
+Route.get('/profiles', 'ProfilesController.index').middleware('auth')
+Route.post('/profiles', 'ProfilesController.store').middleware('auth').middleware('verification')
+Route.get('/profiles/:profileId', 'ProfilesController.show').middleware('auth')
+Route.patch('/profiles/:profileId', 'ProfilesController.update')
+  .middleware('auth')
+  .middleware('verification')
