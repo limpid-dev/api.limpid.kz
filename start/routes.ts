@@ -44,3 +44,5 @@ Route.patch('/profiles/:profileId', 'ProfilesController.update')
 Route.delete('/profiles/:profileId', 'ProfilesController.destroy')
   .middleware('auth')
   .middleware('verification')
+  .middleware('confirmation')
+
