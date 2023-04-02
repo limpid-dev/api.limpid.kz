@@ -19,7 +19,7 @@ export default class Token extends BaseModel {
   public updatedAt: DateTime
 
   @column.dateTime()
-  public expiresAt: DateTime | null
+  public expiresAt: DateTime
 
   @belongsTo(() => User, {
     foreignKey: 'userId',
