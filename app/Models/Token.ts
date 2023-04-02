@@ -41,22 +41,4 @@ export default class Token extends BaseModel {
 
     return record.token
   }
-
-  public static async verify(token: string, type: Type) {
-    const record = await Token.query()
-      .where('token', token)
-      .andWhere('type', type)
-      .andWhere('expiresAt', '>', DateTime.now().toSQL())
-      .first()
-
-    return !!record
-  }
-
-  public static async expire(user: User, type: Type) {
-    await user
-      .related('tokens')
-      .query()
-      .where('type', type)
-      .update({ expiresAt: DateTime.now().toSQL() })
-  }
 }
