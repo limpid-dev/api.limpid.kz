@@ -28,7 +28,7 @@ export default class UsersStoreValidator {
     password: schema.string({}, [
       rules.minLength(8),
       rules.maxLength(128),
-      rules.regex(/^(?=.*[A-Z])(?=.*[a-z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]+$/),
+      rules.regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]+$/),
     ]),
   })
 
