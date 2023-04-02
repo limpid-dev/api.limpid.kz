@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column, computed } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, belongsTo, column, computed } from '@ioc:Adonis/Lucid/Orm'
+import Profile from './Profile'
 
 export type Type = 'MATERIAL' | 'INTELLECTUAL'
 
@@ -24,6 +25,12 @@ export default class Resource extends BaseModel {
 
   @column()
   public description: string
+
+  @column()
+  public profileId: number
+
+  @belongsTo(() => Profile)
+  public profile: BelongsTo<typeof Profile>
 
   @computed()
   public get isVerified() {
