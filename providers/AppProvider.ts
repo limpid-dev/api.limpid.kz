@@ -13,6 +13,23 @@ export default class AppProvider {
 
   public async ready() {
     // App is ready
+    const Db = this.app.container.use('Adonis/Lucid/Database')
+
+    Db.SimplePaginator.namingStrategy = {
+      paginationMetaKeys() {
+        return {
+          total: 'total',
+          perPage: 'perPage',
+          currentPage: 'currentPage',
+          lastPage: 'lastPage',
+          firstPage: 'firstPage',
+          firstPageUrl: 'firstPageUrl',
+          lastPageUrl: 'lastPageUrl',
+          nextPageUrl: 'nextPageUrl',
+          previousPageUrl: 'previousPageUrl',
+        }
+      },
+    }
   }
 
   public async shutdown() {
