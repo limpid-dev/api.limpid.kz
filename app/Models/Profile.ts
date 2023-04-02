@@ -1,5 +1,14 @@
+import {
+  BaseModel,
+  BelongsTo,
+  ModelQueryBuilderContract,
+  beforeFetch,
+  beforeFind,
+  belongsTo,
+  column,
+  computed,
+} from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
-import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import User from './User'
 
 export default class Profile extends BaseModel {
@@ -14,6 +23,11 @@ export default class Profile extends BaseModel {
 
   @column.dateTime()
   public verifiedAt: DateTime | null
+
+  @computed()
+  public get isVerified() {
+    return !!this.verifiedAt
+  }
 
   @column()
   public title: string
