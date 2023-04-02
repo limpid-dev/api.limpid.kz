@@ -31,3 +31,6 @@ Route.post('/auth/logout', 'AuthController.logout').middleware('auth')
 
 Route.post('/auth/recovery', 'RecoveryController.store')
 Route.post('/auth/recovery/:token', 'RecoveryController.update')
+
+Route.post('/auth/verification', 'VerificationController.store').middleware('auth')
+Route.post('/auth/verification/:token', 'VerificationController.update').middleware('auth')
