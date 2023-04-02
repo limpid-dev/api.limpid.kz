@@ -13,6 +13,7 @@ import {
 } from '@ioc:Adonis/Lucid/Orm'
 import Token from './Token'
 import Ban from './Ban'
+import Profile from './Profile'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true, serializeAs: null })
@@ -46,6 +47,9 @@ export default class User extends BaseModel {
 
   @hasMany(() => Token)
   public tokens: HasMany<typeof Token>
+
+  @hasMany(() => Profile)
+  public profiles: HasMany<typeof Profile>
 
   @beforeSave()
   public static async hashPassword(user: User) {
