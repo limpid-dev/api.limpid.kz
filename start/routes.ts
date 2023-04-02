@@ -24,7 +24,7 @@ Route.post('/users', 'UsersController.store')
 Route.get('/users/:id', 'UsersController.show').middleware('auth')
 
 Route.get('/users/@me', 'UsersMeController.index').middleware('auth')
-Route.put('/users/@me', 'UsersMeController.update').middleware('auth')
+Route.patch('/users/@me', 'UsersMeController.update').middleware('auth')
 
 Route.post('/auth/login', 'AuthController.login')
 Route.post('/auth/logout', 'AuthController.logout').middleware('auth')
