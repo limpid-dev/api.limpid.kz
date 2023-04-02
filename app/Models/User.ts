@@ -64,4 +64,15 @@ export default class User extends BaseModel {
         .orWhereNull('expired_at')
     })
   }
+
+  @beforeFetch()
+  public static fetchWithoutBanned(query: ModelQueryBuilderContract<typeof User>) {
+    query.whereNotExists((query) => {
+      query
+        .from('bans')
+        .where('user_id', 'users.id')
+        .andWhere('expired_at', '>', DateTime.now().toSQL())
+        .orWhereNull('expired_at')
+    })
+  }
 }
