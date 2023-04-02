@@ -26,6 +26,7 @@ export default class AuthLoginValidator {
   public schema = schema.create({
     email: schema.string({}, [rules.email(), rules.exists({ table: 'users', column: 'email' })]),
     password: schema.string({}, [rules.minLength(8), rules.maxLength(128)]),
+    mode: schema.enum(['web', 'api'] as const),
   })
 
   /**
