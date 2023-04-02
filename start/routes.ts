@@ -26,7 +26,7 @@ Route.patch('/users/@me', 'UsersMeController.update').middleware('auth').middlew
 Route.post('/users', 'UsersController.store')
 Route.get('/users/:userId', 'UsersController.show').middleware('auth')
 
-Route.post('/auth/login', 'AuthController.login')
+Route.post('/auth/login', 'AuthController.login').middleware('guest')
 Route.post('/auth/logout', 'AuthController.logout').middleware('auth')
 
 Route.post('/auth/recovery', 'RecoveryController.store')
