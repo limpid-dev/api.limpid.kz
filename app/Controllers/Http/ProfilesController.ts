@@ -4,6 +4,7 @@ import Profile from 'App/Models/Profile'
 import ProfilesIndexValidator from 'App/Validators/ProfilesIndexValidator'
 import ProfilesStoreValidator from 'App/Validators/ProfilesStoreValidator'
 import ProfilesShowValidator from 'App/Validators/ProfilesShowValidator'
+import ProfilesUpdateValidator from 'App/Validators/ProfilesUpdateValidator'
 
 export default class ProfilesController {
   public async index({ request }: HttpContextContract) {
@@ -26,7 +27,15 @@ export default class ProfilesController {
     return await Profile.findByOrFail('id', payload.params.profileId)
   }
 
-  public async update({}: HttpContextContract) {}
+  public async update({ request }: HttpContextContract) {
+    const { params, ...payload } = await request.validate(ProfilesUpdateValidator)
+
+    const profile = await Profile.findByOrFail('id', params.profileId)
+
+    profile.merge(payload)
+
+    return await profile.save()
+  }
 
   public async destroy({}: HttpContextContract) {}
 }
