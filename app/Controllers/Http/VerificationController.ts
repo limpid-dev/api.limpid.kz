@@ -1,11 +1,11 @@
 import Mail from '@ioc:Adonis/Addons/Mail'
+import { base64, string } from '@ioc:Adonis/Core/Helpers'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Token from 'App/Models/Token'
 import User from 'App/Models/User'
-import { DateTime } from 'luxon'
-import { string } from '@ioc:Adonis/Core/Helpers'
 import VerificationStoreValidator from 'App/Validators/VerificationStoreValidator'
 import VerificationUpdateValidator from 'App/Validators/VerificationUpdateValidator'
+import { DateTime } from 'luxon'
 
 export default class VerificationController {
   public async store({ request }: HttpContextContract) {
@@ -24,7 +24,11 @@ export default class VerificationController {
     })
 
     await Mail.sendLater((message) => {
-      message.from('info@limpid.kz').to(user.email).subject('Email verification').text(token)
+      message
+        .from('info@limpid.kz')
+        .to(user.email)
+        .subject('Email verification')
+        .text(base64.encode(token))
     })
   }
 
@@ -32,7 +36,7 @@ export default class VerificationController {
     const payload = await request.validate(VerificationUpdateValidator)
 
     const token = await Token.query()
-      .where('token', payload.params.token)
+      .where('token', base64.decode(payload.params.token))
       .andWhere('type', 'VERIFICATION')
       .andWhere('expiresAt', '>', DateTime.now().toSQL())
       .preload('user')
