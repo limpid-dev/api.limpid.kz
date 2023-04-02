@@ -24,9 +24,10 @@ export default class Token extends BaseModel {
   @column.dateTime()
   public expiresAt: DateTime
 
-  @belongsTo(() => User, {
-    foreignKey: 'userId',
-  })
+  @column()
+  public userId: number
+
+  @belongsTo(() => User)
   public user: BelongsTo<typeof User>
 
   public static async generate(user: User, type: Type) {
