@@ -1,6 +1,15 @@
 import { DateTime } from 'luxon'
 import Hash from '@ioc:Adonis/Core/Hash'
-import { column, beforeSave, BaseModel, hasMany, HasMany, computed } from '@ioc:Adonis/Lucid/Orm'
+import {
+  column,
+  beforeSave,
+  BaseModel,
+  hasMany,
+  HasMany,
+  computed,
+  ModelQueryBuilderContract,
+  beforeFind,
+} from '@ioc:Adonis/Lucid/Orm'
 import Token from './Token'
 import Ban from './Ban'
 
@@ -42,5 +51,16 @@ export default class User extends BaseModel {
     if (user.$dirty.password) {
       user.password = await Hash.make(user.password)
     }
+  }
+
+  @beforeFind()
+  public static withoutBanned(query: ModelQueryBuilderContract<typeof User>) {
+    query.whereNotExists((query) => {
+      query
+        .from('bans')
+        .where('user_id', 'users.id')
+        .andWhere('expired_at', '>', DateTime.now().toSQL())
+        .orWhereNull('expired_at')
+    })
   }
 }
