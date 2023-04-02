@@ -9,6 +9,7 @@ import {
   computed,
   ModelQueryBuilderContract,
   beforeFind,
+  beforeFetch,
 } from '@ioc:Adonis/Lucid/Orm'
 import Token from './Token'
 import Ban from './Ban'
@@ -54,7 +55,7 @@ export default class User extends BaseModel {
   }
 
   @beforeFind()
-  public static withoutBanned(query: ModelQueryBuilderContract<typeof User>) {
+  public static findWithoutBanned(query: ModelQueryBuilderContract<typeof User>) {
     query.whereNotExists((query) => {
       query
         .from('bans')
