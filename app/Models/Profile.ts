@@ -21,10 +21,10 @@ export default class Profile extends BaseModel {
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  @column.dateTime({ autoCreate: true, autoUpdate: true, serializeAs: null })
   public updatedAt: DateTime
 
-  @column.dateTime()
+  @column.dateTime({ serializeAs: null })
   public verifiedAt: DateTime | null
 
   @computed()
@@ -44,7 +44,7 @@ export default class Profile extends BaseModel {
   @column()
   public industry: string
 
-  @column()
+  @column({ serializeAs: null })
   public userId: number
 
   @belongsTo(() => User)
