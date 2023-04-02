@@ -23,4 +23,14 @@ export default class Ban extends BaseModel {
 
   @belongsTo(() => User)
   public user: BelongsTo<typeof User>
+
+  public static async isBanned(user: User) {
+    const record = await Ban.query()
+      .where('userId', user.id)
+      .andWhere('expiredAt', '>', DateTime.now().toSQL())
+      .orWhereNull('expiredAt')
+      .first()
+
+    return !!record
+  }
 }
