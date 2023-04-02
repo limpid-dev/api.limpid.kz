@@ -22,6 +22,9 @@ export default class User extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
 
+  @column.dateTime({ serializeAs: null })
+  public verifiedAt: DateTime | null
+
   @hasMany(() => Token)
   public tokens: HasMany<typeof Token>
 
