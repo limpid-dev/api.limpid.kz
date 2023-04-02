@@ -5,7 +5,7 @@ import Token from './Token'
 import Ban from './Ban'
 
 export default class User extends BaseModel {
-  @column({ isPrimary: true })
+  @column({ isPrimary: true, serializeAs: null })
   public id: number
 
   @column()
@@ -17,10 +17,10 @@ export default class User extends BaseModel {
   @column({ serializeAs: null })
   public rememberMeToken: string | null
 
-  @column.dateTime({ autoCreate: true })
+  @column.dateTime({ autoCreate: true, serializeAs: null })
   public createdAt: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  @column.dateTime({ autoCreate: true, autoUpdate: true, serializeAs: null })
   public updatedAt: DateTime
 
   @column.dateTime({ serializeAs: null })
