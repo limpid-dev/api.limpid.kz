@@ -3,6 +3,7 @@ import Database from '@ioc:Adonis/Lucid/Database'
 import Profile from 'App/Models/Profile'
 import ProfilesIndexValidator from 'App/Validators/ProfilesIndexValidator'
 import ProfilesStoreValidator from 'App/Validators/ProfilesStoreValidator'
+import ProfilesShowValidator from 'App/Validators/ProfilesShowValidator'
 
 export default class ProfilesController {
   public async index({ request }: HttpContextContract) {
@@ -19,7 +20,11 @@ export default class ProfilesController {
     }
   }
 
-  public async show({}: HttpContextContract) {}
+  public async show({ request }: HttpContextContract) {
+    const payload = await request.validate(ProfilesShowValidator)
+
+    return await Profile.findByOrFail('id', payload.params.profileId)
+  }
 
   public async update({}: HttpContextContract) {}
 
