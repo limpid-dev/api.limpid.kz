@@ -13,7 +13,7 @@ export default class RecoveryController {
 
     const user = await User.findByOrFail('email', payload.email)
 
-    await Token.query().where('userId', user.id).where('type', 'RECOVERY').delete()
+    await user.related('tokens').query().where('type', 'RECOVERY').delete()
 
     const token = string.generateRandom(64)
 
