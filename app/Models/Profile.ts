@@ -3,6 +3,7 @@ import {
   BelongsTo,
   ModelQueryBuilderContract,
   beforeFetch,
+  beforeSave,
   belongsTo,
   column,
   computed,
@@ -45,6 +46,13 @@ export default class Profile extends BaseModel {
 
   @belongsTo(() => User)
   public user: BelongsTo<typeof User>
+
+  @beforeSave()
+  public static async resetVerifiedAt(profile: Profile) {
+    if (profile.$isDirty) {
+      profile.verifiedAt = null
+    }
+  }
 
   @beforeFetch()
   public static fetchOnlyVerified(query: ModelQueryBuilderContract<typeof Profile>) {
