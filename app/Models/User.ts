@@ -58,6 +58,13 @@ export default class User extends BaseModel {
     }
   }
 
+  @beforeSave()
+  public static async resetVerifiedAt(user: User) {
+    if (user.$dirty.email) {
+      user.verifiedAt = null
+    }
+  }
+
   @beforeFind()
   public static findWithoutBanned(query: ModelQueryBuilderContract<typeof User>) {
     query.whereNotExists((query) => {
