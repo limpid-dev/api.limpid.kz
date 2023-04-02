@@ -31,6 +31,6 @@ export default class Ban extends BaseModel {
       .orWhereNull('expiredAt')
       .first()
 
-    return !!record
+    return record
   }
 }
