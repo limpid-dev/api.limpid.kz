@@ -34,8 +34,25 @@ export default class ProfilesController {
 
     profile.merge(payload)
 
-    return await profile.save()
-  }
 
-  public async destroy({}: HttpContextContract) {}
+  public async destroy({ request, auth, response }: HttpContextContract) {
+    const payload = await request.validate(ProfilesDestroyValidator)
+
+    if (auth.user) {
+      const profile = await Profile.findByOrFail('id', payload.params.profileId)
+
+      if (profile.userId === auth.user.id) {
+        await profile.delete()
+        return response.gone()
+      }
+
+      return response.forbidden({
+        errors: [
+          {
+            message: 'You are not authorized to delete this profile',
+          },
+        ],
+      })
+    }
+  }
 }
