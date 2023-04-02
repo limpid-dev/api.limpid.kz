@@ -13,6 +13,6 @@ export default class UsersController {
   public async show({ request }: HttpContextContract) {
     const payload = await request.validate(UsersShowValidator)
 
-    return User.find(payload.id)
+    return User.find(payload.params.id)
   }
 }
