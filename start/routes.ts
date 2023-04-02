@@ -21,7 +21,7 @@
 import Route from '@ioc:Adonis/Core/Route'
 
 Route.get('/users/@me', 'UsersMeController.index').middleware('auth')
-Route.patch('/users/@me', 'UsersMeController.update').middleware('auth')
+Route.patch('/users/@me', 'UsersMeController.update').middleware('auth').middleware('confirmation')
 
 Route.post('/users', 'UsersController.store')
 Route.get('/users/:id', 'UsersController.show').middleware('auth')
