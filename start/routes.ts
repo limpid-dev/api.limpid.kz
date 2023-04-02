@@ -25,3 +25,5 @@ Route.get('/users/:id', 'UsersController.show').middleware('auth')
 
 Route.post('/auth/login', 'AuthController.login')
 Route.post('/auth/logout', 'AuthController.logout').middleware('auth')
+
+Route.post('/auth/recovery', 'RecoveryController.store')
