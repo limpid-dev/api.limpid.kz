@@ -1,3 +1,4 @@
+import Env from '@ioc:Adonis/Core/Env'
 /**
  * Config source: https://git.io/Jvwvt
  *
@@ -72,7 +73,7 @@ export const csrf: ShieldConfig['csrf'] = {
   | Enable/Disable CSRF
   |--------------------------------------------------------------------------
   */
-  enabled: true,
+  enabled: Env.get('NODE_ENV') === 'production',
 
   /*
   |--------------------------------------------------------------------------
@@ -84,11 +85,11 @@ export const csrf: ShieldConfig['csrf'] = {
   | slash. Example:
   |
   | `/foo/bar`
-	|
-	| Also you can define a function that is evaluated on every HTTP Request.
-	| ```
-	|  exceptRoutes: ({ request }) => request.url().includes('/api')
-	| ```
+  |
+  | Also you can define a function that is evaluated on every HTTP Request.
+  | ```
+  |  exceptRoutes: ({ request }) => request.url().includes('/api')
+  | ```
   |
   */
   exceptRoutes: ['/auth/login', '/auth/recovery', '/users'],
