@@ -2,7 +2,7 @@ import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 import User from './User'
 
-export type Type = 'RECOVERY' | 'VERIFICATION' | 'CONFIRMATION'
+export type Type = 'RECOVERY' | 'VERIFICATION'
 
 export default class Token extends BaseModel {
   @column({ isPrimary: true })
