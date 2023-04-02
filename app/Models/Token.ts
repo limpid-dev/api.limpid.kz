@@ -1,4 +1,3 @@
-import { string } from '@ioc:Adonis/Core/Helpers'
 import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 import User from './User'
@@ -29,16 +28,4 @@ export default class Token extends BaseModel {
 
   @belongsTo(() => User)
   public user: BelongsTo<typeof User>
-
-  public static async generate(user: User, type: Type) {
-    const token = string.generateRandom(64)
-
-    const record = await user.related('tokens').create({
-      expiresAt: DateTime.now().plus({ hours: 1 }),
-      type,
-      token,
-    })
-
-    return record.token
-  }
 }
