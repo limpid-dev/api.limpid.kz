@@ -24,8 +24,10 @@ export default class ConfirmationValidator {
    *    ```
    */
   public schema = schema.create({
-    email: schema.string({}, [rules.email(), rules.exists({ table: 'users', column: 'email' })]),
-    password: schema.string({}, [rules.minLength(8), rules.maxLength(128)]),
+    '@confirmation': schema.object().members({
+      email: schema.string({}, [rules.email(), rules.exists({ table: 'users', column: 'email' })]),
+      password: schema.string({}, [rules.minLength(8), rules.maxLength(128)]),
+    }),
   })
 
   /**
