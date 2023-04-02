@@ -1,15 +1,18 @@
 import {
   BaseModel,
   BelongsTo,
+  HasMany,
   ModelQueryBuilderContract,
   beforeFetch,
   beforeSave,
   belongsTo,
   column,
   computed,
+  hasMany,
 } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 import User from './User'
+import Resource from './Resource'
 
 export default class Profile extends BaseModel {
   @column({ isPrimary: true })
@@ -46,6 +49,9 @@ export default class Profile extends BaseModel {
 
   @belongsTo(() => User)
   public user: BelongsTo<typeof User>
+
+  @hasMany(() => Resource)
+  public resources: HasMany<typeof Resource>
 
   @beforeSave()
   public static async resetVerifiedAt(profile: Profile) {
