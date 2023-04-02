@@ -38,6 +38,9 @@ export default class Profile extends BaseModel {
   public location: string | null
 
   @column()
+  public industry: string
+
+  @column()
   public userId: number
 
   @belongsTo(() => User)
