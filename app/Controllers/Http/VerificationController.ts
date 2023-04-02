@@ -38,6 +38,8 @@ export default class VerificationController {
       .preload('user')
       .firstOrFail()
 
+    await token.user.merge({ verifiedAt: DateTime.now() }).save()
+
     await token.delete()
   }
 }
