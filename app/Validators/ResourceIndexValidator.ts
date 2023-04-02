@@ -27,6 +27,8 @@ export default class ResourceIndexValidator {
     params: schema.object().members({
       profileId: schema.number([rules.exists({ table: 'profiles', column: 'id' })]),
     }),
+    page: schema.number([rules.unsigned()]),
+    perPage: schema.number([rules.unsigned()]),
   })
 
   /**
