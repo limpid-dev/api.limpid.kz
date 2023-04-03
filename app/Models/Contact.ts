@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import Profile from './Profile'
 
 export type Type = 'EMAIL' | 'PHONE' | 'URL'
 
@@ -21,4 +22,10 @@ export default class Contact extends BaseModel {
 
   @column()
   public value: string
+
+  @column()
+  public profileId: number
+
+  @belongsTo(() => Profile)
+  public profile: BelongsTo<typeof Profile>
 }
