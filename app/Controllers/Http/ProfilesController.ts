@@ -1,17 +1,16 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Database from '@ioc:Adonis/Lucid/Database'
 import Profile from 'App/Models/Profile'
-import ProfilesIndexValidator from 'App/Validators/ProfilesIndexValidator'
-import ProfilesStoreValidator from 'App/Validators/ProfilesStoreValidator'
-import ProfilesShowValidator from 'App/Validators/ProfilesShowValidator'
-import ProfilesUpdateValidator from 'App/Validators/ProfilesUpdateValidator'
 import ProfilesDestroyValidator from 'App/Validators/ProfilesDestroyValidator'
+import ProfilesIndexValidator from 'App/Validators/ProfilesIndexValidator'
+import ProfilesShowValidator from 'App/Validators/ProfilesShowValidator'
+import ProfilesStoreValidator from 'App/Validators/ProfilesStoreValidator'
+import ProfilesUpdateValidator from 'App/Validators/ProfilesUpdateValidator'
 
 export default class ProfilesController {
   public async index({ request }: HttpContextContract) {
     const payload = await request.validate(ProfilesIndexValidator)
 
-    return await Database.from('profiles').paginate(payload.page, payload.perPage)
+    return await Profile.query().paginate(payload.page, payload.perPage)
   }
 
   public async store({ request, auth }: HttpContextContract) {
