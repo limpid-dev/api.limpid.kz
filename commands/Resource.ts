@@ -1,10 +1,13 @@
-import { BaseCommand } from '@adonisjs/core/build/standalone'
+import { BaseCommand, args } from '@adonisjs/core/build/standalone'
 
 export default class Resource extends BaseCommand {
   /**
    * Command name is used to run the command
    */
   public static commandName = 'resource'
+
+  @args.string({ description: 'Name of the resource to create' })
+  public name: string
 
   /**
    * Command description is displayed in the "help" output
