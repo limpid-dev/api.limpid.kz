@@ -1,7 +1,7 @@
 import { rules, schema, CustomMessages } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
-export default class ResourceStoreValidator {
+export default class ResourcesStoreValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*
