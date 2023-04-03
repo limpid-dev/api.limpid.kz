@@ -18,7 +18,7 @@ export default class RecoveryController {
     const token = string.generateRandom(64)
 
     await user.related('tokens').create({
-      expiresAt: DateTime.now().plus({ hours: 1 }),
+      expiredAt: DateTime.now().plus({ hours: 1 }),
       type: 'RECOVERY',
       token,
     })
@@ -34,7 +34,7 @@ export default class RecoveryController {
     const token = await Token.query()
       .where('token', payload.params.token)
       .andWhere('type', 'RECOVERY')
-      .andWhere('expiresAt', '>', DateTime.now().toSQL())
+      .andWhere('expiredAt', '>', DateTime.now().toSQL())
       .preload('user')
       .firstOrFail()
 

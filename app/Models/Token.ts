@@ -21,7 +21,7 @@ export default class Token extends BaseModel {
   public updatedAt: DateTime
 
   @column.dateTime()
-  public expiresAt: DateTime
+  public expiredAt: DateTime
 
   @column()
   public userId: number

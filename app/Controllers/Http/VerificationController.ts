@@ -18,7 +18,7 @@ export default class VerificationController {
     const token = string.generateRandom(64)
 
     await user.related('tokens').create({
-      expiresAt: DateTime.now().plus({ hours: 1 }),
+      expiredAt: DateTime.now().plus({ hours: 1 }),
       type: 'VERIFICATION',
       token,
     })
@@ -38,7 +38,7 @@ export default class VerificationController {
     const token = await Token.query()
       .where('token', base64.decode(payload.params.token))
       .andWhere('type', 'VERIFICATION')
-      .andWhere('expiresAt', '>', DateTime.now().toSQL())
+      .andWhere('expiredAt', '>', DateTime.now().toSQL())
       .preload('user')
       .firstOrFail()
 
