@@ -1,8 +1,8 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Profile from 'App/Models/Profile'
 import Resource from 'App/Models/Resource'
-import ResourceIndexValidator from 'App/Validators/ResourceIndexValidator'
-import ResourceStoreValidator from 'App/Validators/ResourceStoreValidator'
+import ResourceIndexValidator from 'App/Validators/ResourcesIndexValidator'
+import ResourceStoreValidator from 'App/Validators/ResourcesStoreValidator'
 
 export default class ResourcesController {
   public async index({ request }: HttpContextContract) {
