@@ -1,4 +1,6 @@
+import { string } from '@ioc:Adonis/Core/Helpers'
 import { BaseCommand, args } from '@adonisjs/core/build/standalone'
+import execa from 'execa'
 
 export default class Resource extends BaseCommand {
   /**
@@ -31,6 +33,23 @@ export default class Resource extends BaseCommand {
   }
 
   public async run() {
-    this.logger.info('Hello world!')
+    await execa.node('ace', ['make:controller', this.name, '-r'], {
+      stdio: 'inherit',
+    })
+    await execa.node('ace', ['make:model', this.name, '-m'], {
+      stdio: 'inherit',
+    })
+    await execa.node('ace', ['make:validator', `${string.pluralize(this.name)}Index`], {
+      stdio: 'inherit',
+    })
+    await execa.node('ace', ['make:validator', `${string.pluralize(this.name)}Store`], {
+      stdio: 'inherit',
+    })
+    await execa.node('ace', ['make:validator', `${string.pluralize(this.name)}Update`], {
+      stdio: 'inherit',
+    })
+    await execa.node('ace', ['make:validator', `${string.pluralize(this.name)}Destroy`], {
+      stdio: 'inherit',
+    })
   }
 }
