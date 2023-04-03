@@ -1,12 +1,12 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Profile from 'App/Models/Profile'
 import Resource from 'App/Models/Resource'
-import ResourceIndexValidator from 'App/Validators/ResourcesIndexValidator'
-import ResourceStoreValidator from 'App/Validators/ResourcesStoreValidator'
+import ResourcesIndexValidator from 'App/Validators/ResourcesIndexValidator'
+import ResourcesStoreValidator from 'App/Validators/ResourcesStoreValidator'
 
 export default class ResourcesController {
   public async index({ request }: HttpContextContract) {
-    const payload = await request.validate(ResourceIndexValidator)
+    const payload = await request.validate(ResourcesIndexValidator)
 
     return await Resource.query()
       .where('profileId', payload.params.profileId)
@@ -14,7 +14,7 @@ export default class ResourcesController {
   }
 
   public async store({ request, auth, response }: HttpContextContract) {
-    const { params, ...payload } = await request.validate(ResourceStoreValidator)
+    const { params, ...payload } = await request.validate(ResourcesStoreValidator)
 
     if (auth.user) {
       const profile = await Profile.findOrFail(params.profileId)
