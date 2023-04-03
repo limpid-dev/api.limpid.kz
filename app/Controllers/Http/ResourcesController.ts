@@ -1,5 +1,4 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Database from '@ioc:Adonis/Lucid/Database'
 import Profile from 'App/Models/Profile'
 import Resource from 'App/Models/Resource'
 import ResourceIndexValidator from 'App/Validators/ResourceIndexValidator'
@@ -9,8 +8,8 @@ export default class ResourcesController {
   public async index({ request }: HttpContextContract) {
     const payload = await request.validate(ResourceIndexValidator)
 
-    return await Database.from('resources')
-      .where('profile_id', payload.params.profileId)
+    return await Resource.query()
+      .where('profileId', payload.params.profileId)
       .paginate(payload.page, payload.perPage)
   }
 
