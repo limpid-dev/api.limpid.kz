@@ -13,6 +13,7 @@ import {
 import { DateTime } from 'luxon'
 import User from './User'
 import Resource from './Resource'
+import Contact from './Contact'
 
 export default class Profile extends BaseModel {
   @column({ isPrimary: true })
@@ -52,6 +53,9 @@ export default class Profile extends BaseModel {
 
   @hasMany(() => Resource)
   public resources: HasMany<typeof Resource>
+
+  @hasMany(() => Contact)
+  public contacts: HasMany<typeof Contact>
 
   @beforeSave()
   public static async resetVerifiedAt(profile: Profile) {
