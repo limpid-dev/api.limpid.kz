@@ -7,7 +7,7 @@
       },
       "commandPath": "./commands/Resource",
       "commandName": "resource",
-      "description": "",
+      "description": "Combines make commands to generate a resource",
       "args": [
         {
           "type": "string",
