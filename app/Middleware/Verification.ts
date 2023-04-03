@@ -1,11 +1,14 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import UnVerifiedException from 'App/Exceptions/UnVerifiedException'
 
 export default class VerificationMiddleware {
-  public async handle({ auth, response }: HttpContextContract, next: () => Promise<void>) {
-    if (!auth.user?.isVerified) {
-      return response.forbidden({ errors: [{ message: 'Unverified access' }] })
+  public async handle({ auth }: HttpContextContract, next: () => Promise<void>) {
+    if (auth.user) {
+      if (auth.user.isVerified) {
+        await next()
+      }
     }
-    // code for middleware goes here. ABOVE THE NEXT CALL
-    await next()
+
+    throw new UnVerifiedException()
   }
 }
