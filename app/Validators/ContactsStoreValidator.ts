@@ -27,7 +27,7 @@ export default class ContactsStoreValidator {
     params: schema.object().members({
       profileId: schema.number([rules.exists({ table: 'profiles', column: 'id' })]),
     }),
-    type: schema.enum(['EMAIL', 'PHONE', 'URL'] as const),
+    type: schema.enum(['EMAIL', 'MOBILE', 'URL'] as const),
     name: schema.string({}, [rules.minLength(1)]),
     value: schema.string({}, [rules.minLength(1)]),
   })

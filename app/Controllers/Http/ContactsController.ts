@@ -7,7 +7,7 @@ import ContactsStoreValidator from 'App/Validators/ContactsStoreValidator'
 
 const ruleByType = {
   EMAIL: rules.email(),
-  PHONE: rules.mobile({ strict: true }),
+  MOBILE: rules.mobile({ strict: true }),
   URL: rules.url(),
 } as const
 

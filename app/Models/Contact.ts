@@ -2,7 +2,7 @@ import { DateTime } from 'luxon'
 import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import Profile from './Profile'
 
-export type Type = 'EMAIL' | 'PHONE' | 'URL'
+export type Type = 'EMAIL' | 'MOBILE' | 'URL'
 
 export default class Contact extends BaseModel {
   @column({ isPrimary: true })
