@@ -11,10 +11,10 @@ export default class Resource extends BaseModel {
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  @column.dateTime({ serializeAs: null, autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
 
-  @column.dateTime()
+  @column.dateTime({ serializeAs: null })
   public verifiedAt: DateTime | null
 
   @column()
@@ -26,7 +26,9 @@ export default class Resource extends BaseModel {
   @column()
   public description: string
 
-  @column()
+  @column({
+    serializeAs: null,
+  })
   public profileId: number
 
   @belongsTo(() => Profile)
