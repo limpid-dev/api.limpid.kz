@@ -7,11 +7,10 @@ import ResourcesUpdateValidator from 'App/Validators/ResourcesUpdateValidator'
 
 export default class ResourcesController {
   public async index({ request }: HttpContextContract) {
-    const payload = await request.validate(ResourcesIndexValidator)
+    const { params, ...payload } = await request.validate(ResourcesIndexValidator)
+    const profile = await Profile.findOrFail(params.profileId)
 
-    return await Resource.query()
-      .where('profileId', payload.params.profileId)
-      .paginate(payload.page, payload.perPage)
+    return await profile.related('resources').query().paginate(payload.page, payload.perPage)
   }
 
   public async store({ request, auth, response }: HttpContextContract) {
