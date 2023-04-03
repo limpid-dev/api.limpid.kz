@@ -57,5 +57,27 @@ export default class ResourcesController {
     })
   }
 
-  public async destroy({}: HttpContextContract) {}
+  public async destroy({ request, auth, response }: HttpContextContract) {
+    const { params } = await request.validate(ResourcesUpdateValidator)
+
+    if (auth.user) {
+      const profile = await Profile.findOrFail(params.profileId)
+
+      if (profile.userId === auth.user.id) {
+        const resource = await Resource.findByOrFail('id', params.resourceId)
+
+        await resource.delete()
+
+        return response.gone()
+      }
+    }
+
+    return response.forbidden({
+      errors: [
+        {
+          message: 'You are not allowed to delete this resource',
+        },
+      ],
+    })
+  }
 }
