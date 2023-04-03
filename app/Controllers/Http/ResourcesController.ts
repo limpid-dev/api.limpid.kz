@@ -1,5 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Database from '@ioc:Adonis/Lucid/Database'
+import Profile from 'App/Models/Profile'
 import Resource from 'App/Models/Resource'
 import ResourceIndexValidator from 'App/Validators/ResourceIndexValidator'
 import ResourceStoreValidator from 'App/Validators/ResourceStoreValidator'
@@ -13,10 +14,24 @@ export default class ResourcesController {
       .paginate(payload.page, payload.perPage)
   }
 
-  public async store({ request }: HttpContextContract) {
+  public async store({ request, auth, response }: HttpContextContract) {
     const { params, ...payload } = await request.validate(ResourceStoreValidator)
 
-    Resource.create({ profileId: params.profileId, ...payload })
+    if (auth.user) {
+      const profile = await Profile.findOrFail(params.profileId)
+
+      if (profile.userId === auth.user.id) {
+        return Resource.create({ profileId: params.profileId, ...payload })
+      }
+    }
+
+    return response.forbidden({
+      errors: [
+        {
+          message: 'You are not allowed to create a resource for this profile',
+        },
+      ],
+    })
   }
 
   public async update({}: HttpContextContract) {}
