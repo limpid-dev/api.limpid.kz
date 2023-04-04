@@ -10,7 +10,7 @@ export default class ProfilesController {
   public async index({ request }: HttpContextContract) {
     const payload = await request.validate(ProfilesIndexValidator)
 
-    return await Profile.query().paginate(payload.page, payload.perPage)
+    return await Profile.query().whereNotNull('verifiedAt').paginate(payload.page, payload.perPage)
   }
 
   public async store({ request, auth }: HttpContextContract) {
