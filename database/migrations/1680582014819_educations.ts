@@ -13,9 +13,9 @@ export default class extends BaseSchema {
         .inTable('profiles')
         .onDelete('CASCADE')
 
-      table.string('title').notNullable()
-      table.string('description').notNullable()
-      table.string('institution').notNullable()
+      table.string('title', 64).notNullable()
+      table.string('description', 256).notNullable()
+      table.string('institution', 64).notNullable()
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
