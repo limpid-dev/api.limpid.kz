@@ -13,6 +13,8 @@ export default class extends BaseSchema {
         .references('id')
         .inTable('users')
         .onDelete('CASCADE')
+        .notNullable()
+
       table.string('title', 256).notNullable()
       table.string('description', 1024).notNullable()
       table.string('location', 256).nullable()

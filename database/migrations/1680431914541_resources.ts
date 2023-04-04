@@ -12,6 +12,8 @@ export default class extends BaseSchema {
         .references('id')
         .inTable('profiles')
         .onDelete('CASCADE')
+        .notNullable()
+
       table.string('type').notNullable()
       table.string('title', 64).notNullable()
       table.string('description', 256).notNullable()
