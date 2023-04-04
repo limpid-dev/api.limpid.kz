@@ -1,5 +1,5 @@
 import Mail from '@ioc:Adonis/Addons/Mail'
-import { base64, string } from '@ioc:Adonis/Core/Helpers'
+import { string } from '@ioc:Adonis/Core/Helpers'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Token from 'App/Models/Token'
 import User from 'App/Models/User'
@@ -24,11 +24,7 @@ export default class VerificationController {
     })
 
     await Mail.sendLater((message) => {
-      message
-        .from('info@limpid.kz')
-        .to(user.email)
-        .subject('Email verification')
-        .text(base64.encode(token))
+      message.from('info@limpid.kz').to(user.email).subject('Email verification').text(token)
     })
   }
 
@@ -36,7 +32,7 @@ export default class VerificationController {
     const payload = await request.validate(VerificationUpdateValidator)
 
     const token = await Token.query()
-      .where('token', base64.decode(payload.params.token))
+      .where('token', payload.params.token)
       .andWhere('type', 'VERIFICATION')
       .andWhere('expiredAt', '>', DateTime.now().toSQL())
       .preload('user')
