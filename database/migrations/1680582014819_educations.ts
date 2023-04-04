@@ -22,8 +22,8 @@ export default class extends BaseSchema {
        */
       table.timestamp('created_at', { useTz: true }).notNullable()
       table.timestamp('updated_at', { useTz: true }).notNullable()
-      table.timestamp('started_at', { useTz: true }).notNullable()
-      table.timestamp('finished_at', { useTz: true }).nullable()
+      table.date('started_at').notNullable()
+      table.date('finished_at').nullable()
     })
   }
 
