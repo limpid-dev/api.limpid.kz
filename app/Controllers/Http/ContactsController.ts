@@ -4,6 +4,7 @@ import Contact from 'App/Models/Contact'
 import Profile from 'App/Models/Profile'
 import ContactsIndexValidator from 'App/Validators/ContactsIndexValidator'
 import ContactsStoreValidator from 'App/Validators/ContactsStoreValidator'
+import ContactsUpdateValidator from 'App/Validators/ContactsUpdateValidator'
 
 const ruleByType = {
   EMAIL: rules.email(),
@@ -43,7 +44,35 @@ export default class ContactsController {
     return response.forbidden({})
   }
 
-  public async update({}: HttpContextContract) {}
+  public async update({ request, auth, response }: HttpContextContract) {
+    const { params, ...payload } = await request.validate(ContactsUpdateValidator)
+
+    if (auth.user) {
+      const profile = await Profile.findOrFail(params.profileId)
+
+      if (profile.userId === auth.user.id) {
+        const contact = await Contact.findOrFail(params.contactId)
+
+        if (payload.type) {
+          await request.validate({
+            schema: schema.create({
+              value: schema.string({}, [ruleByType[payload.type]]),
+            }),
+          })
+        } else {
+          await request.validate({
+            schema: schema.create({
+              value: schema.string({}, [ruleByType[contact.type]]),
+            }),
+          })
+        }
+
+        return await contact.merge(payload).save()
+      }
+    }
+
+    return response.forbidden({})
+  }
 
   public async destroy({}: HttpContextContract) {}
 }
