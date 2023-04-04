@@ -29,8 +29,8 @@ export default class ContactsUpdateValidator {
       contactId: schema.number([rules.exists({ table: 'contacts', column: 'id' })]),
     }),
     type: schema.enum.optional(['EMAIL', 'MOBILE', 'URL'] as const),
-    name: schema.string.optional({}, [rules.minLength(1)]),
-    value: schema.string.optional({}, [rules.minLength(1)]),
+    name: schema.string.optional({}, []),
+    value: schema.string.optional({}, []),
   })
 
   /**
