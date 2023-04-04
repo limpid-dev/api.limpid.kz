@@ -34,6 +34,10 @@ export default class ProfilesUpdateValidator {
     ]),
     location: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(256)]),
     industry: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(256)]),
+    avatar: schema.file.optional({
+      size: '512kb',
+      extnames: ['jpg', 'png', 'jpeg'],
+    }),
   })
 
   /**
