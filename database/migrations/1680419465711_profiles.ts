@@ -17,6 +17,7 @@ export default class extends BaseSchema {
       table.string('description', 1024).notNullable()
       table.string('location', 256).nullable()
       table.string('industry', 256).notNullable()
+      table.json('avatar').nullable()
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */
