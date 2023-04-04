@@ -63,9 +63,4 @@ export default class Profile extends BaseModel {
       profile.verifiedAt = null
     }
   }
-
-  @beforeFetch()
-  public static fetchOnlyVerified(query: ModelQueryBuilderContract<typeof Profile>) {
-    query.whereNotNull('verified_at')
-  }
 }
