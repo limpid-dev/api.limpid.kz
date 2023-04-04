@@ -2,6 +2,7 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
 import Contact from 'App/Models/Contact'
 import Profile from 'App/Models/Profile'
+import ContactsDestroyValidator from 'App/Validators/ContactsDestroyValidator'
 import ContactsIndexValidator from 'App/Validators/ContactsIndexValidator'
 import ContactsStoreValidator from 'App/Validators/ContactsStoreValidator'
 import ContactsUpdateValidator from 'App/Validators/ContactsUpdateValidator'
@@ -74,5 +75,19 @@ export default class ContactsController {
     return response.forbidden({})
   }
 
-  public async destroy({}: HttpContextContract) {}
+  public async destroy({ request, auth, response }: HttpContextContract) {
+    const { params } = await request.validate(ContactsDestroyValidator)
+
+    if (auth.user) {
+      const profile = await Profile.findOrFail(params.profileId)
+
+      if (profile.userId === auth.user.id) {
+        const contact = await Contact.findOrFail(params.contactId)
+
+        return await contact.delete()
+      }
+    }
+
+    return response.forbidden({})
+  }
 }
