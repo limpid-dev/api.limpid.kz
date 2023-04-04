@@ -26,7 +26,7 @@ export default class EducationsDestroyValidator {
   public schema = schema.create({
     params: schema.object().members({
       profileId: schema.number([rules.exists({ table: 'profiles', column: 'id' })]),
-      educationId: schema.number([rules.exists({ table: 'education', column: 'id' })]),
+      educationId: schema.number([rules.exists({ table: 'educations', column: 'id' })]),
     }),
   })
 
