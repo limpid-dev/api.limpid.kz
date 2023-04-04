@@ -98,3 +98,10 @@ Route.patch('/profiles/:profileId/certificates/:certificateId', 'CertificatesCon
 Route.delete('/profiles/:profileId/certificates/:certificateId', 'CertificatesController.destroy')
   .middleware('auth')
   .middleware('verification')
+
+Route.get('/projects', 'ProjectsController.index').middleware('auth')
+Route.post('/projects', 'ProjectsController.store').middleware('auth').middleware('verification')
+Route.get('/projects/:projectId', 'ProjectsController.show').middleware('auth')
+Route.patch('/projects/:projectId', 'ProjectsController.update')
+  .middleware('auth')
+  .middleware('verification')
