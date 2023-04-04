@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon'
 import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import Profile from './Profile'
+import { AttachmentContract, attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 
 export default class Certificate extends BaseModel {
   @column({ isPrimary: true })
@@ -26,6 +27,9 @@ export default class Certificate extends BaseModel {
 
   @column.dateTime()
   public expiredAt: DateTime | null
+
+  @attachment()
+  public attachment: AttachmentContract
 
   @column()
   public profileId: number
