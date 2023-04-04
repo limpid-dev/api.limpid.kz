@@ -54,18 +54,20 @@ export default class ContactsController {
       if (profile.userId === auth.user.id) {
         const contact = await Contact.findOrFail(params.contactId)
 
-        if (payload.type) {
-          await request.validate({
-            schema: schema.create({
-              value: schema.string({}, [ruleByType[payload.type]]),
-            }),
-          })
-        } else {
-          await request.validate({
-            schema: schema.create({
-              value: schema.string({}, [ruleByType[contact.type]]),
-            }),
-          })
+        if (payload.value) {
+          if (payload.type) {
+            await request.validate({
+              schema: schema.create({
+                value: schema.string({}, [ruleByType[payload.type]]),
+              }),
+            })
+          } else {
+            await request.validate({
+              schema: schema.create({
+                value: schema.string({}, [ruleByType[contact.type]]),
+              }),
+            })
+          }
         }
 
         return await contact.merge(payload).save()
