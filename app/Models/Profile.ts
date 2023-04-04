@@ -15,7 +15,9 @@ export default class Profile extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
 
-  @attachment()
+  @attachment({
+    preComputeUrl: true,
+  })
   public avatar: AttachmentContract | null
 
   @column()
