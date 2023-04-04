@@ -49,7 +49,7 @@ export default class ProfilesController {
       return response.forbidden({
         errors: [
           {
-            message: 'You are not authorized to delete this profile',
+            message: 'You are not authorized to update this profile',
           },
         ],
       })
