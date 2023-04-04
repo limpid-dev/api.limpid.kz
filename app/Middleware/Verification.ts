@@ -3,12 +3,10 @@ import UnVerifiedException from 'App/Exceptions/UnVerifiedException'
 
 export default class VerificationMiddleware {
   public async handle({ auth }: HttpContextContract, next: () => Promise<void>) {
-    if (auth.user) {
-      if (auth.user.isVerified) {
-        await next()
-      }
+    if (auth.user?.isVerified) {
+      throw new UnVerifiedException()
     }
 
-    throw new UnVerifiedException()
+    await next()
   }
 }
