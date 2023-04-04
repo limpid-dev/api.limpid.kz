@@ -28,7 +28,9 @@ export default class Certificate extends BaseModel {
   @column.dateTime()
   public expiredAt: DateTime | null
 
-  @attachment()
+  @attachment({
+    preComputeUrl: true,
+  })
   public attachment: AttachmentContract
 
   @column()
