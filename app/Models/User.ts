@@ -16,7 +16,7 @@ import Ban from './Ban'
 import Profile from './Profile'
 
 export default class User extends BaseModel {
-  @column({ isPrimary: true, serializeAs: null })
+  @column({ isPrimary: true })
   public id: number
 
   @column()
@@ -28,13 +28,13 @@ export default class User extends BaseModel {
   @column({ serializeAs: null })
   public rememberMeToken: string | null
 
-  @column.dateTime({ autoCreate: true, serializeAs: null })
+  @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true, serializeAs: null })
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
 
-  @column.dateTime({ serializeAs: null })
+  @column.dateTime()
   public verifiedAt: DateTime | null
 
   @computed()

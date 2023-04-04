@@ -11,7 +11,7 @@ export default class Contact extends BaseModel {
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 
-  @column.dateTime({ serializeAs: null, autoCreate: true, autoUpdate: true })
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
 
   @column()
