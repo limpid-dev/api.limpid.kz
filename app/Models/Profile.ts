@@ -1,19 +1,8 @@
-import {
-  BaseModel,
-  BelongsTo,
-  HasMany,
-  ModelQueryBuilderContract,
-  beforeFetch,
-  beforeSave,
-  belongsTo,
-  column,
-  computed,
-  hasMany,
-} from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, HasMany, belongsTo, column, hasMany } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
-import User from './User'
-import Resource from './Resource'
 import Contact from './Contact'
+import Resource from './Resource'
+import User from './User'
 
 export default class Profile extends BaseModel {
   @column({ isPrimary: true })
@@ -24,14 +13,6 @@ export default class Profile extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
-
-  @column.dateTime()
-  public verifiedAt: DateTime | null
-
-  @computed()
-  public get isVerified() {
-    return !!this.verifiedAt
-  }
 
   @column()
   public title: string
@@ -56,11 +37,4 @@ export default class Profile extends BaseModel {
 
   @hasMany(() => Contact)
   public contacts: HasMany<typeof Contact>
-
-  @beforeSave()
-  public static async resetVerifiedAt(profile: Profile) {
-    if (profile.$isDirty) {
-      profile.verifiedAt = null
-    }
-  }
 }
