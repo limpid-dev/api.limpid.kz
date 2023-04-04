@@ -21,7 +21,7 @@
 import Route from '@ioc:Adonis/Core/Route'
 
 Route.get('/users/@me', 'UsersMeController.index').middleware('auth')
-Route.patch('/users/@me', 'UsersMeController.update').middleware('auth').middleware('confirmation')
+Route.patch('/users/@me', 'UsersMeController.update').middleware('auth')
 
 Route.post('/users', 'UsersController.store')
 Route.get('/users/:userId', 'UsersController.show').middleware('auth')
@@ -44,7 +44,6 @@ Route.patch('/profiles/:profileId', 'ProfilesController.update')
 Route.delete('/profiles/:profileId', 'ProfilesController.destroy')
   .middleware('auth')
   .middleware('verification')
-  .middleware('confirmation')
 
 Route.get('/profiles/:profileId/resources', 'ResourcesController.index').middleware('auth')
 Route.post('/profiles/:profileId/resources', 'ResourcesController.store')
