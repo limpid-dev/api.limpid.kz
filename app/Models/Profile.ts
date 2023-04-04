@@ -3,7 +3,6 @@ import { DateTime } from 'luxon'
 import Contact from './Contact'
 import Resource from './Resource'
 import User from './User'
-import { AttachmentContract, attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 
 export default class Profile extends BaseModel {
   @column({ isPrimary: true })
@@ -14,9 +13,6 @@ export default class Profile extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
-
-  @attachment()
-  public avatar: AttachmentContract
 
   @column()
   public title: string
