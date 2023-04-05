@@ -99,6 +99,17 @@ Route.delete('/profiles/:profileId/certificates/:certificateId', 'CertificatesCo
   .middleware('auth')
   .middleware('verification')
 
+Route.get('/profiles/:profileId/skills', 'SkillsController.index').middleware('auth')
+Route.post('/profiles/:profileId/skills', 'SkillsController.store')
+  .middleware('auth')
+  .middleware('verification')
+Route.patch('/profiles/:profileId/skills/:skillId', 'SkillsController.update')
+  .middleware('auth')
+  .middleware('verification')
+Route.delete('/profiles/:profileId/skills/:skillId', 'SkillsController.destroy')
+  .middleware('auth')
+  .middleware('verification')
+
 Route.get('/projects', 'ProjectsController.index').middleware('auth')
 Route.post('/projects', 'ProjectsController.store').middleware('auth').middleware('verification')
 Route.get('/projects/:projectId', 'ProjectsController.show').middleware('auth')
