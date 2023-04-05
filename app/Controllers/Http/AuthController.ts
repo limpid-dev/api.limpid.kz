@@ -34,6 +34,7 @@ export default class AuthController {
         errors: [
           {
             message: 'E_AUTHORIZATION_FAILURE: Banned access',
+            description: isBanned.description,
           },
         ],
       })
