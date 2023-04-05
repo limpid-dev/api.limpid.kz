@@ -12,6 +12,7 @@ import {
   beforeFetch,
 } from '@ioc:Adonis/Lucid/Orm'
 import Token from './Token'
+import { AttachmentContract, attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 import Ban from './Ban'
 import Profile from './Profile'
 
@@ -27,6 +28,11 @@ export default class User extends BaseModel {
 
   @column({ serializeAs: null })
   public rememberMeToken: string | null
+
+  @attachment({
+    preComputeUrl: true,
+  })
+  public avatar: AttachmentContract | null
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

@@ -1,4 +1,3 @@
-import { Attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Profile from 'App/Models/Profile'
 import ProfilesDestroyValidator from 'App/Validators/ProfilesDestroyValidator'
@@ -15,12 +14,11 @@ export default class ProfilesController {
   }
 
   public async store({ request, auth }: HttpContextContract) {
-    const { avatar, ...payload } = await request.validate(ProfilesStoreValidator)
+    const payload = await request.validate(ProfilesStoreValidator)
 
     if (auth.user) {
       return Profile.create({
         userId: auth.user.id,
-        avatar: avatar ? Attachment.fromFile(avatar) : null,
         ...payload,
       })
     }
@@ -33,14 +31,13 @@ export default class ProfilesController {
   }
 
   public async update({ request, auth, response }: HttpContextContract) {
-    const { params, avatar, ...payload } = await request.validate(ProfilesUpdateValidator)
+    const { params, ...payload } = await request.validate(ProfilesUpdateValidator)
 
     const profile = await Profile.findByOrFail('id', params.profileId)
 
     if (auth.user) {
       if (profile.userId === auth.user.id) {
         profile.merge({
-          avatar: avatar ? Attachment.fromFile(avatar) : null,
           ...payload,
         })
         return await profile.save()

@@ -30,6 +30,10 @@ export default class UsersStoreValidator {
       rules.maxLength(128),
       rules.regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]+$/),
     ]),
+    avatar: schema.file.optional({
+      size: '1mb',
+      extnames: ['jpg', 'png', 'jpeg'],
+    }),
   })
 
   /**
