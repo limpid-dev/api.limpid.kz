@@ -1,6 +1,7 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Profile from 'App/Models/Profile'
 import Resource from 'App/Models/Resource'
+import ResourcesDestroyValidator from 'App/Validators/ResourcesDestroyValidator'
 import ResourcesIndexValidator from 'App/Validators/ResourcesIndexValidator'
 import ResourcesStoreValidator from 'App/Validators/ResourcesStoreValidator'
 import ResourcesUpdateValidator from 'App/Validators/ResourcesUpdateValidator'
@@ -57,7 +58,7 @@ export default class ResourcesController {
   }
 
   public async destroy({ request, auth, response }: HttpContextContract) {
-    const { params } = await request.validate(ResourcesUpdateValidator)
+    const { params } = await request.validate(ResourcesDestroyValidator)
 
     if (auth.user) {
       const profile = await Profile.findOrFail(params.profileId)
