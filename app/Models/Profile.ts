@@ -1,7 +1,6 @@
 import { BaseModel, BelongsTo, HasMany, belongsTo, column, hasMany } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 import Contact from './Contact'
-import Resource from './Resource'
 import User from './User'
 import Skill from './Skill'
 
@@ -32,9 +31,6 @@ export default class Profile extends BaseModel {
 
   @belongsTo(() => User)
   public user: BelongsTo<typeof User>
-
-  @hasMany(() => Resource)
-  public resources: HasMany<typeof Resource>
 
   @hasMany(() => Contact)
   public contacts: HasMany<typeof Contact>
