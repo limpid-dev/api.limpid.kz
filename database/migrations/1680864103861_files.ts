@@ -10,6 +10,7 @@ export default class extends BaseSchema {
       table.integer('size').notNullable()
       table.string('extname').notNullable()
       table.string('mime_type').notNullable()
+      table.string('visibility').notNullable()
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */

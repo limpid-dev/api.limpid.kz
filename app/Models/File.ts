@@ -22,4 +22,7 @@ export default class File extends BaseModel {
 
   @column()
   public mimeType: string
+
+  @column()
+  public visibility: string
 }
