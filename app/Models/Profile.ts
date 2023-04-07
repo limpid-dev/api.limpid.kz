@@ -15,6 +15,12 @@ export default class Profile extends BaseModel {
   public updatedAt: DateTime
 
   @column()
+  public verifiedAt: DateTime | null
+
+  @column()
+  public publishedAt: DateTime | null
+
+  @column()
   public title: string
 
   @column()
