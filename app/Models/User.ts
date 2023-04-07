@@ -34,6 +34,12 @@ export default class User extends BaseModel {
   })
   public avatar: AttachmentContract | null
 
+  @column()
+  public firstName: string
+
+  @column()
+  public lastName: string
+
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 
