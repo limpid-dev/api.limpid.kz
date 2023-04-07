@@ -34,6 +34,8 @@ export default class UsersStoreValidator {
       size: '1mb',
       extnames: ['jpg', 'png', 'jpeg'],
     }),
+    firstName: schema.string({}, [rules.minLength(1), rules.maxLength(255)]),
+    lastName: schema.string({}, [rules.minLength(1), rules.maxLength(255)]),
   })
 
   /**
