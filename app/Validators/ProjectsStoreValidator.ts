@@ -24,6 +24,7 @@ export default class ProjectsStoreValidator {
    *    ```
    */
   public schema = schema.create({
+    profileId: schema.number([rules.exists({ table: 'profiles', column: 'id' })]),
     title: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(256)]),
     description: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(1024)]),
     location: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(256)]),
