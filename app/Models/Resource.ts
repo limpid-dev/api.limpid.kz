@@ -1,6 +1,5 @@
-import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
-import Profile from './Profile'
 
 export type Type = 'MATERIAL' | 'INTELLECTUAL'
 
@@ -22,10 +21,4 @@ export default class Resource extends BaseModel {
 
   @column()
   public description: string
-
-  @column()
-  public profileId: number
-
-  @belongsTo(() => Profile)
-  public profile: BelongsTo<typeof Profile>
 }
