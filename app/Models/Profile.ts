@@ -3,6 +3,7 @@ import { DateTime } from 'luxon'
 import Contact from './Contact'
 import User from './User'
 import Skill from './Skill'
+import Project from './Project'
 
 export default class Profile extends BaseModel {
   @column({ isPrimary: true })
@@ -43,4 +44,7 @@ export default class Profile extends BaseModel {
 
   @hasMany(() => Skill)
   public skills: HasMany<typeof Skill>
+
+  @hasMany(() => Project)
+  public projects: HasMany<typeof Project>
 }
