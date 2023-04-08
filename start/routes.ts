@@ -79,7 +79,11 @@ Route.group(() => {
   Route.patch('profiles/:profile/experiences/:>experience', 'ExperiencesController.update')
   Route.delete('profiles/:profile/experiences/:>experience', 'ExperiencesController.destroy')
 
-  // Route.resource('projects', 'ProjectsController').apiOnly()
+  Route.get('projects', 'ProjectsController.index')
+  Route.post('projects', 'ProjectsController.store')
+  Route.get('projects/:project', 'ProjectsController.show')
+  Route.patch('projects/:project', 'ProjectsController.update')
+  Route.delete('projects/:project', 'ProjectsController.destroy')
 
   // Route.resource('projects.memberships', 'MembershipsController').apiOnly()
 }).middleware('auth')
