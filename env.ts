@@ -41,4 +41,11 @@ export default Env.rules({
   SMTP_PASSWORD: Env.schema.string(),
 
   SESSION_DRIVER: Env.schema.string(),
+
+  EPAY_URL: Env.schema.string({ format: 'url' }),
+  EPAY_EMAIL: Env.schema.string(),
+  EPAY_PASSWORD: Env.schema.string(),
+  EPAY_CLIENT_ID: Env.schema.string(),
+  EPAY_CLIENT_SECRET: Env.schema.string(),
+  EPAY_TERMINAL_ID: Env.schema.string(),
 })
