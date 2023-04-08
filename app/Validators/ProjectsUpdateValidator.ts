@@ -24,9 +24,6 @@ export default class ProjectsUpdateValidator {
    *    ```
    */
   public schema = schema.create({
-    params: schema.object().members({
-      projectId: schema.number([rules.exists({ table: 'projects', column: 'id' })]),
-    }),
     title: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(256)]),
     description: schema.string.optional({ trim: true }, [
       rules.minLength(1),

@@ -24,9 +24,6 @@ export default class ExperiencesStoreValidator {
    *    ```
    */
   public schema = schema.create({
-    params: schema.object().members({
-      profileId: schema.number([rules.exists({ table: 'profiles', column: 'id' })]),
-    }),
     title: schema.string({ trim: true }, [rules.maxLength(64)]),
     description: schema.string({ trim: true }, [rules.maxLength(256)]),
     organization: schema.string({ trim: true }, [rules.maxLength(64)]),

@@ -24,10 +24,6 @@ export default class CertificatesUpdateValidator {
    *    ```
    */
   public schema = schema.create({
-    params: schema.object().members({
-      profileId: schema.number([rules.exists({ table: 'profiles', column: 'id' })]),
-      certificateId: schema.number([rules.exists({ table: 'certificates', column: 'id' })]),
-    }),
     title: schema.string.optional({ trim: true }, [rules.maxLength(64)]),
     description: schema.string.optional({ trim: true }, [rules.maxLength(256)]),
     institution: schema.string.optional({ trim: true }, [rules.maxLength(64)]),

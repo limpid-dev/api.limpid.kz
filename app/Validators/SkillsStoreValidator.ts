@@ -24,9 +24,6 @@ export default class SkillsStoreValidator {
    *    ```
    */
   public schema = schema.create({
-    params: schema.object().members({
-      profileId: schema.number([rules.exists({ table: 'profiles', column: 'id' })]),
-    }),
     name: schema.string({ trim: true }, [rules.minLength(4), rules.maxLength(64)]),
   })
 

@@ -23,12 +23,7 @@ export default class ExperiencesDestroyValidator {
    *     ])
    *    ```
    */
-  public schema = schema.create({
-    params: schema.object().members({
-      profileId: schema.number([rules.exists({ table: 'profiles', column: 'id' })]),
-      experienceId: schema.number([rules.exists({ table: 'experiences', column: 'id' })]),
-    }),
-  })
+  public schema = schema.create({})
 
   /**
    * Custom messages for validation failures. You can make use of dot notation `(.)`

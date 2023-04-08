@@ -24,10 +24,6 @@ export default class EducationsUpdateValidator {
    *    ```
    */
   public schema = schema.create({
-    params: schema.object().members({
-      profileId: schema.number([rules.exists({ table: 'profiles', column: 'id' })]),
-      educationId: schema.number([rules.exists({ table: 'educations', column: 'id' })]),
-    }),
     title: schema.string.optional({ trim: true }, [rules.maxLength(64)]),
     description: schema.string.optional({ trim: true }, [rules.maxLength(256)]),
     institution: schema.string.optional({ trim: true }, [rules.maxLength(64)]),

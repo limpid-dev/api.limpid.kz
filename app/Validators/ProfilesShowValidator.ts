@@ -23,11 +23,7 @@ export default class ProfilesShowValidator {
    *     ])
    *    ```
    */
-  public schema = schema.create({
-    params: schema.object().members({
-      profileId: schema.number([rules.exists({ table: 'profiles', column: 'id' })]),
-    }),
-  })
+  public schema = schema.create({})
 
   /**
    * Custom messages for validation failures. You can make use of dot notation `(.)`

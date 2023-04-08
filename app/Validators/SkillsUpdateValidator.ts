@@ -24,10 +24,6 @@ export default class SkillsUpdateValidator {
    *    ```
    */
   public schema = schema.create({
-    params: schema.object().members({
-      profileId: schema.number([rules.exists({ table: 'profiles', column: 'id' })]),
-      skillId: schema.number([rules.exists({ table: 'skills', column: 'id' })]),
-    }),
     name: schema.string.optional({ trim: true }, [rules.minLength(4), rules.maxLength(64)]),
   })
 

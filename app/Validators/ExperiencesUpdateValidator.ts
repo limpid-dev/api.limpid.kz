@@ -24,10 +24,6 @@ export default class ExperiencesUpdateValidator {
    *    ```
    */
   public schema = schema.create({
-    params: schema.object().members({
-      profileId: schema.number([rules.exists({ table: 'profiles', column: 'id' })]),
-      experienceId: schema.number([rules.exists({ table: 'experiences', column: 'id' })]),
-    }),
     title: schema.string.optional({ trim: true }, [rules.maxLength(64)]),
     description: schema.string.optional({ trim: true }, [rules.maxLength(256)]),
     organization: schema.string.optional({ trim: true }, [rules.maxLength(64)]),

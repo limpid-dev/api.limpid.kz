@@ -24,9 +24,6 @@ export default class RecoveriesUpdateValidator {
    *    ```
    */
   public schema = schema.create({
-    params: schema.object().members({
-      token: schema.string(),
-    }),
     password: schema.string({}, [
       rules.minLength(8),
       rules.maxLength(128),

@@ -24,10 +24,6 @@ export default class ContactsUpdateValidator {
    *    ```
    */
   public schema = schema.create({
-    params: schema.object().members({
-      profileId: schema.number([rules.exists({ table: 'profiles', column: 'id' })]),
-      contactId: schema.number([rules.exists({ table: 'contacts', column: 'id' })]),
-    }),
     type: schema.enum.optional(['EMAIL', 'MOBILE', 'URL'] as const),
     name: schema.string.optional({}, []),
     value: schema.string.optional({}, []),
