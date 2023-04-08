@@ -30,6 +30,27 @@ export default class Project extends BaseModel {
   public stage: string
 
   @column()
+  public requiredMoneyAmount: number
+
+  @column()
+  public ownedMoneyAmount: number
+
+  @column()
+  public requiredIntellectualResources: string
+
+  @column()
+  public ownedIntellectualResources: string
+
+  @column()
+  public requiredMaterialResources: string
+
+  @column()
+  public ownedMaterialResources: string
+
+  @column()
+  public profitability: string
+
+  @column()
   public profileId: number
 
   @belongsTo(() => Profile)
