@@ -8,6 +8,18 @@ export default class User extends BaseModel {
   @column({ isPrimary: true })
   public id: number
 
+  @column.dateTime({ autoCreate: true })
+  public createdAt: DateTime
+
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  public updatedAt: DateTime
+
+  @column.dateTime()
+  public verifiedAt: DateTime | null
+
+  @column.dateTime()
+  public bornAt: DateTime
+
   @column()
   public email: string
 
@@ -23,15 +35,6 @@ export default class User extends BaseModel {
   @column()
   public lastName: string
 
-  @column.dateTime({ autoCreate: true })
-  public createdAt: DateTime
-
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public updatedAt: DateTime
-
-  @column.dateTime()
-  public verifiedAt: DateTime | null
-
   @hasMany(() => Token)
   public tokens: HasMany<typeof Token>
 
@@ -39,14 +42,10 @@ export default class User extends BaseModel {
   public profiles: HasMany<typeof Profile>
 
   @beforeSave()
-  public static async hashPassword(user: User) {
+  public static async beforeSave(user: User) {
     if (user.$dirty.password) {
       user.password = await Hash.make(user.password)
     }
-  }
-
-  @beforeSave()
-  public static async resetVerifiedAt(user: User) {
     if (user.$dirty.email) {
       user.verifiedAt = null
     }
