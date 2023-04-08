@@ -20,7 +20,6 @@
       "@adonisjs/auth",
       "@adonisjs/mail",
       "@adonisjs/session",
-      "@adonisjs/shield",
       "@adonisjs/bouncer"
     ]
   }
