@@ -1,4 +1,4 @@
-import { schema, CustomMessages } from '@ioc:Adonis/Core/Validator'
+import { rules, schema, CustomMessages } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
 export default class ProjectsIndexValidator {
@@ -23,7 +23,10 @@ export default class ProjectsIndexValidator {
    *     ])
    *    ```
    */
-  public schema = schema.create({})
+  public schema = schema.create({
+    page: schema.number([rules.unsigned()]),
+    perPage: schema.number([rules.unsigned()]),
+  })
 
   /**
    * Custom messages for validation failures. You can make use of dot notation `(.)`

@@ -32,7 +32,4 @@ export default class Project extends BaseModel {
 
   @belongsTo(() => Profile)
   public profile: BelongsTo<typeof Profile>
-
-  @column()
-  public attachments: string
 }

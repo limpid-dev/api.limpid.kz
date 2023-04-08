@@ -30,12 +30,6 @@ export default class ProjectsStoreValidator {
     location: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(256)]),
     industry: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(256)]),
     stage: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(64)]),
-    attachments: schema.array().members(
-      schema.file({
-        extnames: ['jpg', 'png', 'jpeg', 'pdf', 'docx', 'xlsx', 'pptx'],
-        size: '16mb',
-      })
-    ),
   })
 
   /**
