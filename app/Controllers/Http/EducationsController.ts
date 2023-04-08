@@ -1,66 +1,58 @@
+import { bind } from '@adonisjs/route-model-binding'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Education from 'App/Models/Education'
 import Profile from 'App/Models/Profile'
-import EducationsDestroyValidator from 'App/Validators/EducationsDestroyValidator'
-import EducationsIndexValidator from 'App/Validators/EducationsIndexValidator'
 import EducationsStoreValidator from 'App/Validators/EducationsStoreValidator'
 import EducationsUpdateValidator from 'App/Validators/EducationsUpdateValidator'
+import PaginationValidator from 'App/Validators/PaginationValidator'
 
 export default class EducationsController {
-  public async index({ request }: HttpContextContract) {
-    const payload = await request.validate(EducationsIndexValidator)
+  @bind()
+  public async index({ bouncer, request }: HttpContextContract, profile: Profile) {
+    await bouncer.with('EducationPolicy').authorize('viewList', profile)
+    const payload = await request.validate(PaginationValidator)
 
-    return await Education.query()
-      .where('profileId', payload.params.profileId)
-      .paginate(payload.page, payload.perPage)
+    return await profile.related('educations').query().paginate(payload.page, payload.perPage)
   }
 
-  public async store({ request, auth, response }: HttpContextContract) {
-    const { params, ...payload } = await request.validate(EducationsStoreValidator)
+  @bind()
+  public async show({ bouncer }: HttpContextContract, profile: Profile, education: Education) {
+    await bouncer.with('EducationPolicy').authorize('view', profile)
 
-    if (auth.user) {
-      const profile = await Profile.findOrFail(params.profileId)
-
-      if (profile.userId === auth.user.id) {
-        return await Education.create({
-          profileId: params.profileId,
-          ...payload,
-        })
-      }
-    }
-
-    return response.forbidden({})
+    return { data: education }
   }
 
-  public async update({ request, auth, response }: HttpContextContract) {
-    const { params, ...payload } = await request.validate(EducationsUpdateValidator)
+  @bind()
+  public async store({ bouncer, request }: HttpContextContract, profile: Profile) {
+    await bouncer.with('EducationPolicy').authorize('create', profile)
+    const payload = await request.validate(EducationsStoreValidator)
 
-    if (auth.user) {
-      const profile = await Profile.findOrFail(params.profileId)
+    const education = profile.related('educations').create(payload)
 
-      if (profile.userId === auth.user.id) {
-        const contact = await Education.findOrFail(params.educationId)
-
-        return await contact.merge(payload).save()
-      }
-    }
-
-    return response.forbidden({})
+    return { data: education }
   }
 
-  public async destroy({ request, auth, response }: HttpContextContract) {
-    const { params } = await request.validate(EducationsDestroyValidator)
+  @bind()
+  public async update(
+    { bouncer, request }: HttpContextContract,
+    profile: Profile,
+    education: Education
+  ) {
+    await bouncer.with('EducationPolicy').authorize('update', profile)
 
-    if (auth.user) {
-      const profile = await Profile.findOrFail(params.profileId)
+    const payload = await request.validate(EducationsUpdateValidator)
 
-      if (profile.userId === auth.user.id) {
-        const contact = await Education.findOrFail(params.educationId)
+    education.merge(payload)
 
-        return await contact.delete()
-      }
-    }
+    await education.save()
 
-    return response.forbidden({})
+    return { data: education }
+  }
+
+  @bind()
+  public async destroy({ bouncer }: HttpContextContract, profile: Profile, education: Education) {
+    await bouncer.with('EducationPolicy').authorize('delete', profile)
+
+    return await education.delete()
   }
 }

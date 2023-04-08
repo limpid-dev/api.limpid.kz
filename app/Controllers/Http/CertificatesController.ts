@@ -1,70 +1,62 @@
+import { bind } from '@adonisjs/route-model-binding'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Certificate from 'App/Models/Certificate'
 import Profile from 'App/Models/Profile'
-import CertificatesDestroyValidator from 'App/Validators/CertificatesDestroyValidator'
-import CertificatesIndexValidator from 'App/Validators/CertificatesIndexValidator'
 import CertificatesStoreValidator from 'App/Validators/CertificatesStoreValidator'
 import CertificatesUpdateValidator from 'App/Validators/CertificatesUpdateValidator'
+import PaginationValidator from 'App/Validators/PaginationValidator'
 
 export default class CertificatesController {
-  public async index({ request }: HttpContextContract) {
-    const payload = await request.validate(CertificatesIndexValidator)
+  @bind()
+  public async index({ bouncer, request }: HttpContextContract, profile: Profile) {
+    await bouncer.with('CertificatePolicy').authorize('viewList', profile)
+    const payload = await request.validate(PaginationValidator)
 
-    return await Certificate.query()
-      .where('profileId', payload.params.profileId)
-      .paginate(payload.page, payload.perPage)
+    return await profile.related('certificates').query().paginate(payload.page, payload.perPage)
   }
 
-  public async store({ request, auth, response }: HttpContextContract) {
-    const { params, attachment, ...payload } = await request.validate(CertificatesStoreValidator)
+  @bind()
+  public async show({ bouncer }: HttpContextContract, profile: Profile, certificate: Certificate) {
+    await bouncer.with('CertificatePolicy').authorize('view', profile)
 
-    if (auth.user) {
-      const profile = await Profile.findOrFail(params.profileId)
-
-      if (profile.userId === auth.user.id) {
-        return await Certificate.create({
-          profileId: params.profileId,
-          ...payload,
-        })
-      }
-    }
-
-    return response.forbidden({})
+    return { data: certificate }
   }
 
-  public async update({ request, auth, response }: HttpContextContract) {
-    const { params, attachment, ...payload } = await request.validate(CertificatesUpdateValidator)
+  @bind()
+  public async store({ bouncer, request }: HttpContextContract, profile: Profile) {
+    await bouncer.with('CertificatePolicy').authorize('create', profile)
+    const payload = await request.validate(CertificatesStoreValidator)
 
-    if (auth.user) {
-      const profile = await Profile.findOrFail(params.profileId)
+    const certificate = profile.related('educations').create(payload)
 
-      if (profile.userId === auth.user.id) {
-        const certificate = await Certificate.findOrFail(params.certificateId)
-
-        return await certificate
-          .merge({
-            ...payload,
-          })
-          .save()
-      }
-    }
-
-    return response.forbidden({})
+    return { data: certificate }
   }
 
-  public async destroy({ request, auth, response }: HttpContextContract) {
-    const { params } = await request.validate(CertificatesDestroyValidator)
+  @bind()
+  public async update(
+    { bouncer, request }: HttpContextContract,
+    profile: Profile,
+    certificate: Certificate
+  ) {
+    await bouncer.with('CertificatePolicy').authorize('update', profile)
 
-    if (auth.user) {
-      const profile = await Profile.findOrFail(params.profileId)
+    const payload = await request.validate(CertificatesUpdateValidator)
 
-      if (profile.userId === auth.user.id) {
-        const certificate = await Certificate.findOrFail(params.certificateId)
+    certificate.merge(payload)
 
-        return await certificate.delete()
-      }
-    }
+    await certificate.save()
 
-    return response.forbidden({})
+    return { data: certificate }
+  }
+
+  @bind()
+  public async destroy(
+    { bouncer }: HttpContextContract,
+    profile: Profile,
+    certificate: Certificate
+  ) {
+    await bouncer.with('CertificatePolicy').authorize('delete', profile)
+
+    return await certificate.delete()
   }
 }

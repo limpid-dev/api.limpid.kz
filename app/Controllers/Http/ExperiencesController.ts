@@ -1,66 +1,58 @@
+import { bind } from '@adonisjs/route-model-binding'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Experience from 'App/Models/Experience'
 import Profile from 'App/Models/Profile'
-import ExperiencesDestroyValidator from 'App/Validators/ExperiencesDestroyValidator'
-import ExperiencesIndexValidator from 'App/Validators/ExperiencesIndexValidator'
 import ExperiencesStoreValidator from 'App/Validators/ExperiencesStoreValidator'
 import ExperiencesUpdateValidator from 'App/Validators/ExperiencesUpdateValidator'
+import PaginationValidator from 'App/Validators/PaginationValidator'
 
 export default class ExperiencesController {
-  public async index({ request }: HttpContextContract) {
-    const payload = await request.validate(ExperiencesIndexValidator)
+  @bind()
+  public async index({ bouncer, request }: HttpContextContract, profile: Profile) {
+    await bouncer.with('ExperiencePolicy').authorize('viewList', profile)
+    const payload = await request.validate(PaginationValidator)
 
-    return await Experience.query()
-      .where('profileId', payload.params.profileId)
-      .paginate(payload.page, payload.perPage)
+    return await profile.related('experiences').query().paginate(payload.page, payload.perPage)
   }
 
-  public async store({ request, auth, response }: HttpContextContract) {
-    const { params, ...payload } = await request.validate(ExperiencesStoreValidator)
+  @bind()
+  public async show({ bouncer }: HttpContextContract, profile: Profile, experience: Experience) {
+    await bouncer.with('ExperiencePolicy').authorize('view', profile)
 
-    if (auth.user) {
-      const profile = await Profile.findOrFail(params.profileId)
-
-      if (profile.userId === auth.user.id) {
-        return await Experience.create({
-          profileId: params.profileId,
-          ...payload,
-        })
-      }
-    }
-
-    return response.forbidden({})
+    return { data: experience }
   }
 
-  public async update({ request, auth, response }: HttpContextContract) {
-    const { params, ...payload } = await request.validate(ExperiencesUpdateValidator)
+  @bind()
+  public async store({ bouncer, request }: HttpContextContract, profile: Profile) {
+    await bouncer.with('ExperiencePolicy').authorize('create', profile)
+    const payload = await request.validate(ExperiencesStoreValidator)
 
-    if (auth.user) {
-      const profile = await Profile.findOrFail(params.profileId)
+    const experience = profile.related('experiences').create(payload)
 
-      if (profile.userId === auth.user.id) {
-        const contact = await Experience.findOrFail(params.experienceId)
-
-        return await contact.merge(payload).save()
-      }
-    }
-
-    return response.forbidden({})
+    return { data: experience }
   }
 
-  public async destroy({ request, auth, response }: HttpContextContract) {
-    const { params } = await request.validate(ExperiencesDestroyValidator)
+  @bind()
+  public async update(
+    { bouncer, request }: HttpContextContract,
+    profile: Profile,
+    experience: Experience
+  ) {
+    await bouncer.with('ExperiencePolicy').authorize('update', profile)
 
-    if (auth.user) {
-      const profile = await Profile.findOrFail(params.profileId)
+    const payload = await request.validate(ExperiencesUpdateValidator)
 
-      if (profile.userId === auth.user.id) {
-        const contact = await Experience.findOrFail(params.experienceId)
+    experience.merge(payload)
 
-        return await contact.delete()
-      }
-    }
+    await experience.save()
 
-    return response.forbidden({})
+    return { data: experience }
+  }
+
+  @bind()
+  public async destroy({ bouncer }: HttpContextContract, profile: Profile, experience: Experience) {
+    await bouncer.with('ExperiencePolicy').authorize('delete', profile)
+
+    return await experience.delete()
   }
 }
