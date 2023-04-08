@@ -1,7 +1,8 @@
 import { BaseModel, BelongsTo, HasMany, belongsTo, column, hasMany } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
-import Profile from './Profile'
 import Membership from './Membership'
+import Profile from './Profile'
+import Message from './Message'
 
 export default class Project extends BaseModel {
   @column({ isPrimary: true })
@@ -36,4 +37,7 @@ export default class Project extends BaseModel {
 
   @hasMany(() => Membership)
   public memberships: HasMany<typeof Membership>
+
+  @hasMany(() => Message)
+  public messages: HasMany<typeof Message>
 }

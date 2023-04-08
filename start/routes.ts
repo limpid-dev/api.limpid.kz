@@ -90,4 +90,7 @@ Route.group(() => {
   Route.get('projects/:project/memberships/:>membership', 'MembershipsController.show')
   Route.patch('projects/:project/memberships/:>membership', 'MembershipsController.update')
   Route.delete('projects/:project/memberships/:>membership', 'MembershipsController.destroy')
+
+  Route.get('projects/:project/messages', 'MessagesController.index')
+  Route.post('projects/:project/messages', 'MessagesController.store')
 }).middleware('auth')

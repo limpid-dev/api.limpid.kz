@@ -17,6 +17,7 @@ import Resource from './Resource'
 import Skill from './Skill'
 import User from './User'
 import Project from './Project'
+import Message from './Message'
 
 export default class Profile extends BaseModel {
   @column({ isPrimary: true })
@@ -72,6 +73,9 @@ export default class Profile extends BaseModel {
 
   @hasMany(() => Project)
   public projects: HasMany<typeof Project>
+
+  @hasMany(() => Message)
+  public messages: HasMany<typeof Message>
 
   @beforeSave()
   public static async beforeSave(profile: Profile) {
