@@ -2,16 +2,19 @@ import {
   BaseModel,
   BelongsTo,
   HasMany,
+  HasManyThrough,
   beforeSave,
   belongsTo,
   column,
   hasMany,
+  hasManyThrough,
 } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 import Contact from './Contact'
 import User from './User'
 import Skill from './Skill'
 import Project from './Project'
+import Membership from './Membership'
 
 export default class Profile extends BaseModel {
   @column({ isPrimary: true })
@@ -23,10 +26,10 @@ export default class Profile extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
 
-  @column()
+  @column.dateTime()
   public verifiedAt: DateTime | null
 
-  @column()
+  @column.dateTime()
   public publishedAt: DateTime | null
 
   @column()
@@ -53,8 +56,8 @@ export default class Profile extends BaseModel {
   @hasMany(() => Skill)
   public skills: HasMany<typeof Skill>
 
-  @hasMany(() => Project)
-  public projects: HasMany<typeof Project>
+  @hasMany(() => Membership)
+  public memberships: HasMany<typeof Membership>
 
   @beforeSave()
   public static async resetValidationDate(profile: Profile) {

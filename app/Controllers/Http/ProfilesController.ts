@@ -8,10 +8,15 @@ import ProfilesUpdateValidator from 'App/Validators/ProfilesUpdateValidator'
 import { DateTime } from 'luxon'
 
 export default class ProfilesController {
-  public async index({ request }: HttpContextContract) {
+  public async index({ request, auth }: HttpContextContract) {
     const payload = await request.validate(ProfilesIndexValidator)
 
-    return await Profile.query().whereNotNull('verifiedAt').paginate(payload.page, payload.perPage)
+    return await Profile.query()
+      .whereNotNull('verifiedAt')
+      .whereNotNull('publishedAt')
+      .andWhereNotNull('publishedAt')
+      .orWhere('userId', auth.user?.id!)
+      .paginate(payload.page, payload.perPage)
   }
 
   public async store({ request, auth }: HttpContextContract) {
@@ -25,12 +30,14 @@ export default class ProfilesController {
     }
   }
 
-  public async show({ request }: HttpContextContract) {
+  public async show({ request, auth }: HttpContextContract) {
     const payload = await request.validate(ProfilesShowValidator)
 
     return await Profile.query()
       .where('id', payload.params.profileId)
       .whereNotNull('verifiedAt')
+      .andWhereNotNull('publishedAt')
+      .orWhere('userId', auth.user?.id!)
       .firstOrFail()
   }
 
@@ -42,14 +49,9 @@ export default class ProfilesController {
     if (auth.user) {
       if (profile.userId === auth.user.id) {
         profile.merge({
+          publishedAt: isPublished ? DateTime.now() : null,
           ...payload,
         })
-
-        if (isPublished) {
-          profile.merge({
-            publishedAt: DateTime.now(),
-          })
-        }
 
         return await profile.save()
       }

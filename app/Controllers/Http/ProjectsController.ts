@@ -1,6 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import Membership from 'App/Models/Membership'
 import Project from 'App/Models/Project'
-import ProjectsDestroyValidator from 'App/Validators/ProjectsDestroyValidator'
 import ProjectsIndexValidator from 'App/Validators/ProjectsIndexValidator'
 import ProjectsShowValidator from 'App/Validators/ProjectsShowValidator'
 import ProjectsStoreValidator from 'App/Validators/ProjectsStoreValidator'
@@ -14,17 +14,18 @@ export default class ProjectsController {
   }
 
   public async store({ request, auth, response }: HttpContextContract) {
-    const payload = await request.validate(ProjectsStoreValidator)
+    const { profileId, ...payload } = await request.validate(ProjectsStoreValidator)
 
     if (auth.user) {
-      const profile = await auth.user
-        .related('profiles')
-        .query()
-        .where('id', payload.profileId)
-        .first()
+      const profile = await auth.user.related('profiles').query().where('id', profileId).first()
 
       if (profile) {
-        const project = await profile.related('projects').create(payload)
+        const project = await Project.create(payload)
+
+        await profile.related('memberships').create({
+          projectId: project.id,
+          type: 'ADMIN',
+        })
 
         return project
       }
@@ -50,51 +51,45 @@ export default class ProjectsController {
 
     const project = await Project.findOrFail(payload.params.projectId)
 
-    if (auth.user) {
-      const profile = await auth.user
-        .related('profiles')
-        .query()
-        .where('id', project.profileId)
-        .first()
+    const membership = await Membership.query()
+      .where('projectId', project.id)
+      .andWhere('userId', auth.user?.id!)
+      .firstOrFail()
 
-      if (profile) {
-        project.merge(payload)
-        return await project.save()
-      }
-
-      return response.forbidden({
-        errors: [
-          {
-            message: 'You are not authorized to perform this action',
-          },
-        ],
-      })
+    if (membership.type === 'ADMIN') {
+      project.merge(payload)
+      return await project.save()
     }
+
+    return response.forbidden({
+      errors: [
+        {
+          message: 'You are not authorized to perform this action',
+        },
+      ],
+    })
   }
 
   public async destroy({ request, auth, response }: HttpContextContract) {
-    const payload = await request.validate(ProjectsDestroyValidator)
+    const payload = await request.validate(ProjectsUpdateValidator)
 
     const project = await Project.findOrFail(payload.params.projectId)
 
-    if (auth.user) {
-      const profile = await auth.user
-        .related('profiles')
-        .query()
-        .where('id', project.profileId)
-        .first()
+    const membership = await Membership.query()
+      .where('projectId', project.id)
+      .andWhere('userId', auth.user?.id!)
+      .firstOrFail()
 
-      if (profile) {
-        return await project.delete()
-      }
-
-      return response.forbidden({
-        errors: [
-          {
-            message: 'You are not authorized to perform this action',
-          },
-        ],
-      })
+    if (membership.type === 'ADMIN') {
+      return await project.delete()
     }
+
+    return response.forbidden({
+      errors: [
+        {
+          message: 'You are not authorized to perform this action',
+        },
+      ],
+    })
   }
 }
