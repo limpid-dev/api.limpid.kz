@@ -1,44 +1,42 @@
-import Mail from '@ioc:Adonis/Addons/Mail'
 import { string } from '@ioc:Adonis/Core/Helpers'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import VerifyEmail from 'App/Mailers/VerifyEmail'
 import Token from 'App/Models/Token'
-import User from 'App/Models/User'
-import VerificationStoreValidator from 'App/Validators/VerificationStoreValidator'
 import VerificationUpdateValidator from 'App/Validators/VerificationUpdateValidator'
 import { DateTime } from 'luxon'
 
 export default class VerificationController {
-  public async store({ request, auth }: HttpContextContract) {
-    const payload = await request.validate(VerificationStoreValidator)
+  public async store({ auth, bouncer }: HttpContextContract) {
+    const user = auth.user!
 
-    const user = await User.findByOrFail('email', payload.email)
+    await bouncer.with('VerificationPolicy').authorize('store')
 
-    await user.related('tokens').query().where('type', 'VERIFICATION').delete()
+    await Token.query().where('userId', user.id).where('type', 'VERIFICATION').delete()
 
     const token = string.generateRandom(64)
 
-    await user.related('tokens').create({
+    await Token.create({
       expiredAt: DateTime.now().plus({ hours: 1 }),
       type: 'VERIFICATION',
       token,
+      userId: user.id,
     })
 
-    await Mail.sendLater((message) => {
-      message.from('info@limpid.kz').to(auth.user!.email).subject('Email verification').text(token)
-    })
+    await new VerifyEmail(user, token).sendLater()
   }
 
-  public async update({ request }: HttpContextContract) {
+  public async update({ request, bouncer }: HttpContextContract) {
     const payload = await request.validate(VerificationUpdateValidator)
 
-    const token = await Token.query()
-      .where('token', payload.token)
-      .andWhere('type', 'VERIFICATION')
-      .andWhere('expiredAt', '>', DateTime.now().toSQL())
-      .preload('user')
-      .firstOrFail()
+    const token = await Token.findByOrFail('token', payload.token)
 
-    await token.user.merge({ verifiedAt: DateTime.now() }).save()
+    await bouncer.with('VerificationPolicy').authorize('update', token)
+
+    const user = await token.related('user').query().firstOrFail()
+
+    user.merge({ verifiedAt: DateTime.now() })
+
+    await user.save()
 
     await token.delete()
   }
