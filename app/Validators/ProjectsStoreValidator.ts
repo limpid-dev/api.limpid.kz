@@ -30,6 +30,25 @@ export default class ProjectsStoreValidator {
     location: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
     industry: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
     stage: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(64)]),
+    requiredMoneyAmount: schema.number([]),
+    ownedMoneyAmount: schema.number([]),
+    requiredIntellectualResources: schema.string({ trim: true }, [
+      rules.minLength(1),
+      rules.maxLength(1024),
+    ]),
+    ownedIntellectualResources: schema.string({ trim: true }, [
+      rules.minLength(1),
+      rules.maxLength(1024),
+    ]),
+    requiredMaterialResources: schema.string({ trim: true }, [
+      rules.minLength(1),
+      rules.maxLength(1024),
+    ]),
+    ownedMaterialResources: schema.string({ trim: true }, [
+      rules.minLength(1),
+      rules.maxLength(1024),
+    ]),
+    profitability: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(1024)]),
   })
 
   /**
