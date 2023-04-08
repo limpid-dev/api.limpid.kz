@@ -25,7 +25,6 @@ export default class extends BaseSchema {
       table.timestamp('created_at', { useTz: true }).notNullable()
       table.timestamp('updated_at', { useTz: true }).notNullable()
       table.timestamp('verified_at', { useTz: true }).nullable()
-      table.timestamp('published_at', { useTz: true }).nullable()
     })
   }
 

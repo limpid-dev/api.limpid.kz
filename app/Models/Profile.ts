@@ -2,18 +2,15 @@ import {
   BaseModel,
   BelongsTo,
   HasMany,
-  HasManyThrough,
   beforeSave,
   belongsTo,
   column,
   hasMany,
-  hasManyThrough,
 } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 import Contact from './Contact'
 import User from './User'
 import Skill from './Skill'
-import Project from './Project'
 import Membership from './Membership'
 
 export default class Profile extends BaseModel {
@@ -28,9 +25,6 @@ export default class Profile extends BaseModel {
 
   @column.dateTime()
   public verifiedAt: DateTime | null
-
-  @column.dateTime()
-  public publishedAt: DateTime | null
 
   @column()
   public title: string
@@ -60,8 +54,8 @@ export default class Profile extends BaseModel {
   public memberships: HasMany<typeof Membership>
 
   @beforeSave()
-  public static async resetValidationDate(profile: Profile) {
-    if (profile.$dirty.publishedAt) {
+  public static async beforeSave(profile: Profile) {
+    if (profile.$isDirty) {
       profile.verifiedAt = null
     }
   }

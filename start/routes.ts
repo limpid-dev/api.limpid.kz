@@ -47,6 +47,4 @@ Route.group(() => {
   Route.resource('projects', 'ProjectsController').apiOnly()
 
   Route.resource('projects.memberships', 'MembershipsController').apiOnly()
-})
-  .middleware('auth')
-  .middleware('verification')
+}).middleware('auth')

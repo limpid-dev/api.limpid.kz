@@ -1,89 +1,63 @@
+import { bind } from '@adonisjs/route-model-binding'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Profile from 'App/Models/Profile'
-import ProfilesDestroyValidator from 'App/Validators/ProfilesDestroyValidator'
-import ProfilesIndexValidator from 'App/Validators/ProfilesIndexValidator'
-import ProfilesShowValidator from 'App/Validators/ProfilesShowValidator'
+import PaginationValidator from 'App/Validators/PaginationValidator'
 import ProfilesStoreValidator from 'App/Validators/ProfilesStoreValidator'
 import ProfilesUpdateValidator from 'App/Validators/ProfilesUpdateValidator'
-import { DateTime } from 'luxon'
 
 export default class ProfilesController {
   public async index({ request, auth }: HttpContextContract) {
-    const payload = await request.validate(ProfilesIndexValidator)
+    const user = auth.user!
+    const payload = await request.validate(PaginationValidator)
 
     return await Profile.query()
       .whereNotNull('verifiedAt')
-      .whereNotNull('publishedAt')
-      .andWhereNotNull('publishedAt')
-      .orWhere('userId', auth.user?.id!)
+      .orWhere('userId', user.id)
       .paginate(payload.page, payload.perPage)
   }
 
-  public async store({ request, auth }: HttpContextContract) {
+  public async store({ bouncer, request, auth }: HttpContextContract) {
+    await bouncer.with('ProfilePolicy').authorize('create')
+
+    const user = auth.user!
     const payload = await request.validate(ProfilesStoreValidator)
 
-    if (auth.user) {
-      return Profile.create({
-        userId: auth.user.id,
-        ...payload,
-      })
+    const profile = await Profile.create({
+      userId: user.id,
+      ...payload,
+    })
+
+    return {
+      data: profile,
     }
   }
 
-  public async show({ request, auth }: HttpContextContract) {
-    const payload = await request.validate(ProfilesShowValidator)
+  @bind()
+  public async show({ bouncer }: HttpContextContract, profile: Profile) {
+    await bouncer.with('ProfilePolicy').authorize('view', profile)
 
-    return await Profile.query()
-      .where('id', payload.params.profileId)
-      .whereNotNull('verifiedAt')
-      .andWhereNotNull('publishedAt')
-      .orWhere('userId', auth.user?.id!)
-      .firstOrFail()
+    return { data: profile }
   }
 
-  public async update({ request, auth, response }: HttpContextContract) {
-    const { params, isPublished, ...payload } = await request.validate(ProfilesUpdateValidator)
+  @bind()
+  public async update({ bouncer, request }: HttpContextContract, profile: Profile) {
+    await bouncer.with('ProfilePolicy').authorize('update', profile)
 
-    const profile = await Profile.findByOrFail('id', params.profileId)
+    const payload = await request.validate(ProfilesUpdateValidator)
 
-    if (auth.user) {
-      if (profile.userId === auth.user.id) {
-        profile.merge({
-          publishedAt: isPublished ? DateTime.now() : null,
-          ...payload,
-        })
+    const mergedProfile = profile.merge(payload)
 
-        return await profile.save()
-      }
+    const savedProfile = await mergedProfile.save()
 
-      return response.forbidden({
-        errors: [
-          {
-            message: 'You are not authorized to update this profile',
-          },
-        ],
-      })
+    return {
+      data: savedProfile,
     }
   }
 
-  public async destroy({ request, auth, response }: HttpContextContract) {
-    const payload = await request.validate(ProfilesDestroyValidator)
+  @bind()
+  public async destroy({ bouncer }: HttpContextContract, profile: Profile) {
+    await bouncer.with('ProfilePolicy').authorize('delete', profile)
 
-    if (auth.user) {
-      const profile = await Profile.findByOrFail('id', payload.params.profileId)
-
-      if (profile.userId === auth.user.id) {
-        await profile.delete()
-        return response.gone()
-      }
-
-      return response.forbidden({
-        errors: [
-          {
-            message: 'You are not authorized to delete this profile',
-          },
-        ],
-      })
-    }
+    await profile.delete()
   }
 }

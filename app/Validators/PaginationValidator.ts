@@ -25,7 +25,7 @@ export default class PaginationValidator {
    */
   public schema = schema.create({
     page: schema.number([rules.unsigned()]),
-    perPage: schema.number([rules.unsigned(), rules.minLength(1), rules.maxLength(128)]),
+    perPage: schema.number([rules.unsigned(), rules.range(1, 100)]),
   })
 
   /**
