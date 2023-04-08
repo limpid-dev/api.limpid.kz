@@ -1,3 +1,4 @@
+import { bind } from '@adonisjs/route-model-binding'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import User from 'App/Models/User'
 import UsersStoreValidator from 'App/Validators/UsersStoreValidator'
@@ -7,18 +8,18 @@ export default class UsersController {
   public async store({ request }: HttpContextContract) {
     const payload = await request.validate(UsersStoreValidator)
 
-    return User.create(payload)
+    return await User.create(payload)
   }
 
-  public async show({ params }: HttpContextContract) {
-    return User.find(params.id)
+  @bind()
+  public async show({}: HttpContextContract, user: User) {
+    return user
   }
 
-  public async update({ request, params }: HttpContextContract) {
+  @bind()
+  public async update({ request }: HttpContextContract, user: User) {
     const payload = await request.validate(UsersUpdateValidator)
 
-    const user = await User.findOrFail(params.id)
-
-    return user.merge(payload).save()
+    return await user.merge(payload).save()
   }
 }
