@@ -5,12 +5,13 @@ import ProfilesIndexValidator from 'App/Validators/ProfilesIndexValidator'
 import ProfilesShowValidator from 'App/Validators/ProfilesShowValidator'
 import ProfilesStoreValidator from 'App/Validators/ProfilesStoreValidator'
 import ProfilesUpdateValidator from 'App/Validators/ProfilesUpdateValidator'
+import { DateTime } from 'luxon'
 
 export default class ProfilesController {
   public async index({ request }: HttpContextContract) {
     const payload = await request.validate(ProfilesIndexValidator)
 
-    return await Profile.query().paginate(payload.page, payload.perPage)
+    return await Profile.query().whereNotNull('verifiedAt').paginate(payload.page, payload.perPage)
   }
 
   public async store({ request, auth }: HttpContextContract) {
@@ -27,11 +28,14 @@ export default class ProfilesController {
   public async show({ request }: HttpContextContract) {
     const payload = await request.validate(ProfilesShowValidator)
 
-    return await Profile.findByOrFail('id', payload.params.profileId)
+    return await Profile.query()
+      .where('id', payload.params.profileId)
+      .whereNotNull('verifiedAt')
+      .firstOrFail()
   }
 
   public async update({ request, auth, response }: HttpContextContract) {
-    const { params, ...payload } = await request.validate(ProfilesUpdateValidator)
+    const { params, isPublished, ...payload } = await request.validate(ProfilesUpdateValidator)
 
     const profile = await Profile.findByOrFail('id', params.profileId)
 
@@ -40,6 +44,13 @@ export default class ProfilesController {
         profile.merge({
           ...payload,
         })
+
+        if (isPublished) {
+          profile.merge({
+            publishedAt: DateTime.now(),
+          })
+        }
+
         return await profile.save()
       }
 

@@ -1,4 +1,12 @@
-import { BaseModel, BelongsTo, HasMany, belongsTo, column, hasMany } from '@ioc:Adonis/Lucid/Orm'
+import {
+  BaseModel,
+  BelongsTo,
+  HasMany,
+  beforeSave,
+  belongsTo,
+  column,
+  hasMany,
+} from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 import Contact from './Contact'
 import User from './User'
@@ -47,4 +55,11 @@ export default class Profile extends BaseModel {
 
   @hasMany(() => Project)
   public projects: HasMany<typeof Project>
+
+  @beforeSave()
+  public static async resetValidationDate(profile: Profile) {
+    if (profile.$dirty.publishedAt) {
+      profile.verifiedAt = null
+    }
+  }
 }
