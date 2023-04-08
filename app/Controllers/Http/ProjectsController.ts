@@ -47,13 +47,15 @@ export default class ProjectsController {
   }
 
   public async update({ request, auth, response }: HttpContextContract) {
-    const payload = await request.validate(ProjectsUpdateValidator)
+    const { params, ...payload } = await request.validate(ProjectsUpdateValidator)
 
-    const project = await Project.findOrFail(payload.params.projectId)
+    const project = await Project.findOrFail(params.projectId)
 
     const membership = await Membership.query()
       .where('projectId', project.id)
-      .andWhere('userId', auth.user?.id!)
+      .preload('profile', (profileQuery) => {
+        profileQuery.where('userId', auth.user?.id!)
+      })
       .firstOrFail()
 
     if (membership.type === 'ADMIN') {
@@ -77,7 +79,9 @@ export default class ProjectsController {
 
     const membership = await Membership.query()
       .where('projectId', project.id)
-      .andWhere('userId', auth.user?.id!)
+      .preload('profile', (profileQuery) => {
+        profileQuery.where('userId', auth.user?.id!)
+      })
       .firstOrFail()
 
     if (membership.type === 'ADMIN') {
