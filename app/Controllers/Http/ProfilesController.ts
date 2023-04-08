@@ -45,12 +45,12 @@ export default class ProfilesController {
 
     const payload = await request.validate(ProfilesUpdateValidator)
 
-    const mergedProfile = profile.merge(payload)
+    profile.merge(payload)
 
-    const savedProfile = await mergedProfile.save()
+    await profile.save()
 
     return {
-      data: savedProfile,
+      data: profile,
     }
   }
 

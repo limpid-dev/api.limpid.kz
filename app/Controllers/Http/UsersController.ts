@@ -22,10 +22,10 @@ export default class UsersController {
   public async update({ request }: HttpContextContract, user: User) {
     const payload = await request.validate(UsersUpdateValidator)
 
-    const mergedUser = user.merge(payload)
+    user.merge(payload)
 
-    const savedUser = await mergedUser.save()
+    await user.save()
 
-    return { data: savedUser }
+    return { data: user }
   }
 }

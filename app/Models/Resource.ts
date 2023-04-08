@@ -1,5 +1,13 @@
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import {
+  BaseModel,
+  BelongsTo,
+  beforeCreate,
+  beforeSave,
+  belongsTo,
+  column,
+} from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
+import Profile from './Profile'
 
 export type Type = 'MATERIAL' | 'INTELLECTUAL'
 
@@ -13,6 +21,9 @@ export default class Resource extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
 
+  @column.dateTime()
+  public verifiedAt: DateTime | null
+
   @column()
   public type: Type
 
@@ -21,4 +32,17 @@ export default class Resource extends BaseModel {
 
   @column()
   public description: string
+
+  @column()
+  public profileId: number
+
+  @belongsTo(() => Profile)
+  public profile: BelongsTo<typeof Profile>
+
+  @beforeSave()
+  public static async beforeSave(resource: Resource) {
+    if (resource.$isDirty) {
+      resource.verifiedAt = null
+    }
+  }
 }

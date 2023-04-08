@@ -21,30 +21,41 @@
 import Route from '@ioc:Adonis/Core/Route'
 
 Route.post('users', 'UsersController.store')
-Route.get('users/:user', 'UsersController.show').middleware('auth')
-Route.patch('users/:user', 'UsersController.update').middleware('auth')
-
-Route.post('session', 'SessionController.store')
-Route.get('session', 'SessionController.show').middleware('auth')
-Route.delete('session', 'SessionController.destroy').middleware('auth')
 
 Route.post('recovery', 'RecoveryController.store')
 Route.patch('recovery', 'RecoveryController.update')
 
-Route.post('verification', 'VerificationController.store').middleware('auth')
-Route.patch('verification', 'VerificationController.update').middleware('auth')
+Route.post('session', 'SessionController.store')
 
 Route.group(() => {
-  Route.resource('profiles', 'ProfilesController').apiOnly()
+  Route.get('users/:user', 'UsersController.show')
+  Route.patch('users/:user', 'UsersController.update')
 
-  Route.resource('profiles.resources', 'ResourcesController').apiOnly()
-  Route.resource('profiles.contacts', 'ContactsController').apiOnly()
-  Route.resource('profiles.educations', 'EducationsController').apiOnly()
-  Route.resource('profiles.experiences', 'ExperiencesController').apiOnly()
-  Route.resource('profiles.certificates', 'CertificatesController').apiOnly()
-  Route.resource('profiles.skills', 'SkillsController').apiOnly()
+  Route.get('session', 'SessionController.show')
+  Route.delete('session', 'SessionController.destroy')
 
-  Route.resource('projects', 'ProjectsController').apiOnly()
+  Route.post('verification', 'VerificationController.store')
+  Route.patch('verification', 'VerificationController.update')
 
-  Route.resource('projects.memberships', 'MembershipsController').apiOnly()
+  Route.get('profiles', 'ProfilesController.index')
+  Route.post('profiles', 'ProfilesController.store')
+  Route.get('profiles/:profile', 'ProfilesController.show')
+  Route.patch('profiles/:profile', 'ProfilesController.update')
+  Route.delete('profiles/:profile', 'ProfilesController.destroy')
+
+  Route.get('profiles/:profile/resources', 'ResourcesController.index')
+  Route.post('profiles/:profile/resources', 'ResourcesController.store')
+  Route.get('profiles/:profile/resources/:>resource', 'ResourcesController.show')
+  Route.patch('profiles/:profile/resources/:>resource', 'ResourcesController.update')
+  Route.delete('profiles/:profile/resources/:>resource', 'ResourcesController.destroy')
+
+  // Route.resource('profiles.contacts', 'ContactsController').apiOnly()
+  // Route.resource('profiles.educations', 'EducationsController').apiOnly()
+  // Route.resource('profiles.experiences', 'ExperiencesController').apiOnly()
+  // Route.resource('profiles.certificates', 'CertificatesController').apiOnly()
+  // Route.resource('profiles.skills', 'SkillsController').apiOnly()
+
+  // Route.resource('projects', 'ProjectsController').apiOnly()
+
+  // Route.resource('projects.memberships', 'MembershipsController').apiOnly()
 }).middleware('auth')

@@ -1,83 +1,66 @@
+import { bind } from '@adonisjs/route-model-binding'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Profile from 'App/Models/Profile'
 import Resource from 'App/Models/Resource'
-import ResourcesDestroyValidator from 'App/Validators/ResourcesDestroyValidator'
-import ResourcesIndexValidator from 'App/Validators/ResourcesIndexValidator'
+import PaginationValidator from 'App/Validators/PaginationValidator'
 import ResourcesStoreValidator from 'App/Validators/ResourcesStoreValidator'
 import ResourcesUpdateValidator from 'App/Validators/ResourcesUpdateValidator'
 
 export default class ResourcesController {
-  public async index({ request }: HttpContextContract) {
-    const { params, ...payload } = await request.validate(ResourcesIndexValidator)
-    const profile = await Profile.findOrFail(params.profileId)
+  @bind()
+  public async index({ bouncer, request }: HttpContextContract, profile: Profile) {
+    await bouncer.with('ResourcePolicy').authorize('viewList', profile)
+
+    const payload = await request.validate(PaginationValidator)
 
     return await profile.related('resources').query().paginate(payload.page, payload.perPage)
   }
 
-  public async store({ request, auth, response }: HttpContextContract) {
-    const { params, ...payload } = await request.validate(ResourcesStoreValidator)
+  @bind()
+  public static async show({ bouncer }: HttpContextContract, profile: Profile, resource: Resource) {
+    await bouncer.with('ResourcePolicy').authorize('view', profile)
 
-    if (auth.user) {
-      const profile = await Profile.findOrFail(params.profileId)
-
-      if (profile.userId === auth.user.id) {
-        return Resource.create({ profileId: params.profileId, ...payload })
-      }
+    return {
+      data: resource,
     }
-
-    return response.forbidden({
-      errors: [
-        {
-          message: 'You are not allowed to create a resource for this profile',
-        },
-      ],
-    })
   }
 
-  public async update({ request, auth, response }: HttpContextContract) {
-    const { params, ...payload } = await request.validate(ResourcesUpdateValidator)
+  @bind()
+  public async store({ bouncer, request }: HttpContextContract, profile: Profile) {
+    await bouncer.with('ResourcePolicy').authorize('create', profile)
 
-    if (auth.user) {
-      const profile = await Profile.findOrFail(params.profileId)
+    const payload = await request.validate(ResourcesStoreValidator)
 
-      if (profile.userId === auth.user.id) {
-        const resource = await Resource.findByOrFail('id', params.resourceId)
+    const resource = await profile.related('resources').create(payload)
 
-        resource.merge(payload)
-
-        return await resource.save()
-      }
+    return {
+      data: resource,
     }
-    return response.forbidden({
-      errors: [
-        {
-          message: 'You are not allowed to update this resource',
-        },
-      ],
-    })
   }
 
-  public async destroy({ request, auth, response }: HttpContextContract) {
-    const { params } = await request.validate(ResourcesDestroyValidator)
+  @bind()
+  public async update(
+    { bouncer, request }: HttpContextContract,
+    profile: Profile,
+    resource: Resource
+  ) {
+    await bouncer.with('ResourcePolicy').authorize('update', profile)
 
-    if (auth.user) {
-      const profile = await Profile.findOrFail(params.profileId)
+    const payload = await request.validate(ResourcesUpdateValidator)
 
-      if (profile.userId === auth.user.id) {
-        const resource = await Resource.findByOrFail('id', params.resourceId)
+    resource.merge(payload)
 
-        await resource.delete()
+    await resource.save()
 
-        return response.gone()
-      }
+    return {
+      data: resource,
     }
+  }
 
-    return response.forbidden({
-      errors: [
-        {
-          message: 'You are not allowed to delete this resource',
-        },
-      ],
-    })
+  @bind()
+  public async destroy({ bouncer }: HttpContextContract, profile: Profile, resource: Resource) {
+    await bouncer.with('ResourcePolicy').authorize('delete', profile)
+
+    await resource.delete()
   }
 }
