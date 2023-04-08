@@ -11,7 +11,7 @@ export default class UsersController {
   }
 
   public async show({ params }: HttpContextContract) {
-    return User.findOrFail(params.id)
+    return User.find(params.id)
   }
 
   public async update({ request, params }: HttpContextContract) {

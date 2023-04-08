@@ -17,7 +17,7 @@ export default class User extends BaseModel {
   @column.dateTime()
   public verifiedAt: DateTime | null
 
-  @column.dateTime()
+  @column.date()
   public bornAt: DateTime
 
   @column()
