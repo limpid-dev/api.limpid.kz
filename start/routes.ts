@@ -20,11 +20,9 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 
-Route.resource('users', 'UsersController').only(['store', 'show', 'update']).middleware({
-  store: 'guest',
-  show: 'auth',
-  update: 'auth',
-})
+Route.post('users', 'UsersController.store').middleware('guest')
+Route.get('users/:id', 'UsersController.show').middleware('auth')
+Route.patch('users/:id', 'UsersController.update').middleware('auth')
 
 Route.post('session', 'SessionController.store').middleware('guest')
 Route.get('session', 'SessionController.show').middleware('auth')
