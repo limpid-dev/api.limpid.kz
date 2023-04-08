@@ -1,4 +1,3 @@
-import { Attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Certificate from 'App/Models/Certificate'
 import Profile from 'App/Models/Profile'
@@ -25,7 +24,6 @@ export default class CertificatesController {
       if (profile.userId === auth.user.id) {
         return await Certificate.create({
           profileId: params.profileId,
-          attachment: Attachment.fromFile(attachment),
           ...payload,
         })
       }
@@ -45,7 +43,6 @@ export default class CertificatesController {
 
         return await certificate
           .merge({
-            attachment: attachment ? Attachment.fromFile(attachment) : certificate.attachment,
             ...payload,
           })
           .save()

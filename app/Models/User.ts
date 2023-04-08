@@ -1,9 +1,8 @@
-import { DateTime } from 'luxon'
 import Hash from '@ioc:Adonis/Core/Hash'
-import { column, beforeSave, BaseModel, hasMany, HasMany, computed } from '@ioc:Adonis/Lucid/Orm'
-import Token from './Token'
-import { AttachmentContract, attachment } from '@ioc:Adonis/Addons/AttachmentLite'
+import { BaseModel, HasMany, beforeSave, column, hasMany } from '@ioc:Adonis/Lucid/Orm'
+import { DateTime } from 'luxon'
 import Profile from './Profile'
+import Token from './Token'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -17,11 +16,6 @@ export default class User extends BaseModel {
 
   @column({ serializeAs: null })
   public rememberMeToken: string | null
-
-  @attachment({
-    preComputeUrl: true,
-  })
-  public avatar: AttachmentContract | null
 
   @column()
   public firstName: string

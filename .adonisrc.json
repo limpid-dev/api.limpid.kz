@@ -28,7 +28,6 @@
     "@adonisjs/mail",
     "@adonisjs/session",
     "@adonisjs/shield",
-    "@adonisjs/attachment-lite",
     "@adonisjs/bouncer"
   ],
   "metaFiles": [

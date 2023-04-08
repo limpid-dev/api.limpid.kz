@@ -17,7 +17,6 @@ export default class extends BaseSchema {
       table.string('title', 64).notNullable()
       table.string('description', 256).notNullable()
       table.string('institution', 64).notNullable()
-      table.json('attachment').notNullable()
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
