@@ -3,13 +3,13 @@ import { string } from '@ioc:Adonis/Core/Helpers'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Token from 'App/Models/Token'
 import User from 'App/Models/User'
-import RecoveryStoreValidator from 'App/Validators/RecoveryStoreValidator'
-import RecoveryUpdateValidator from 'App/Validators/RecoveryUpdateValidator'
+import RecoveriesStoreValidator from 'App/Validators/RecoveriesStoreValidator'
+import RecoveriesUpdateValidator from 'App/Validators/RecoveriesUpdateValidator'
 import { DateTime } from 'luxon'
 
-export default class RecoveryController {
+export default class RecoveriesController {
   public async store({ request }: HttpContextContract) {
-    const payload = await request.validate(RecoveryStoreValidator)
+    const payload = await request.validate(RecoveriesStoreValidator)
 
     const user = await User.findByOrFail('email', payload.email)
 
@@ -29,7 +29,7 @@ export default class RecoveryController {
   }
 
   public async update({ request }: HttpContextContract) {
-    const payload = await request.validate(RecoveryUpdateValidator)
+    const payload = await request.validate(RecoveriesUpdateValidator)
 
     const token = await Token.query()
       .where('token', payload.params.token)
@@ -39,6 +39,6 @@ export default class RecoveryController {
       .firstOrFail()
 
     await token.user.merge({ password: payload.password }).save()
-    return await token.delete()
+    await token.delete()
   }
 }

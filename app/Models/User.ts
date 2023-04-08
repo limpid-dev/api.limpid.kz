@@ -38,11 +38,6 @@ export default class User extends BaseModel {
   @column.dateTime()
   public verifiedAt: DateTime | null
 
-  @computed()
-  public get isVerified() {
-    return !!this.verifiedAt
-  }
-
   @hasMany(() => Token)
   public tokens: HasMany<typeof Token>
 

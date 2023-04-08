@@ -32,11 +32,11 @@ Route.resource('sessions', 'SessionsController').only(['store', 'show', 'destroy
   destroy: 'auth',
 })
 
-Route.resource('recoveries', 'RecoveriesController').only(['store', 'show']).middleware({
+Route.resource('recoveries', 'RecoveriesController').only(['store', 'update']).middleware({
   '*': 'guest',
 })
 
-Route.resource('verifications', 'VerificationsController').only(['store', 'show']).middleware({
+Route.resource('verifications', 'VerificationsController').only(['store', 'update']).middleware({
   '*': 'auth',
 })
 
