@@ -1,99 +1,62 @@
+import { bind } from '@adonisjs/route-model-binding'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Membership from 'App/Models/Membership'
+import Profile from 'App/Models/Profile'
 import Project from 'App/Models/Project'
-import ProjectsIndexValidator from 'App/Validators/ProjectsIndexValidator'
-import ProjectsShowValidator from 'App/Validators/ProjectsShowValidator'
+import PaginationValidator from 'App/Validators/PaginationValidator'
+import ProjectsDestroyValidator from 'App/Validators/ProjectsDestroyValidator'
 import ProjectsStoreValidator from 'App/Validators/ProjectsStoreValidator'
 import ProjectsUpdateValidator from 'App/Validators/ProjectsUpdateValidator'
 
 export default class ProjectsController {
-  public async index({ request }: HttpContextContract) {
-    const payload = await request.validate(ProjectsIndexValidator)
+  public async index({ bouncer, request }: HttpContextContract) {
+    await bouncer.with('ProjectPolicy').authorize('viewList')
+    const payload = await request.validate(PaginationValidator)
 
-    return Project.query().paginate(payload.page, payload.perPage)
+    return await Project.query().paginate(payload.page, payload.perPage)
   }
 
-  public async store({ request, auth, response }: HttpContextContract) {
+  public async store({ bouncer, request }: HttpContextContract) {
     const { profileId, ...payload } = await request.validate(ProjectsStoreValidator)
 
-    if (auth.user) {
-      const profile = await auth.user.related('profiles').query().where('id', profileId).first()
+    const profile = await Profile.findOrFail(profileId)
 
-      if (profile) {
-        const project = await Project.create(payload)
+    await bouncer.with('ProjectPolicy').authorize('create', profile)
 
-        await profile.related('memberships').create({
-          projectId: project.id,
-          type: 'ADMIN',
-        })
+    const project = await profile.related('projects').create(payload)
 
-        return project
-      }
-
-      return response.forbidden({
-        errors: [
-          {
-            message: 'You are not authorized to perform this action',
-          },
-        ],
-      })
-    }
+    return { data: project }
   }
 
-  public async show({ request }: HttpContextContract) {
-    const payload = await request.validate(ProjectsShowValidator)
+  @bind()
+  public async show({ bouncer }: HttpContextContract, project: Project) {
+    await bouncer.with('ProjectPolicy').authorize('view')
 
-    return Project.findOrFail(payload.params.projectId)
+    return { data: project }
   }
 
-  public async update({ request, auth, response }: HttpContextContract) {
-    const { params, ...payload } = await request.validate(ProjectsUpdateValidator)
+  @bind()
+  public async update({ request, bouncer }: HttpContextContract, project: Project) {
+    const { profileId, ...payload } = await request.validate(ProjectsUpdateValidator)
 
-    const project = await Project.findOrFail(params.projectId)
+    const profile = await Profile.findOrFail(profileId)
 
-    const membership = await Membership.query()
-      .where('projectId', project.id)
-      .preload('profile', (profileQuery) => {
-        profileQuery.where('userId', auth.user?.id!)
-      })
-      .firstOrFail()
+    await bouncer.with('ProjectPolicy').authorize('update', profile, project)
 
-    if (membership.type === 'ADMIN') {
-      project.merge(payload)
-      return await project.save()
-    }
+    project.merge(payload)
 
-    return response.forbidden({
-      errors: [
-        {
-          message: 'You are not authorized to perform this action',
-        },
-      ],
-    })
+    await project.save()
+
+    return { data: project }
   }
 
-  public async destroy({ request, auth, response }: HttpContextContract) {
-    const payload = await request.validate(ProjectsUpdateValidator)
+  @bind()
+  public async destroy({ request, bouncer }: HttpContextContract, project: Project) {
+    const payload = await request.validate(ProjectsDestroyValidator)
 
-    const project = await Project.findOrFail(payload.params.projectId)
+    const profile = await Profile.findOrFail(payload.profileId)
 
-    const membership = await Membership.query()
-      .where('projectId', project.id)
-      .preload('profile', (profileQuery) => {
-        profileQuery.where('userId', auth.user?.id!)
-      })
-      .firstOrFail()
+    await bouncer.with('ProjectPolicy').authorize('delete', profile, project)
 
-    if (membership.type === 'ADMIN') {
-      return await project.delete()
-    }
-
-    return response.forbidden({
-      errors: [
-        {
-          message: 'You are not authorized to perform this action',
-        },
-      ],
-    })
+    await project.delete()
   }
 }

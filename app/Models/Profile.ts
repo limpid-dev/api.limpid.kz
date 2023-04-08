@@ -6,17 +6,17 @@ import {
   belongsTo,
   column,
   hasMany,
-  hasManyThrough,
 } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
+import Certificate from './Certificate'
 import Contact from './Contact'
-import User from './User'
-import Skill from './Skill'
+import Education from './Education'
+import Experience from './Experience'
 import Membership from './Membership'
 import Resource from './Resource'
-import Education from './Education'
-import Certificate from './Certificate'
-import Experience from './Experience'
+import Skill from './Skill'
+import User from './User'
+import Project from './Project'
 
 export default class Profile extends BaseModel {
   @column({ isPrimary: true })
@@ -69,6 +69,9 @@ export default class Profile extends BaseModel {
 
   @hasMany(() => Experience)
   public experiences: HasMany<typeof Experience>
+
+  @hasMany(() => Project)
+  public projects: HasMany<typeof Project>
 
   @beforeSave()
   public static async beforeSave(profile: Profile) {

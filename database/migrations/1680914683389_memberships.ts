@@ -20,13 +20,13 @@ export default class extends BaseSchema {
         .inTable('projects')
         .onDelete('CASCADE')
         .notNullable()
-      table.string('type').notNullable()
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */
       table.timestamp('created_at', { useTz: true }).notNullable()
       table.timestamp('updated_at', { useTz: true }).notNullable()
+      table.timestamp('accepted_at', { useTz: true }).nullable()
     })
   }
 

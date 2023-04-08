@@ -85,5 +85,9 @@ Route.group(() => {
   Route.patch('projects/:project', 'ProjectsController.update')
   Route.delete('projects/:project', 'ProjectsController.destroy')
 
-  // Route.resource('projects.memberships', 'MembershipsController').apiOnly()
+  Route.get('projects/:projects/memberships', 'MembershipsController.index')
+  Route.post('projects/:projects/memberships', 'MembershipsController.store')
+  Route.get('projects/:projects/memberships/:>membership', 'MembershipsController.show')
+  Route.patch('projects/:projects/memberships/:>membership', 'MembershipsController.update')
+  Route.delete('projects/:projects/memberships/:>membership', 'MembershipsController.destroy')
 }).middleware('auth')

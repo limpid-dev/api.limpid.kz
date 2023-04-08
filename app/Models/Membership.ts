@@ -3,8 +3,6 @@ import { DateTime } from 'luxon'
 import Profile from './Profile'
 import Project from './Project'
 
-type Type = 'ADMIN' | 'PARTICIPANT' | 'WAITING'
-
 export default class Membership extends BaseModel {
   @column({ isPrimary: true })
   public id: number
@@ -14,6 +12,9 @@ export default class Membership extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  @column.dateTime()
+  public acceptedAt: DateTime | null
 
   @column()
   public profileId: number
@@ -26,7 +27,4 @@ export default class Membership extends BaseModel {
 
   @belongsTo(() => Project)
   public project: BelongsTo<typeof Project>
-
-  @column()
-  public type: Type
 }
