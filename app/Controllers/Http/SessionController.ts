@@ -5,11 +5,15 @@ export default class SessionController {
   public async store({ request, auth }: HttpContextContract) {
     const payload = await request.validate(SessionStoreValidator)
 
-    return await auth.use(payload.mode).attempt(payload.email, payload.password)
+    const attempt = await auth.use(payload.mode).attempt(payload.email, payload.password)
+
+    return {
+      data: attempt,
+    }
   }
 
   public async show({ auth }: HttpContextContract) {
-    return auth.user
+    return { data: auth.user }
   }
 
   public destroy({ auth }: HttpContextContract) {
