@@ -2,30 +2,30 @@ import Mail from '@ioc:Adonis/Addons/Mail'
 import { string } from '@ioc:Adonis/Core/Helpers'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Token from 'App/Models/Token'
-import User from 'App/Models/User'
-import VerificationStoreValidator from 'App/Validators/VerificationStoreValidator'
 import VerificationUpdateValidator from 'App/Validators/VerificationUpdateValidator'
 import { DateTime } from 'luxon'
 
 export default class VerificationController {
-  public async store({ request }: HttpContextContract) {
-    const payload = await request.validate(VerificationStoreValidator)
+  public async store({ auth }: HttpContextContract) {
+    if (auth.user) {
+      await auth.user.related('tokens').query().where('type', 'VERIFICATION').delete()
 
-    const user = await User.findByOrFail('email', payload.email)
+      const token = string.generateRandom(64)
 
-    await user.related('tokens').query().where('type', 'VERIFICATION').delete()
+      await auth.user.related('tokens').create({
+        expiredAt: DateTime.now().plus({ hours: 1 }),
+        type: 'VERIFICATION',
+        token,
+      })
 
-    const token = string.generateRandom(64)
-
-    await user.related('tokens').create({
-      expiredAt: DateTime.now().plus({ hours: 1 }),
-      type: 'VERIFICATION',
-      token,
-    })
-
-    await Mail.sendLater((message) => {
-      message.from('info@limpid.kz').to(user.email).subject('Email verification').text(token)
-    })
+      await Mail.sendLater((message) => {
+        message
+          .from('info@limpid.kz')
+          .to(auth.user!.email)
+          .subject('Email verification')
+          .text(token)
+      })
+    }
   }
 
   public async update({ request }: HttpContextContract) {
@@ -40,6 +40,6 @@ export default class VerificationController {
 
     await token.user.merge({ verifiedAt: DateTime.now() }).save()
 
-    await token.delete()
+    return await token.delete()
   }
 }

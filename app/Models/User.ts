@@ -1,19 +1,8 @@
 import { DateTime } from 'luxon'
 import Hash from '@ioc:Adonis/Core/Hash'
-import {
-  column,
-  beforeSave,
-  BaseModel,
-  hasMany,
-  HasMany,
-  computed,
-  ModelQueryBuilderContract,
-  beforeFind,
-  beforeFetch,
-} from '@ioc:Adonis/Lucid/Orm'
+import { column, beforeSave, BaseModel, hasMany, HasMany, computed } from '@ioc:Adonis/Lucid/Orm'
 import Token from './Token'
 import { AttachmentContract, attachment } from '@ioc:Adonis/Addons/AttachmentLite'
-import Ban from './Ban'
 import Profile from './Profile'
 
 export default class User extends BaseModel {
@@ -54,9 +43,6 @@ export default class User extends BaseModel {
     return !!this.verifiedAt
   }
 
-  @hasMany(() => Ban)
-  public bans: HasMany<typeof Ban>
-
   @hasMany(() => Token)
   public tokens: HasMany<typeof Token>
 
@@ -75,27 +61,5 @@ export default class User extends BaseModel {
     if (user.$dirty.email) {
       user.verifiedAt = null
     }
-  }
-
-  @beforeFind()
-  public static findWithoutBanned(query: ModelQueryBuilderContract<typeof User>) {
-    query.whereNotExists((query) => {
-      query
-        .from('bans')
-        .where('user_id', 'users.id')
-        .andWhere('expired_at', '>', DateTime.now().toSQL())
-        .orWhereNull('expired_at')
-    })
-  }
-
-  @beforeFetch()
-  public static fetchWithoutBanned(query: ModelQueryBuilderContract<typeof User>) {
-    query.whereNotExists((query) => {
-      query
-        .from('bans')
-        .where('user_id', 'users.id')
-        .andWhere('expired_at', '>', DateTime.now().toSQL())
-        .orWhereNull('expired_at')
-    })
   }
 }

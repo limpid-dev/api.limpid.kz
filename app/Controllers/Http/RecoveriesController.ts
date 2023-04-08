@@ -1,11 +1,11 @@
 import Mail from '@ioc:Adonis/Addons/Mail'
+import { string } from '@ioc:Adonis/Core/Helpers'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Token from 'App/Models/Token'
 import User from 'App/Models/User'
 import RecoveryStoreValidator from 'App/Validators/RecoveryStoreValidator'
 import RecoveryUpdateValidator from 'App/Validators/RecoveryUpdateValidator'
 import { DateTime } from 'luxon'
-import { string } from '@ioc:Adonis/Core/Helpers'
 
 export default class RecoveryController {
   public async store({ request }: HttpContextContract) {
@@ -39,6 +39,6 @@ export default class RecoveryController {
       .firstOrFail()
 
     await token.user.merge({ password: payload.password }).save()
-    await token.delete()
+    return await token.delete()
   }
 }
