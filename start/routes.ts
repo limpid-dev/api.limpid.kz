@@ -26,19 +26,15 @@ Route.resource('users', 'UsersController').only(['store', 'show', 'update']).mid
   update: 'auth',
 })
 
-Route.resource('sessions', 'SessionsController').only(['store', 'show', 'destroy']).middleware({
-  store: 'guest',
-  show: 'auth',
-  destroy: 'auth',
-})
+Route.post('session', 'SessionController.store').middleware('guest')
+Route.get('session', 'SessionController.show').middleware('auth')
+Route.delete('session', 'SessionController.destroy').middleware('auth')
 
-Route.resource('recoveries', 'RecoveriesController').only(['store', 'update']).middleware({
-  '*': 'guest',
-})
+Route.post('recovery', 'RecoveryController.store').middleware('guest')
+Route.patch('recovery', 'RecoveryController.update').middleware('guest')
 
-Route.resource('verifications', 'VerificationsController').only(['store', 'update']).middleware({
-  '*': 'auth',
-})
+Route.post('verification', 'VerificationController.store').middleware('auth')
+Route.patch('verification', 'VerificationController.update').middleware('auth')
 
 Route.group(() => {
   Route.resource('profiles', 'ProfilesController').apiOnly()

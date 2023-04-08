@@ -3,13 +3,13 @@ import { string } from '@ioc:Adonis/Core/Helpers'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Token from 'App/Models/Token'
 import User from 'App/Models/User'
-import RecoveriesStoreValidator from 'App/Validators/RecoveriesStoreValidator'
-import RecoveriesUpdateValidator from 'App/Validators/RecoveriesUpdateValidator'
+import RecoveryStoreValidator from 'App/Validators/RecoveryStoreValidator'
+import RecoveryUpdateValidator from 'App/Validators/RecoveryUpdateValidator'
 import { DateTime } from 'luxon'
 
-export default class RecoveriesController {
+export default class RecoveryController {
   public async store({ request }: HttpContextContract) {
-    const payload = await request.validate(RecoveriesStoreValidator)
+    const payload = await request.validate(RecoveryStoreValidator)
 
     const user = await User.findByOrFail('email', payload.email)
 
@@ -29,10 +29,10 @@ export default class RecoveriesController {
   }
 
   public async update({ request }: HttpContextContract) {
-    const payload = await request.validate(RecoveriesUpdateValidator)
+    const payload = await request.validate(RecoveryUpdateValidator)
 
     const token = await Token.query()
-      .where('token', payload.params.token)
+      .where('token', payload.token)
       .andWhere('type', 'RECOVERY')
       .andWhere('expiredAt', '>', DateTime.now().toSQL())
       .preload('user')

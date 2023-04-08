@@ -3,13 +3,13 @@ import { string } from '@ioc:Adonis/Core/Helpers'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Token from 'App/Models/Token'
 import User from 'App/Models/User'
-import VerificationsStoreValidator from 'App/Validators/VerificationsStoreValidator'
-import VerificationsUpdateValidator from 'App/Validators/VerificationsUpdateValidator'
+import VerificationStoreValidator from 'App/Validators/VerificationStoreValidator'
+import VerificationUpdateValidator from 'App/Validators/VerificationUpdateValidator'
 import { DateTime } from 'luxon'
 
-export default class VerificationsController {
+export default class VerificationController {
   public async store({ request, auth }: HttpContextContract) {
-    const payload = await request.validate(VerificationsStoreValidator)
+    const payload = await request.validate(VerificationStoreValidator)
 
     const user = await User.findByOrFail('email', payload.email)
 
@@ -29,7 +29,7 @@ export default class VerificationsController {
   }
 
   public async update({ request }: HttpContextContract) {
-    const payload = await request.validate(VerificationsUpdateValidator)
+    const payload = await request.validate(VerificationUpdateValidator)
 
     const token = await Token.query()
       .where('token', payload.token)
