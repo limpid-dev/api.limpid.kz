@@ -13,6 +13,11 @@ export default class AppProvider {
 
   public async ready() {
     // App is ready
+
+    if (this.app.environment === 'web') {
+      await import('../start/socket')
+    }
+
     const Db = this.app.container.use('Adonis/Lucid/Database')
 
     Db.SimplePaginator.namingStrategy = {
