@@ -20,16 +20,16 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 
-Route.post('users', 'UsersController.store').middleware('guest')
+Route.post('users', 'UsersController.store')
 Route.get('users/:id', 'UsersController.show').middleware('auth')
 Route.patch('users/:id', 'UsersController.update').middleware('auth')
 
-Route.post('session', 'SessionController.store').middleware('guest')
+Route.post('session', 'SessionController.store')
 Route.get('session', 'SessionController.show').middleware('auth')
 Route.delete('session', 'SessionController.destroy').middleware('auth')
 
-Route.post('recovery', 'RecoveryController.store').middleware('guest')
-Route.patch('recovery', 'RecoveryController.update').middleware('guest')
+Route.post('recovery', 'RecoveryController.store')
+Route.patch('recovery', 'RecoveryController.update')
 
 Route.post('verification', 'VerificationController.store').middleware('auth')
 Route.patch('verification', 'VerificationController.update').middleware('auth')
