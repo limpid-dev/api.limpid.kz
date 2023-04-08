@@ -15,7 +15,7 @@ export default class extends BaseSchema {
         .notNullable()
 
       table.string('title', 64).notNullable()
-      table.string('description', 256).notNullable()
+      table.string('description', 255).notNullable()
       table.string('institution', 64).notNullable()
 
       /**

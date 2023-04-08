@@ -25,7 +25,7 @@ export default class ExperiencesStoreValidator {
    */
   public schema = schema.create({
     title: schema.string({ trim: true }, [rules.maxLength(64)]),
-    description: schema.string({ trim: true }, [rules.maxLength(256)]),
+    description: schema.string({ trim: true }, [rules.maxLength(255)]),
     organization: schema.string({ trim: true }, [rules.maxLength(64)]),
     startedAt: schema.date(),
     finishedAt: schema.date.optional(),

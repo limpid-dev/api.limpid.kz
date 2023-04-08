@@ -25,7 +25,7 @@ export default class ResourcesStoreValidator {
    */
   public schema = schema.create({
     title: schema.string({ trim: true }, [rules.minLength(4), rules.maxLength(64)]),
-    description: schema.string({ trim: true }, [rules.minLength(64), rules.maxLength(256)]),
+    description: schema.string({ trim: true }, [rules.minLength(64), rules.maxLength(255)]),
     type: schema.enum(['MATERIAL', 'INTELLECTUAL'] as const),
   })
 

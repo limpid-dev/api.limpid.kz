@@ -27,7 +27,7 @@ export default class ResourcesUpdateValidator {
     title: schema.string.optional({ trim: true }, [rules.minLength(4), rules.maxLength(64)]),
     description: schema.string.optional({ trim: true }, [
       rules.minLength(64),
-      rules.maxLength(256),
+      rules.maxLength(255),
     ]),
     type: schema.enum.optional(['MATERIAL', 'INTELLECTUAL'] as const),
   })

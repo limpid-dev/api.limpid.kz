@@ -24,13 +24,13 @@ export default class ProfilesUpdateValidator {
    *    ```
    */
   public schema = schema.create({
-    title: schema.string.optional({ trim: true }, [rules.minLength(4), rules.maxLength(256)]),
+    title: schema.string.optional({ trim: true }, [rules.minLength(4), rules.maxLength(255)]),
     description: schema.string.optional({ trim: true }, [
-      rules.minLength(256),
+      rules.minLength(255),
       rules.maxLength(1024),
     ]),
-    location: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(256)]),
-    industry: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(256)]),
+    location: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
+    industry: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
     isPublished: schema.boolean.optional(),
   })
 
