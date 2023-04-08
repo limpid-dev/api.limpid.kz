@@ -9,17 +9,16 @@ export default class VerificationController {
   public async store({ auth, bouncer }: HttpContextContract) {
     const user = auth.user!
 
-    await bouncer.with('VerificationPolicy').authorize('store')
+    await bouncer.with('VerificationPolicy').authorize('create')
 
-    await Token.query().where('userId', user.id).where('type', 'VERIFICATION').delete()
+    await user.related('tokens').query().where('type', 'VERIFICATION').delete()
 
     const token = string.generateRandom(64)
 
-    await Token.create({
+    await user.related('tokens').create({
       expiredAt: DateTime.now().plus({ hours: 1 }),
       type: 'VERIFICATION',
       token,
-      userId: user.id,
     })
 
     await new VerifyEmail(user, token).sendLater()

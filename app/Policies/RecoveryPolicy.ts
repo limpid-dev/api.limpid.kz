@@ -3,7 +3,7 @@ import Token from 'App/Models/Token'
 import User from 'App/Models/User'
 import { DateTime } from 'luxon'
 
-export default class VerificationPolicy extends BasePolicy {
+export default class RecoveryPolicy extends BasePolicy {
   public create(user: User) {
     return !user.verifiedAt
   }
@@ -17,7 +17,7 @@ export default class VerificationPolicy extends BasePolicy {
       return false
     }
 
-    if (token.type !== 'VERIFICATION') {
+    if (token.type !== 'RECOVERY') {
       return false
     }
 

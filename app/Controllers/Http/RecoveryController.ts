@@ -1,17 +1,15 @@
-import Mail from '@ioc:Adonis/Addons/Mail'
 import { string } from '@ioc:Adonis/Core/Helpers'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import RecoveryEmail from 'App/Mailers/RecoveryEmail'
 import Token from 'App/Models/Token'
-import User from 'App/Models/User'
-import RecoveryStoreValidator from 'App/Validators/RecoveryStoreValidator'
 import RecoveryUpdateValidator from 'App/Validators/RecoveryUpdateValidator'
 import { DateTime } from 'luxon'
 
 export default class RecoveryController {
-  public async store({ request }: HttpContextContract) {
-    const payload = await request.validate(RecoveryStoreValidator)
+  public async store({ auth, bouncer }: HttpContextContract) {
+    const user = auth.user!
 
-    const user = await User.findByOrFail('email', payload.email)
+    await bouncer.with('RecoveryPolicy').authorize('create')
 
     await user.related('tokens').query().where('type', 'RECOVERY').delete()
 
@@ -23,22 +21,22 @@ export default class RecoveryController {
       token,
     })
 
-    await Mail.sendLater((message) => {
-      message.from('info@limpid.kz').to(user.email).subject('Password recovery').text(token)
-    })
+    await new RecoveryEmail(user, token).sendLater()
   }
 
-  public async update({ request }: HttpContextContract) {
+  public async update({ request, bouncer }: HttpContextContract) {
     const payload = await request.validate(RecoveryUpdateValidator)
 
-    const token = await Token.query()
-      .where('token', payload.token)
-      .andWhere('type', 'RECOVERY')
-      .andWhere('expiredAt', '>', DateTime.now().toSQL())
-      .preload('user')
-      .firstOrFail()
+    const token = await Token.findByOrFail('token', payload.token)
 
-    await token.user.merge({ password: payload.password }).save()
+    await bouncer.with('RecoveryPolicy').authorize('update', token)
+
+    const user = await token.related('user').query().firstOrFail()
+
+    user.merge({ password: payload.password })
+
+    await user.save()
+
     await token.delete()
   }
 }
