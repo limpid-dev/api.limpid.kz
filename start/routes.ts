@@ -52,9 +52,6 @@ Route.get('profiles/:profile/experiences/:>experience', 'ExperiencesController.s
 Route.get('projects', 'ProjectsController.index')
 Route.get('projects/:project', 'ProjectsController.show')
 
-Route.get('projects/:project/files', 'ProjectFilesController.index')
-Route.get('projects/:project/files/:>file', 'ProjectFilesController.show')
-
 Route.group(() => {
   Route.patch('users/:user', 'UsersController.update')
 
