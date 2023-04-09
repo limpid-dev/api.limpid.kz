@@ -1,7 +1,6 @@
 import { bind } from '@adonisjs/route-model-binding'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Certificate from 'App/Models/Certificate'
-import File from 'App/Models/File'
 import Profile from 'App/Models/Profile'
 import CertificatesStoreValidator from 'App/Validators/CertificatesStoreValidator'
 import CertificatesUpdateValidator from 'App/Validators/CertificatesUpdateValidator'
@@ -25,26 +24,7 @@ export default class CertificatesController {
     await bouncer.with('CertificatePolicy').authorize('create', profile)
     const payload = await request.validate(CertificatesStoreValidator)
 
-    const location = `./${profile.id}/certificates`
-
-    await payload.file.moveToDisk(location, {
-      name: payload.file.clientName,
-      visibility: 'public',
-    })
-
-    const file = await File.create({
-      location: `${location}/${payload.file.clientName}`,
-      mimeType: `${payload.file.type}/${payload.file.subtype}`,
-      name: payload.file.clientName,
-      extname: payload.file.extname,
-      visibility: 'public',
-      size: payload.file.size,
-    })
-
-    const certificate = await profile.related('certificates').create({
-      fileId: file.id,
-      ...payload,
-    })
+    const certificate = await profile.related('certificates').create(payload)
 
     return { data: certificate }
   }
@@ -55,29 +35,9 @@ export default class CertificatesController {
     profile: Profile,
     certificate: Certificate
   ) {
-    await bouncer.with('CertificatePolicy').authorize('update', profile)
+    await bouncer.with('CertificatePolicy').authorize('update', profile, certificate)
 
     const payload = await request.validate(CertificatesUpdateValidator)
-
-    if (payload.file) {
-      const location = `./${profile.id}/certificates`
-
-      await payload.file.moveToDisk(location, {
-        name: payload.file.clientName,
-        visibility: 'public',
-      })
-
-      const file = await File.create({
-        location: `${location}/${payload.file.clientName}`,
-        mimeType: `${payload.file.type}/${payload.file.subtype}`,
-        name: payload.file.clientName,
-        extname: payload.file.extname,
-        visibility: 'public',
-        size: payload.file.size,
-      })
-
-      certificate.merge({ fileId: file.id })
-    }
 
     certificate.merge(payload)
 
@@ -92,7 +52,7 @@ export default class CertificatesController {
     profile: Profile,
     certificate: Certificate
   ) {
-    await bouncer.with('CertificatePolicy').authorize('delete', profile)
+    await bouncer.with('CertificatePolicy').authorize('delete', profile, certificate)
 
     return await certificate.delete()
   }

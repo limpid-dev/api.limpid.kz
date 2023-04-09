@@ -9,12 +9,12 @@ export default class CertificatePolicy extends BasePolicy {
 
     return !!exists
   }
-  public async update(user: User, certificate: Certificate) {
+  public async update(user: User, profile: Profile, certificate: Certificate) {
     const exists = await user.related('certificates').query().where('id', certificate.id).first()
 
     return !!exists
   }
-  public async delete(user: User, certificate: Certificate) {
+  public async delete(user: User, profile: Profile, certificate: Certificate) {
     const exists = await user.related('certificates').query().where('id', certificate.id).first()
 
     return !!exists
