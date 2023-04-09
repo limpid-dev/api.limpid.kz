@@ -8,19 +8,18 @@ import VerificationStoreValidator from 'App/Validators/VerificationStoreValidato
 import { DateTime } from 'luxon'
 
 export default class VerificationController {
-  @bind()
-  public async store({ request }: HttpContextContract, user: User) {
+  public async store({ request }: HttpContextContract) {
     const payload = await request.validate(VerificationStoreValidator)
 
+    const user = await User.findByOrFail('email', payload.email)
+
     const url = Route.builder()
-      .params({
-        email: user.email,
-      })
+      .params([user.email])
       .qs({
         redirectUri: payload.redirectUri,
       })
       .prefixUrl(Env.get('DOMAIN'))
-      .makeSigned('/verifications/:email', {
+      .makeSigned('VerificationController.show', {
         expiresIn: '5m',
         purpose: 'verification',
       })

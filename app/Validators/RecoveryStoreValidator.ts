@@ -25,6 +25,10 @@ export default class RecoveryStoreValidator {
    */
   public schema = schema.create({
     redirectUri: schema.string({ trim: true }, [rules.url(), rules.normalizeUrl()]),
+    email: schema.string({ trim: true }, [
+      rules.email(),
+      rules.exists({ table: 'users', column: 'email' }),
+    ]),
     password: schema.string({}, [
       rules.minLength(8),
       rules.maxLength(128),
