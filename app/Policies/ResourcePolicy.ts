@@ -1,15 +1,21 @@
 import { BasePolicy } from '@ioc:Adonis/Addons/Bouncer'
 import User from 'App/Models/User'
-import Profile from 'App/Models/Profile'
+import Resource from 'App/Models/Resource'
 
 export default class ResourcePolicy extends BasePolicy {
-  public async create(user: User, profile: Profile) {
-    return user.id === profile.userId
+  public async create(user: User, resource: Resource) {
+    const exists = await user.related('resources').query().where('id', resource.id).first()
+
+    return !!exists
   }
-  public async update(user: User, profile: Profile) {
-    return user.id === profile.userId
+  public async update(user: User, resource: Resource) {
+    const exists = await user.related('resources').query().where('id', resource.id).first()
+
+    return !!exists
   }
-  public async delete(user: User, profile: Profile) {
-    return user.id === profile.userId
+  public async delete(user: User, resource: Resource) {
+    const exists = await user.related('resources').query().where('id', resource.id).first()
+
+    return !!exists
   }
 }

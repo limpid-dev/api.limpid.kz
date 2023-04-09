@@ -1,5 +1,5 @@
-import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { CustomMessages, schema } from '@ioc:Adonis/Core/Validator'
+import type { HttpContextContract, } from '@ioc:Adonis/Core/HttpContext'
+import { CustomMessages, rules, schema } from '@ioc:Adonis/Core/Validator'
 
 export default class ContactsUpdateValidator {
   constructor(protected ctx: HttpContextContract) {}
@@ -25,8 +25,8 @@ export default class ContactsUpdateValidator {
    */
   public schema = schema.create({
     type: schema.enum.optional(['EMAIL', 'MOBILE', 'URL'] as const),
-    name: schema.string.optional({}, []),
-    value: schema.string.optional({}, []),
+    name: schema.string.optional({}, [rules.minLength(1)]),
+    value: schema.string.optional({}, [rules.minLength(1)]),
   })
 
   /**

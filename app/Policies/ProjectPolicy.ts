@@ -8,17 +8,9 @@ export default class ProjectPolicy extends BasePolicy {
     return user.id === profile.userId
   }
   public async update(user: User, profile: Profile, project: Project) {
-    if (user.id !== profile.userId) {
-      return false
-    }
-
     return profile.id === project.profileId
   }
   public async delete(user: User, profile: Profile, project: Project) {
-    if (user.id !== profile.userId) {
-      return false
-    }
-
     return profile.id === project.profileId
   }
 }

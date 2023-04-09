@@ -1,5 +1,5 @@
-import { rules, schema, CustomMessages } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { CustomMessages, rules, schema } from '@ioc:Adonis/Core/Validator'
 
 export default class ProjectsStoreValidator {
   constructor(protected ctx: HttpContextContract) {}
@@ -29,8 +29,8 @@ export default class ProjectsStoreValidator {
     location: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
     industry: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
     stage: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(64)]),
-    requiredMoneyAmount: schema.number([]),
-    ownedMoneyAmount: schema.number([]),
+    requiredMoneyAmount: schema.number([rules.range(1, 999999999999999.9999)]),
+    ownedMoneyAmount: schema.number([rules.range(1, 999999999999999.9999)]),
     requiredIntellectualResources: schema.string({ trim: true }, [
       rules.minLength(1),
       rules.maxLength(1024),
