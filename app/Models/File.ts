@@ -1,9 +1,5 @@
-import { cuid } from '@ioc:Adonis/Core/Helpers'
-import Drive from '@ioc:Adonis/Core/Drive'
-import { MultipartFileContract } from '@ioc:Adonis/Core/BodyParser'
+import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
-import { BaseModel, BelongsTo, belongsTo, column, computed } from '@ioc:Adonis/Lucid/Orm'
-import Profile from './Profile'
 import Certificate from './Certificate'
 import Project from './Project'
 

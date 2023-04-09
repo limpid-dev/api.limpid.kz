@@ -1,11 +1,4 @@
-import {
-  BaseModel,
-  BelongsTo,
-  beforeCreate,
-  beforeSave,
-  belongsTo,
-  column,
-} from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, beforeSave, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 import Profile from './Profile'
 

@@ -7,4 +7,3 @@
 | boot.
 |
 */
-import Redis from '@ioc:Adonis/Addons/Redis'

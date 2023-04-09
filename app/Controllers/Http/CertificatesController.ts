@@ -1,4 +1,3 @@
-import Drive from '@ioc:Adonis/Core/Drive'
 import { bind } from '@adonisjs/route-model-binding'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Certificate from 'App/Models/Certificate'

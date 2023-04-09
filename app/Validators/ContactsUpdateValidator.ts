@@ -1,5 +1,5 @@
-import { rules, schema, CustomMessages } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { CustomMessages, schema } from '@ioc:Adonis/Core/Validator'
 
 export default class ContactsUpdateValidator {
   constructor(protected ctx: HttpContextContract) {}

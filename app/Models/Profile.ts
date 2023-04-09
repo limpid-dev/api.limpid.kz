@@ -6,20 +6,19 @@ import {
   belongsTo,
   column,
   hasMany,
-  hasManyThrough,
 } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 import Certificate from './Certificate'
 import Contact from './Contact'
 import Education from './Education'
 import Experience from './Experience'
+import File from './File'
 import Membership from './Membership'
+import Message from './Message'
+import Project from './Project'
 import Resource from './Resource'
 import Skill from './Skill'
 import User from './User'
-import Project from './Project'
-import Message from './Message'
-import File from './File'
 
 export default class Profile extends BaseModel {
   @column({ isPrimary: true })

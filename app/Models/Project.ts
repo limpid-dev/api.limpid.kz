@@ -1,19 +1,9 @@
-import {
-  BaseModel,
-  BelongsTo,
-  HasMany,
-  HasManyThrough,
-  belongsTo,
-  column,
-  hasMany,
-  hasManyThrough,
-} from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, HasMany, belongsTo, column, hasMany } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
-import Membership from './Membership'
-import Profile from './Profile'
-import Message from './Message'
-import ProjectFile from './ProjectFile'
 import File from './File'
+import Membership from './Membership'
+import Message from './Message'
+import Profile from './Profile'
 
 export default class Project extends BaseModel {
   @column({ isPrimary: true })
@@ -73,6 +63,6 @@ export default class Project extends BaseModel {
   @hasMany(() => Message)
   public messages: HasMany<typeof Message>
 
-  @hasManyThrough([() => File, () => ProjectFile])
-  public files: HasManyThrough<typeof File>
+  @hasMany(() => File)
+  public files: HasMany<typeof File>
 }
