@@ -98,4 +98,20 @@ Route.group(() => {
 
   Route.get('projects/:project/messages', 'MessagesController.index')
   Route.post('projects/:project/messages', 'MessagesController.store')
+
+  Route.get('/procurements', 'ProcurementsController.index')
+  Route.post('/procurements', 'ProcurementsController.store')
+  Route.get('/procurements/:procurement', 'ProcurementsController.show')
+  Route.patch('/procurements/:procurement', 'ProcurementsController.update')
+  Route.delete('/procurements/:procurement', 'ProcurementsController.destroy')
+
+  Route.get('/procurements/:procurement/files', 'ProcurementFilesController.index')
+  Route.post('/procurements/:procurement/files', 'ProcurementFilesController.store')
+  Route.get('/procurements/:procurement/files/:>file', 'ProcurementFilesController.show')
+  Route.delete('/procurements/:procurement/files/:>file', 'ProcurementFilesController.destroy')
+
+  Route.get('/procurements/:procurement/bids', 'ProcurementBidsController.index')
+  Route.post('/procurements/:procurement/bids', 'ProcurementBidsController.store')
+  Route.get('/procurements/:procurement/bids/:>bid', 'ProcurementBidsController.show')
+  Route.patch('/procurements/:procurement/bids/:>bid', 'ProcurementBidsController.update')
 }).middleware('auth')
