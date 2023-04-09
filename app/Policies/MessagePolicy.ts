@@ -6,10 +6,6 @@ import User from 'App/Models/User'
 
 export default class MessagePolicy extends BasePolicy {
   public async viewList(user: User, profile: Profile, project: Project, membership: Membership) {
-    if (!user.verifiedAt || !profile.verifiedAt) {
-      return false
-    }
-
     if (user.id !== profile.userId) {
       return false
     }
@@ -30,10 +26,6 @@ export default class MessagePolicy extends BasePolicy {
   }
 
   public async create(user: User, profile: Profile, project: Project, membership: Membership) {
-    if (!user.verifiedAt || !profile.verifiedAt) {
-      return false
-    }
-
     if (user.id !== profile.userId) {
       return false
     }
