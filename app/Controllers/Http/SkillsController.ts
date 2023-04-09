@@ -31,7 +31,7 @@ export default class SkillsController {
 
   @bind()
   public async update({ bouncer, request }: HttpContextContract, profile: Profile, skill: Skill) {
-    await bouncer.with('SkillPolicy').authorize('update', profile)
+    await bouncer.with('SkillPolicy').authorize('update', skill)
 
     const payload = await request.validate(SkillsUpdateValidator)
 
@@ -44,7 +44,7 @@ export default class SkillsController {
 
   @bind()
   public async destroy({ bouncer }: HttpContextContract, profile: Profile, skill: Skill) {
-    await bouncer.with('SkillPolicy').authorize('delete', profile)
+    await bouncer.with('SkillPolicy').authorize('delete', skill)
 
     return await skill.delete()
   }
