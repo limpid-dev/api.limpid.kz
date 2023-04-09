@@ -13,6 +13,6 @@ export default Factory.define(User, ({ faker }) => {
     email: faker.internet.email(),
     password: faker.internet.password(),
     rememberMeToken: null,
-    verifiedAt: DateTime.now(),
+    verifiedAt: faker.helpers.maybe(() => DateTime.now()),
   }
 }).build()
