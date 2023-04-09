@@ -35,7 +35,7 @@ export default class ExperiencesController {
     profile: Profile,
     experience: Experience
   ) {
-    await bouncer.with('ExperiencePolicy').authorize('update', profile)
+    await bouncer.with('ExperiencePolicy').authorize('update', profile, experience)
 
     const payload = await request.validate(ExperiencesUpdateValidator)
 
@@ -48,7 +48,7 @@ export default class ExperiencesController {
 
   @bind()
   public async destroy({ bouncer }: HttpContextContract, profile: Profile, experience: Experience) {
-    await bouncer.with('ExperiencePolicy').authorize('delete', profile)
+    await bouncer.with('ExperiencePolicy').authorize('delete', profile, experience)
 
     await experience.delete()
   }

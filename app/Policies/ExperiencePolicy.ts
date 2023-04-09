@@ -9,12 +9,12 @@ export default class ExperiencePolicy extends BasePolicy {
 
     return !!exists
   }
-  public async update(user: User, experience: Experience) {
+  public async update(user: User, profile: Profile, experience: Experience) {
     const exists = await user.related('experiences').query().where('id', experience.id).first()
 
     return !!exists
   }
-  public async delete(user: User, experience: Experience) {
+  public async delete(user: User, profile: Profile, experience: Experience) {
     const exists = await user.related('experiences').query().where('id', experience.id).first()
 
     return !!exists
