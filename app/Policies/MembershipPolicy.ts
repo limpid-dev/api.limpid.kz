@@ -6,24 +6,18 @@ import Project from 'App/Models/Project'
 
 export default class MembershipPolicy extends BasePolicy {
   public async create(user: User, profile: Profile) {
-    return user.id === profile.userId
+    const exists = await user.related('profiles').query().where('id', profile.id).first()
+
+    return !!exists
   }
-  public async update(user: User, profile: Profile, project: Project) {
-    if (user.id !== profile.userId) {
-      return false
-    }
+  public async update(user: User, project: Project) {
+    const exists = await user.related('projects').query().where('id', project.id).first()
 
-    return profile.id === project.profileId
+    return !!exists
   }
-  public async delete(user: User, profile: Profile, project: Project, membership: Membership) {
-    if (user.id !== profile.userId) {
-      return false
-    }
+  public async delete(user: User, membership: Membership) {
+    const exists = await user.related('memberships').query().where('id', membership.id).first()
 
-    if (project.id !== membership.projectId) {
-      return false
-    }
-
-    return membership.profileId === profile.id
+    return !!exists
   }
 }
