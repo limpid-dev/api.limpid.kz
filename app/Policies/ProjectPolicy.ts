@@ -4,12 +4,6 @@ import Project from 'App/Models/Project'
 import Profile from 'App/Models/Profile'
 
 export default class ProjectPolicy extends BasePolicy {
-  public async viewList(user: User) {
-    return !!user.verifiedAt
-  }
-  public async view(user: User) {
-    return !!user.verifiedAt
-  }
   public async create(user: User, profile: Profile) {
     if (user.id !== profile.userId) {
       return false

@@ -5,12 +5,6 @@ import Profile from 'App/Models/Profile'
 import File from 'App/Models/File'
 
 export default class ProjectFilePolicy extends BasePolicy {
-  public async viewList(user: User) {
-    return !!user.verifiedAt
-  }
-  public async view(user: User) {
-    return !!user.verifiedAt
-  }
   public async create(user: User, profile: Profile, project: Project) {
     if (!user.verifiedAt) {
       return false

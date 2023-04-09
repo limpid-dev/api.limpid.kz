@@ -9,17 +9,14 @@ import ProjectsDestroyValidator from 'App/Validators/ProjectsDestroyValidator'
 
 export default class ProjectFilesController {
   @bind()
-  public async index({ request, bouncer }: HttpContextContract, project: Project) {
-    await bouncer.with('ProjectFilePolicy').authorize('viewList')
+  public async index({ request }: HttpContextContract, project: Project) {
     const payload = await request.validate(PaginationValidator)
 
     return project.related('files').query().paginate(payload.page, payload.perPage)
   }
 
   @bind()
-  public async show({ bouncer }: HttpContextContract, _: Project, file: File) {
-    await bouncer.with('ProjectFilePolicy').authorize('view')
-
+  public async show({}: HttpContextContract, _: Project, file: File) {
     return { data: file }
   }
 

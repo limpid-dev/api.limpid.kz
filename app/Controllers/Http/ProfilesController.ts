@@ -6,19 +6,13 @@ import ProfilesStoreValidator from 'App/Validators/ProfilesStoreValidator'
 import ProfilesUpdateValidator from 'App/Validators/ProfilesUpdateValidator'
 
 export default class ProfilesController {
-  public async index({ request, auth }: HttpContextContract) {
-    const user = auth.user!
+  public async index({ request }: HttpContextContract) {
     const payload = await request.validate(PaginationValidator)
 
-    return await Profile.query()
-      .whereNotNull('verifiedAt')
-      .orWhere('userId', user.id)
-      .paginate(payload.page, payload.perPage)
+    return await Profile.query().paginate(payload.page, payload.perPage)
   }
 
-  public async store({ bouncer, request, auth }: HttpContextContract) {
-    await bouncer.with('ProfilePolicy').authorize('create')
-
+  public async store({ request, auth }: HttpContextContract) {
     const user = auth.user!
     const payload = await request.validate(ProfilesStoreValidator)
 
@@ -33,9 +27,7 @@ export default class ProfilesController {
   }
 
   @bind()
-  public async show({ bouncer }: HttpContextContract, profile: Profile) {
-    await bouncer.with('ProfilePolicy').authorize('view', profile)
-
+  public async show({}: HttpContextContract, profile: Profile) {
     return { data: profile }
   }
 

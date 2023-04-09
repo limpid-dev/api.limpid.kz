@@ -2,14 +2,16 @@ import { string } from '@ioc:Adonis/Core/Helpers'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import RecoveryEmail from 'App/Mailers/RecoveryEmail'
 import Token from 'App/Models/Token'
+import User from 'App/Models/User'
+import RecoveryStoreValidator from 'App/Validators/RecoveryStoreValidator'
 import RecoveryUpdateValidator from 'App/Validators/RecoveryUpdateValidator'
 import { DateTime } from 'luxon'
 
 export default class RecoveryController {
-  public async store({ auth, bouncer }: HttpContextContract) {
-    const user = auth.user!
+  public async store({ request }: HttpContextContract) {
+    const payload = await request.validate(RecoveryStoreValidator)
 
-    await bouncer.with('RecoveryPolicy').authorize('create')
+    const user = await User.findByOrFail('email', payload.email)
 
     await user.related('tokens').query().where('type', 'RECOVERY').delete()
 
@@ -24,18 +26,19 @@ export default class RecoveryController {
     await new RecoveryEmail(user, token).sendLater()
   }
 
-  public async update({ request, bouncer }: HttpContextContract) {
+  public async update({ request }: HttpContextContract) {
     const payload = await request.validate(RecoveryUpdateValidator)
 
-    const token = await Token.findByOrFail('token', payload.token)
+    const token = await Token.query()
+      .where('token', payload.token)
+      .andWhere('type', 'RECOVERY')
+      .andWhere('expiredAt', '>', DateTime.now().toSQL())
+      .preload('user')
+      .firstOrFail()
 
-    await bouncer.with('RecoveryPolicy').authorize('update', token)
+    token.user.merge({ password: payload.password })
 
-    const user = await token.related('user').query().firstOrFail()
-
-    user.merge({ password: payload.password })
-
-    await user.save()
+    await token.user.save()
 
     await token.delete()
   }

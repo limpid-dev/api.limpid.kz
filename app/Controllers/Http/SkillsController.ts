@@ -8,17 +8,14 @@ import SkillsUpdateValidator from 'App/Validators/SkillsUpdateValidator'
 
 export default class SkillsController {
   @bind()
-  public async index({ bouncer, request }: HttpContextContract, profile: Profile) {
-    await bouncer.with('SkillPolicy').authorize('viewList', profile)
+  public async index({ request }: HttpContextContract, profile: Profile) {
     const payload = await request.validate(PaginationValidator)
 
     return await profile.related('skills').query().paginate(payload.page, payload.perPage)
   }
 
   @bind()
-  public async show({ bouncer }: HttpContextContract, profile: Profile, skill: Skill) {
-    await bouncer.with('SkillPolicy').authorize('view', profile)
-
+  public async show({}: HttpContextContract, profile: Profile, skill: Skill) {
     return { data: skill }
   }
 

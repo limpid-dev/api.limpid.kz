@@ -9,17 +9,14 @@ import PaginationValidator from 'App/Validators/PaginationValidator'
 
 export default class CertificatesController {
   @bind()
-  public async index({ bouncer, request }: HttpContextContract, profile: Profile) {
-    await bouncer.with('CertificatePolicy').authorize('viewList', profile)
+  public async index({ request }: HttpContextContract, profile: Profile) {
     const payload = await request.validate(PaginationValidator)
 
     return await profile.related('certificates').query().paginate(payload.page, payload.perPage)
   }
 
   @bind()
-  public async show({ bouncer }: HttpContextContract, profile: Profile, certificate: Certificate) {
-    await bouncer.with('CertificatePolicy').authorize('view', profile)
-
+  public async show({}: HttpContextContract, profile: Profile, certificate: Certificate) {
     return { data: { certificate } }
   }
 

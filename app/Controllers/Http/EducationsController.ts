@@ -8,17 +8,14 @@ import PaginationValidator from 'App/Validators/PaginationValidator'
 
 export default class EducationsController {
   @bind()
-  public async index({ bouncer, request }: HttpContextContract, profile: Profile) {
-    await bouncer.with('EducationPolicy').authorize('viewList', profile)
+  public async index({ request }: HttpContextContract, profile: Profile) {
     const payload = await request.validate(PaginationValidator)
 
     return await profile.related('educations').query().paginate(payload.page, payload.perPage)
   }
 
   @bind()
-  public async show({ bouncer }: HttpContextContract, profile: Profile, education: Education) {
-    await bouncer.with('EducationPolicy').authorize('view', profile)
-
+  public async show({}: HttpContextContract, profile: Profile, education: Education) {
     return { data: education }
   }
 

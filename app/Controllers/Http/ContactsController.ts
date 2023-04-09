@@ -15,17 +15,14 @@ const ruleByType = {
 
 export default class ContactsController {
   @bind()
-  public async index({ bouncer, request }: HttpContextContract, profile: Profile) {
-    await bouncer.with('ContactPolicy').authorize('viewList', profile)
+  public async index({ request }: HttpContextContract, profile: Profile) {
     const payload = await request.validate(PaginationValidator)
 
     return await profile.related('contacts').query().paginate(payload.page, payload.perPage)
   }
 
   @bind()
-  public async show({ bouncer }: HttpContextContract, profile: Profile, contact: Contact) {
-    await bouncer.with('ContactPolicy').authorize('view', profile)
-
+  public async show({}: HttpContextContract, profile: Profile, contact: Contact) {
     return { data: contact }
   }
 

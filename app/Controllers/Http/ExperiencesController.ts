@@ -8,17 +8,14 @@ import PaginationValidator from 'App/Validators/PaginationValidator'
 
 export default class ExperiencesController {
   @bind()
-  public async index({ bouncer, request }: HttpContextContract, profile: Profile) {
-    await bouncer.with('ExperiencePolicy').authorize('viewList', profile)
+  public async index({ request }: HttpContextContract, profile: Profile) {
     const payload = await request.validate(PaginationValidator)
 
     return await profile.related('experiences').query().paginate(payload.page, payload.perPage)
   }
 
   @bind()
-  public async show({ bouncer }: HttpContextContract, profile: Profile, experience: Experience) {
-    await bouncer.with('ExperiencePolicy').authorize('view', profile)
-
+  public async show({}: HttpContextContract, profile: Profile, experience: Experience) {
     return { data: experience }
   }
 

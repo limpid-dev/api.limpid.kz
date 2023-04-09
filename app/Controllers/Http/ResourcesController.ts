@@ -8,18 +8,14 @@ import ResourcesUpdateValidator from 'App/Validators/ResourcesUpdateValidator'
 
 export default class ResourcesController {
   @bind()
-  public async index({ bouncer, request }: HttpContextContract, profile: Profile) {
-    await bouncer.with('ResourcePolicy').authorize('viewList', profile)
-
+  public async index({ request }: HttpContextContract, profile: Profile) {
     const payload = await request.validate(PaginationValidator)
 
     return await profile.related('resources').query().paginate(payload.page, payload.perPage)
   }
 
   @bind()
-  public static async show({ bouncer }: HttpContextContract, profile: Profile, resource: Resource) {
-    await bouncer.with('ResourcePolicy').authorize('view', profile)
-
+  public static async show({}: HttpContextContract, profile: Profile, resource: Resource) {
     return {
       data: resource,
     }

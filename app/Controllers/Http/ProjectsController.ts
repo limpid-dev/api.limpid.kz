@@ -8,8 +8,7 @@ import ProjectsStoreValidator from 'App/Validators/ProjectsStoreValidator'
 import ProjectsUpdateValidator from 'App/Validators/ProjectsUpdateValidator'
 
 export default class ProjectsController {
-  public async index({ bouncer, request }: HttpContextContract) {
-    await bouncer.with('ProjectPolicy').authorize('viewList')
+  public async index({ request }: HttpContextContract) {
     const payload = await request.validate(PaginationValidator)
 
     return await Project.query().paginate(payload.page, payload.perPage)
@@ -28,9 +27,7 @@ export default class ProjectsController {
   }
 
   @bind()
-  public async show({ bouncer }: HttpContextContract, project: Project) {
-    await bouncer.with('ProjectPolicy').authorize('view')
-
+  public async show({}: HttpContextContract, project: Project) {
     return { data: project }
   }
 
