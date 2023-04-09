@@ -1,7 +1,7 @@
 {
     "_type": "export",
     "__export_format": 4,
-    "__export_date": "2023-04-09T09:38:57.382Z",
+    "__export_date": "2023-04-09T09:42:49.593Z",
     "__export_source": "insomnia.desktop.app:v2023.1.0",
     "resources": [
         {
@@ -1570,6 +1570,281 @@
                 {
                     "id": "pair_2c4f4d2bc6104286a35cfc257cda74d5",
                     "name": "experienceId",
+                    "value": "1",
+                    "description": "",
+                    "disabled": true
+                }
+            ],
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "id": "pair_d229070a06024e07a060f8c2b7cc859f"
+                },
+                {
+                    "id": "pair_52799a440be54475a27c793c7b8280ac",
+                    "name": "Accept",
+                    "value": "application/json",
+                    "description": ""
+                }
+            ],
+            "authentication": {},
+            "metaSortKey": -1680492427379.625,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "req_5ad6ec151c884c77a55d2cd9b94e0bff",
+            "parentId": "fld_06e72d8a69114d40869fd29f94c4e866",
+            "modified": 1681033278843,
+            "created": 1681033271729,
+            "url": "{{ _.url }}/profiles/{% request 'parameter', 'profileId', 0 %}/skills",
+            "name": "Index",
+            "description": "",
+            "method": "GET",
+            "body": {},
+            "parameters": [
+                {
+                    "id": "pair_bd830082194448bd8cc8dc7e1dbeff5a",
+                    "name": "profileId",
+                    "value": "1",
+                    "description": "",
+                    "disabled": true
+                },
+                {
+                    "id": "pair_1a548c07dde244b2a0850bdfa6b788d1",
+                    "name": "page",
+                    "value": "1",
+                    "description": ""
+                },
+                {
+                    "id": "pair_f2d4d05a0b8d47e98122121800f9d058",
+                    "name": "perPage",
+                    "value": "1",
+                    "description": ""
+                }
+            ],
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "authentication": {},
+            "metaSortKey": -1680500842889,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "fld_06e72d8a69114d40869fd29f94c4e866",
+            "parentId": "fld_f3a0e911978944a7867cd1271d642328",
+            "modified": 1681033271726,
+            "created": 1681033271726,
+            "name": "Skills",
+            "description": "",
+            "environment": {},
+            "environmentPropertyOrder": null,
+            "metaSortKey": -1680404073515,
+            "_type": "request_group"
+        },
+        {
+            "_id": "req_09bedb2d25f94f2a95977768bb726e0b",
+            "parentId": "fld_06e72d8a69114d40869fd29f94c4e866",
+            "modified": 1681033289512,
+            "created": 1681033271741,
+            "url": "{{ _.url }}/profiles/{% request 'parameter', 'profileId', 0 %}/skills/{% request 'parameter', 'skillId', 0 %}",
+            "name": "Show",
+            "description": "",
+            "method": "GET",
+            "body": {},
+            "parameters": [
+                {
+                    "id": "pair_bd830082194448bd8cc8dc7e1dbeff5a",
+                    "name": "profileId",
+                    "value": "1",
+                    "description": "",
+                    "disabled": true
+                },
+                {
+                    "id": "pair_1a548c07dde244b2a0850bdfa6b788d1",
+                    "name": "page",
+                    "value": "1",
+                    "description": ""
+                },
+                {
+                    "id": "pair_f2d4d05a0b8d47e98122121800f9d058",
+                    "name": "perPage",
+                    "value": "1",
+                    "description": ""
+                },
+                {
+                    "id": "pair_9848cd73b63b45e48009c972ddfb37c4",
+                    "name": "skillId",
+                    "value": "1",
+                    "description": "",
+                    "disabled": true
+                }
+            ],
+            "headers": [
+                {
+                    "name": "Accept",
+                    "value": "application/json"
+                },
+                {
+                    "name": "Content-Type",
+                    "value": "application/json"
+                }
+            ],
+            "authentication": {},
+            "metaSortKey": -1680498438457.75,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "req_7d07f2a9d1fd4d8dadeed56926f5b33e",
+            "parentId": "fld_06e72d8a69114d40869fd29f94c4e866",
+            "modified": 1681033318097,
+            "created": 1681033271733,
+            "url": "{{ _.url }}/profiles/{% request 'parameter', 'profileId', 0 %}/skills",
+            "name": "Store",
+            "description": "",
+            "method": "POST",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n\t\"name\": \"Javascript\"\n}"
+            },
+            "parameters": [
+                {
+                    "id": "pair_bd830082194448bd8cc8dc7e1dbeff5a",
+                    "name": "profileId",
+                    "value": "1",
+                    "description": "",
+                    "disabled": true
+                }
+            ],
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "id": "pair_d229070a06024e07a060f8c2b7cc859f"
+                },
+                {
+                    "id": "pair_52799a440be54475a27c793c7b8280ac",
+                    "name": "Accept",
+                    "value": "application/json",
+                    "description": ""
+                }
+            ],
+            "authentication": {},
+            "metaSortKey": -1680496034026.5,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "req_40b1482f7a654e5b9541ded2f2bb8ad6",
+            "parentId": "fld_06e72d8a69114d40869fd29f94c4e866",
+            "modified": 1681033338764,
+            "created": 1681033271736,
+            "url": "{{ _.url }}/profiles/{% request 'parameter', 'profileId', 0 %}/skill/{% request 'parameter', 'skillId', 0 %}",
+            "name": "Update",
+            "description": "",
+            "method": "PATCH",
+            "body": {
+                "mimeType": "application/json",
+                "text": "{\n\t\"name\": \"Typescript\"\n}"
+            },
+            "parameters": [
+                {
+                    "id": "pair_bd830082194448bd8cc8dc7e1dbeff5a",
+                    "name": "profileId",
+                    "value": "1",
+                    "description": "",
+                    "disabled": true
+                },
+                {
+                    "id": "pair_2c4f4d2bc6104286a35cfc257cda74d5",
+                    "name": "skillId",
+                    "value": "1",
+                    "description": "",
+                    "disabled": true
+                }
+            ],
+            "headers": [
+                {
+                    "name": "Content-Type",
+                    "value": "application/json",
+                    "id": "pair_d229070a06024e07a060f8c2b7cc859f"
+                },
+                {
+                    "id": "pair_52799a440be54475a27c793c7b8280ac",
+                    "name": "Accept",
+                    "value": "application/json",
+                    "description": ""
+                }
+            ],
+            "authentication": {},
+            "metaSortKey": -1680493629595.25,
+            "isPrivate": false,
+            "settingStoreCookies": true,
+            "settingSendCookies": true,
+            "settingDisableRenderRequestBody": false,
+            "settingEncodeUrl": true,
+            "settingRebuildPath": true,
+            "settingFollowRedirects": "global",
+            "_type": "request"
+        },
+        {
+            "_id": "req_63f4c53c166a4fc3b3e63b5134ab0552",
+            "parentId": "fld_06e72d8a69114d40869fd29f94c4e866",
+            "modified": 1681033349161,
+            "created": 1681033271738,
+            "url": "{{ _.url }}/profiles/{% request 'parameter', 'profileId', 0 %}/skills/{% request 'parameter', 'skillid', 0 %}",
+            "name": "Destroy",
+            "description": "",
+            "method": "DELETE",
+            "body": {
+                "mimeType": "application/json",
+                "text": ""
+            },
+            "parameters": [
+                {
+                    "id": "pair_bd830082194448bd8cc8dc7e1dbeff5a",
+                    "name": "profileId",
+                    "value": "1",
+                    "description": "",
+                    "disabled": true
+                },
+                {
+                    "id": "pair_2c4f4d2bc6104286a35cfc257cda74d5",
+                    "name": "skillId",
                     "value": "1",
                     "description": "",
                     "disabled": true
