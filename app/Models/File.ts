@@ -2,6 +2,7 @@ import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 import Certificate from './Certificate'
 import Project from './Project'
+import Procurement from './Procurement'
 
 export default class File extends BaseModel {
   @column({ isPrimary: true })
@@ -42,4 +43,10 @@ export default class File extends BaseModel {
 
   @belongsTo(() => Project)
   public project: BelongsTo<typeof Project>
+
+  @column()
+  public procurementId: number | null
+
+  @belongsTo(() => Procurement)
+  public procurement: BelongsTo<typeof Procurement>
 }
