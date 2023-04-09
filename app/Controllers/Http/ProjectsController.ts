@@ -3,7 +3,6 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Profile from 'App/Models/Profile'
 import Project from 'App/Models/Project'
 import PaginationValidator from 'App/Validators/PaginationValidator'
-import ProjectsDestroyValidator from 'App/Validators/ProjectsDestroyValidator'
 import ProjectsStoreValidator from 'App/Validators/ProjectsStoreValidator'
 import ProjectsUpdateValidator from 'App/Validators/ProjectsUpdateValidator'
 
@@ -33,11 +32,9 @@ export default class ProjectsController {
 
   @bind()
   public async update({ request, bouncer }: HttpContextContract, project: Project) {
-    const { profileId, ...payload } = await request.validate(ProjectsUpdateValidator)
+    const payload = await request.validate(ProjectsUpdateValidator)
 
-    const profile = await Profile.findOrFail(profileId)
-
-    await bouncer.with('ProjectPolicy').authorize('update', profile, project)
+    await bouncer.with('ProjectPolicy').authorize('update', project)
 
     project.merge(payload)
 
@@ -47,12 +44,8 @@ export default class ProjectsController {
   }
 
   @bind()
-  public async destroy({ request, bouncer }: HttpContextContract, project: Project) {
-    const payload = await request.validate(ProjectsDestroyValidator)
-
-    const profile = await Profile.findOrFail(payload.profileId)
-
-    await bouncer.with('ProjectPolicy').authorize('delete', profile, project)
+  public async destroy({ bouncer }: HttpContextContract, project: Project) {
+    await bouncer.with('ProjectPolicy').authorize('delete', project)
 
     await project.delete()
   }
