@@ -10,4 +10,16 @@ export default class File extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  @column()
+  public name: string
+
+  @column()
+  public size: number
+
+  @column()
+  public mimeType: string
+
+  @column()
+  public extname: string
 }
