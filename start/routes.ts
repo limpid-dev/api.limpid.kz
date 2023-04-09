@@ -35,25 +35,26 @@ Route.get('profiles', 'ProfilesController.index')
 Route.get('profiles/:profile', 'ProfilesController.show')
 
 Route.get('profiles/:profile/resources', 'ResourcesController.index')
-Route.get('profiles/:profile/resources/:>resource', 'ResourcesController.show')
 
 Route.get('profiles/:profile/contacts', 'ContactsController.index')
-Route.get('profiles/:profile/contacts/:>contact', 'ContactsController.show')
 
 Route.get('profiles/:profile/educations', 'EducationsController.index')
-Route.get('profiles/:profile/educations/:>education', 'EducationsController.show')
 
 Route.get('profiles/:profile/skills', 'SkillsController.index')
-Route.get('profiles/:profile/skills/:>skill', 'SkillsController.show')
 
 Route.get('profiles/:profile/certificates', 'CertificatesController.index')
-Route.get('profiles/:profile/certificates/:>certificate', 'CertificatesController.show')
+
+Route.get('profiles/:profile/certificates/:>certificate/files', 'CertificateFilesController.index')
+Route.get(
+  'profiles/:profile/certificates/:>certificate/files/:>file',
+  'CertificateFilesController.show'
+)
 
 Route.get('profiles/:profile/experiences', 'ExperiencesController.index')
-Route.get('profiles/:profile/experiences/:>experience', 'ExperiencesController.show')
 
 Route.get('projects', 'ProjectsController.index')
 Route.get('projects/:project', 'ProjectsController.show')
+Route.get('projects/:project/files', 'ProjectFilesController.index')
 
 Route.group(() => {
   Route.patch('users/:user', 'UsersController.update')
@@ -85,6 +86,15 @@ Route.group(() => {
     Route.post('profiles/:profile/certificates', 'CertificatesController.store')
     Route.patch('profiles/:profile/certificates/:>certificate', 'CertificatesController.update')
     Route.delete('profiles/:profile/certificates/:>certificate', 'CertificatesController.destroy')
+
+    Route.post(
+      'profiles/:profile/certificates/:>certificate/files',
+      'CertificateFilesController.store'
+    )
+    Route.delete(
+      'profiles/:profile/certificates/:>certificate/files/:>file',
+      'CertificateFilesController.destroy'
+    )
 
     Route.post('profiles/:profile/experiences', 'ExperiencesController.store')
     Route.patch('profiles/:profile/experiences/:>experience', 'ExperiencesController.update')

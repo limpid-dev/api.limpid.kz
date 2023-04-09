@@ -1,7 +1,7 @@
+import { schema, CustomMessages } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import { CustomMessages, schema } from '@ioc:Adonis/Core/Validator'
 
-export default class ProjectFilesStoreValidator {
+export default class CertificateFilesStoreValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*
@@ -25,7 +25,7 @@ export default class ProjectFilesStoreValidator {
    */
   public schema = schema.create({
     file: schema.file({
-      extnames: ['jpg', 'jpeg', 'png', 'pdf', 'docx', 'xlsx', 'pptx'],
+      extnames: ['jpg', 'jpeg', 'png', 'pdf'],
       size: '8mb',
     }),
   })

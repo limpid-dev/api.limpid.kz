@@ -15,11 +15,6 @@ export default class ExperiencesController {
   }
 
   @bind()
-  public async show({}: HttpContextContract, _profile: Profile, experience: Experience) {
-    return { data: experience }
-  }
-
-  @bind()
   public async store({ bouncer, request }: HttpContextContract, profile: Profile) {
     await bouncer.with('ExperiencePolicy').authorize('create', profile)
     const payload = await request.validate(ExperiencesStoreValidator)

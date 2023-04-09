@@ -21,7 +21,7 @@ export default class File extends BaseModel {
   public size: number
 
   @column()
-  public mimeType: string
+  public contentType: string
 
   @column()
   public extname: string

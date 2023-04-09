@@ -35,5 +35,5 @@ export default class Certificate extends BaseModel {
   public profile: BelongsTo<typeof Profile>
 
   @hasMany(() => File)
-  public file: HasMany<typeof File>
+  public files: HasMany<typeof File>
 }

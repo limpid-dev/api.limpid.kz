@@ -15,11 +15,6 @@ export default class SkillsController {
   }
 
   @bind()
-  public async show({}: HttpContextContract, _profile: Profile, skill: Skill) {
-    return { data: skill }
-  }
-
-  @bind()
   public async store({ bouncer, request }: HttpContextContract, profile: Profile) {
     await bouncer.with('SkillPolicy').authorize('create', profile)
     const payload = await request.validate(SkillsStoreValidator)

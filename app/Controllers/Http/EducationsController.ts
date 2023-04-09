@@ -15,11 +15,6 @@ export default class EducationsController {
   }
 
   @bind()
-  public async show({}: HttpContextContract, _profile: Profile, education: Education) {
-    return { data: education }
-  }
-
-  @bind()
   public async store({ bouncer, request }: HttpContextContract, profile: Profile) {
     await bouncer.with('EducationPolicy').authorize('create', profile)
     const payload = await request.validate(EducationsStoreValidator)

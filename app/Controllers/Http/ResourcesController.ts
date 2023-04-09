@@ -15,13 +15,6 @@ export default class ResourcesController {
   }
 
   @bind()
-  public static async show({}: HttpContextContract, _profile: Profile, resource: Resource) {
-    return {
-      data: resource,
-    }
-  }
-
-  @bind()
   public async store({ bouncer, request }: HttpContextContract, profile: Profile) {
     await bouncer.with('ResourcePolicy').authorize('create', profile)
 

@@ -22,11 +22,6 @@ export default class ContactsController {
   }
 
   @bind()
-  public async show({}: HttpContextContract, _profile: Profile, contact: Contact) {
-    return { data: contact }
-  }
-
-  @bind()
   public async store({ bouncer, request }: HttpContextContract, profile: Profile) {
     await bouncer.with('ContactPolicy').authorize('create', profile)
 

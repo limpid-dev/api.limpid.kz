@@ -9,7 +9,7 @@ export default class extends BaseSchema {
 
       table.string('name', 64).notNullable()
       table.integer('size').notNullable()
-      table.string('mime_type', 64).notNullable()
+      table.string('content_type', 64).notNullable()
       table.string('extname', 64).notNullable()
       table.string('visibility', 8).notNullable()
       table.string('location', 255).notNullable()
