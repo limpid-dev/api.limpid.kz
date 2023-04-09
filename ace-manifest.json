@@ -1,25 +1,5 @@
 {
   "commands": {
-    "resource": {
-      "settings": {
-        "loadApp": false,
-        "stayAlive": false
-      },
-      "commandPath": "./commands/Resource",
-      "commandName": "resource",
-      "description": "Combines make commands to generate a resource",
-      "args": [
-        {
-          "type": "string",
-          "propertyName": "name",
-          "name": "name",
-          "required": true,
-          "description": "Name of the resource to create"
-        }
-      ],
-      "aliases": [],
-      "flags": []
-    },
     "dump:rcfile": {
       "settings": {},
       "commandPath": "@adonisjs/core/build/commands/DumpRc",
