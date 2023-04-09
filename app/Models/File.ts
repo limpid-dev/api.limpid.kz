@@ -4,6 +4,8 @@ import { MultipartFileContract } from '@ioc:Adonis/Core/BodyParser'
 import { DateTime } from 'luxon'
 import { BaseModel, BelongsTo, belongsTo, column, computed } from '@ioc:Adonis/Lucid/Orm'
 import Profile from './Profile'
+import Certificate from './Certificate'
+import Project from './Project'
 
 export default class File extends BaseModel {
   @column({ isPrimary: true })
@@ -31,58 +33,17 @@ export default class File extends BaseModel {
   public visibility: string
 
   @column()
-  public profileId: number
+  public location: string
 
-  @computed()
-  public get url() {
-    const location = `./${this.profileId}/${this.name}`
+  @column()
+  public certificateId: number | null
 
-    if (this.visibility === 'private') {
-      return Drive.getSignedUrl(location, { expiresIn: '1h' })
-    }
+  @belongsTo(() => Certificate)
+  public certificate: BelongsTo<typeof Certificate>
 
-    return Drive.getUrl(location)
-  }
+  @column()
+  public projectId: number | null
 
-  @belongsTo(() => Profile)
-  public profile: BelongsTo<typeof Profile>
-
-  public static async upload(
-    profile: Profile,
-    file: MultipartFileContract,
-    visibility: 'public' | 'private'
-  ) {
-    const name = `${cuid()}.${file.extname}`
-
-    const location = `./${profile.id}/${name}`
-    const mimeType = `${file.type}/${file.subtype}`
-
-    await file.moveToDisk(location, {
-      name,
-      visibility,
-      contentType: mimeType,
-      contentLength: file.size,
-    })
-
-    return await this.create({
-      profileId: profile.id,
-      visibility,
-      name,
-      size: file.size,
-      extname: file.extname,
-      mimeType,
-    })
-  }
-
-  public static async download(profile: Profile, name: string) {
-    const file = await this.query().where('profileId', profile.id).where('name', name).firstOrFail()
-
-    const location = `./${profile.id}/${name}`
-
-    if (file.visibility === 'private') {
-      return await Drive.getSignedUrl(location, { expiresIn: '1h' })
-    }
-
-    return await Drive.getUrl(location)
-  }
+  @belongsTo(() => Project)
+  public project: BelongsTo<typeof Project>
 }

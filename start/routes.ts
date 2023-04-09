@@ -85,10 +85,10 @@ Route.group(() => {
   Route.patch('projects/:project', 'ProjectsController.update')
   Route.delete('projects/:project', 'ProjectsController.destroy')
 
-  Route.get('/projects/:project/files', 'ProjectAttachmentsController.index')
-  Route.post('/projects/:project/files', 'ProjectAttachmentsController.store')
-  Route.get('/projects/:project/files/:>file', 'ProjectAttachmentsController.show')
-  Route.delete('/projects/:project/files/:>file', 'ProjectAttachmentsController.destroy')
+  Route.get('/projects/:project/files', 'ProjectFilesController.index')
+  Route.post('/projects/:project/files', 'ProjectFilesController.store')
+  Route.get('/projects/:project/files/:>file', 'ProjectFilesController.show')
+  Route.delete('/projects/:project/files/:>file', 'ProjectFilesController.destroy')
 
   Route.get('projects/:project/memberships', 'MembershipsController.index')
   Route.post('projects/:project/memberships', 'MembershipsController.store')

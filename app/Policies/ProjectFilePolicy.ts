@@ -1,23 +1,15 @@
 import { BasePolicy } from '@ioc:Adonis/Addons/Bouncer'
 import User from 'App/Models/User'
-import ProjectFile from 'App/Models/ProjectFile'
 import Project from 'App/Models/Project'
 import Profile from 'App/Models/Profile'
+import File from 'App/Models/File'
 
 export default class ProjectFilePolicy extends BasePolicy {
   public async viewList(user: User) {
-    if (!user.verifiedAt) {
-      return false
-    }
-
-    return true
+    return !!user.verifiedAt
   }
   public async view(user: User) {
-    if (!user.verifiedAt) {
-      return false
-    }
-
-    return true
+    return !!user.verifiedAt
   }
   public async create(user: User, profile: Profile, project: Project) {
     if (!user.verifiedAt) {
@@ -30,7 +22,7 @@ export default class ProjectFilePolicy extends BasePolicy {
 
     return profile.id === project.profileId
   }
-  public async delete(user: User, profile: Profile, project: Project, projectFile: ProjectFile) {
+  public async delete(user: User, profile: Profile, project: Project, file: File) {
     if (!user.verifiedAt) {
       return false
     }
@@ -43,6 +35,6 @@ export default class ProjectFilePolicy extends BasePolicy {
       return false
     }
 
-    return project.id === projectFile.projectId
+    return project.id === file.projectId
   }
 }

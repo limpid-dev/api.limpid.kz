@@ -13,6 +13,13 @@ export default class extends BaseSchema {
         .inTable('profiles')
         .onDelete('CASCADE')
         .notNullable()
+      table
+        .integer('file_id')
+        .unsigned()
+        .references('id')
+        .inTable('files')
+        .onDelete('CASCADE')
+        .notNullable()
 
       table.string('title', 64).notNullable()
       table.string('description', 255).notNullable()

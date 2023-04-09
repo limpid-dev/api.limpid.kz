@@ -27,7 +27,7 @@ export default class EducationsController {
     await bouncer.with('EducationPolicy').authorize('create', profile)
     const payload = await request.validate(EducationsStoreValidator)
 
-    const education = profile.related('educations').create(payload)
+    const education = await profile.related('educations').create(payload)
 
     return { data: education }
   }

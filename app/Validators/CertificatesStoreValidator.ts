@@ -29,7 +29,7 @@ export default class CertificatesStoreValidator {
     institution: schema.string({ trim: true }, [rules.maxLength(64)]),
     issuedAt: schema.date(),
     expiredAt: schema.date.optional(),
-    attachment: schema.file({
+    file: schema.file({
       size: '1mb',
       extnames: ['jpg', 'png', 'jpeg', 'pdf'],
     }),
