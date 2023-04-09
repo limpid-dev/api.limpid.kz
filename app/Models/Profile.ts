@@ -19,7 +19,6 @@ import Project from './Project'
 import Resource from './Resource'
 import Skill from './Skill'
 import User from './User'
-import Procurement from './Procurement'
 
 export default class Profile extends BaseModel {
   @column({ isPrimary: true })
@@ -88,7 +87,4 @@ export default class Profile extends BaseModel {
       profile.verifiedAt = null
     }
   }
-
-  @hasMany(() => Procurement)
-  public procurements: HasMany<typeof Procurement>
 }
