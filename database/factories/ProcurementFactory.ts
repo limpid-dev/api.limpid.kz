@@ -1,8 +1,0 @@
-import procurement from 'App/Models/procurement'
-import Factory from '@ioc:Adonis/Lucid/Factory'
-
-export default Factory.define(procurement, ({ faker }) => {
-  return {
-    //
-  }
-}).build()
