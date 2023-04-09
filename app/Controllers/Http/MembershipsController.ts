@@ -4,8 +4,6 @@ import Membership from 'App/Models/Membership'
 import Profile from 'App/Models/Profile'
 import Project from 'App/Models/Project'
 import MembershipsStoreValidator from 'App/Validators/MembershipsStoreValidator'
-import MembershipsUpdateValidator from 'App/Validators/MembershipsUpdateValidator'
-import MembershipsDestroyValidator from 'App/Validators/MembershipsDestroyValidator'
 import { DateTime } from 'luxon'
 import PaginationValidator from 'App/Validators/PaginationValidator'
 
@@ -36,16 +34,8 @@ export default class MembershipsController {
   }
 
   @bind()
-  public async update(
-    { request, bouncer }: HttpContextContract,
-    project: Project,
-    membership: Membership
-  ) {
-    const payload = await request.validate(MembershipsUpdateValidator)
-
-    const profile = await Profile.findOrFail(payload.profileId)
-
-    await bouncer.with('MembershipPolicy').authorize('update', profile, project)
+  public async update({ bouncer }: HttpContextContract, project: Project, membership: Membership) {
+    await bouncer.with('MembershipPolicy').authorize('update', project, membership)
 
     membership.merge({ acceptedAt: DateTime.now() })
 
@@ -55,16 +45,8 @@ export default class MembershipsController {
   }
 
   @bind()
-  public async destroy(
-    { request, bouncer }: HttpContextContract,
-    project: Project,
-    membership: Membership
-  ) {
-    const payload = await request.validate(MembershipsDestroyValidator)
-
-    const profile = await Profile.findOrFail(payload.profileId)
-
-    await bouncer.with('MembershipPolicy').authorize('delete', profile, project, membership)
+  public async destroy({ bouncer }: HttpContextContract, project: Project, membership: Membership) {
+    await bouncer.with('MembershipPolicy').authorize('delete', project, membership)
 
     await membership.delete()
   }

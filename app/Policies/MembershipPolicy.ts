@@ -10,14 +10,18 @@ export default class MembershipPolicy extends BasePolicy {
 
     return !!exists
   }
-  public async update(user: User, project: Project) {
-    const exists = await user.related('projects').query().where('id', project.id).first()
+  public async update(user: User, project: Project, membership: Membership) {
+    const admin = await user.related('projects').query().where('id', project.id).first()
 
-    return !!exists
+    const member = await user.related('memberships').query().where('id', membership.id).first()
+
+    return !!admin || !!member
   }
-  public async delete(user: User, membership: Membership) {
-    const exists = await user.related('memberships').query().where('id', membership.id).first()
+  public async delete(user: User, project: Project, membership: Membership) {
+    const admin = await user.related('projects').query().where('id', project.id).first()
 
-    return !!exists
+    const member = await user.related('memberships').query().where('id', membership.id).first()
+
+    return !!admin || !!member
   }
 }
