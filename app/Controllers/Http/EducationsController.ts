@@ -35,7 +35,7 @@ export default class EducationsController {
     profile: Profile,
     education: Education
   ) {
-    await bouncer.with('EducationPolicy').authorize('update', profile)
+    await bouncer.with('EducationPolicy').authorize('update', profile, education)
 
     const payload = await request.validate(EducationsUpdateValidator)
 
@@ -48,7 +48,7 @@ export default class EducationsController {
 
   @bind()
   public async destroy({ bouncer }: HttpContextContract, profile: Profile, education: Education) {
-    await bouncer.with('EducationPolicy').authorize('delete', profile)
+    await bouncer.with('EducationPolicy').authorize('delete', profile, education)
 
     return await education.delete()
   }
