@@ -19,7 +19,7 @@ export default class RecoveryController {
         redirectUri: payload.redirectUri,
       })
       .prefixUrl(Env.get('DOMAIN'))
-      .makeSigned('/recoveries/:email', {
+      .makeSigned('RecoveryController.show', {
         expiresIn: '5m',
         purpose: 'recovery',
       })
