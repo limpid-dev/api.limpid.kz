@@ -23,7 +23,7 @@ export default class MembershipsController {
   }
 
   @bind()
-  public async view(
+  public async show(
     { request, bouncer }: HttpContextContract,
     project: Project,
     membership: Membership
