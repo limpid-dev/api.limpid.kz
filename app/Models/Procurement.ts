@@ -1,5 +1,7 @@
+import { BaseModel, BelongsTo, HasMany, belongsTo, column, hasMany } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import File from './File'
+import Profile from './Profile'
 
 export default class Procurement extends BaseModel {
   @column({ isPrimary: true })
@@ -10,4 +12,25 @@ export default class Procurement extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  @column.dateTime()
+  public startedAt: DateTime
+
+  @column.dateTime()
+  public finishedAt: DateTime | null
+
+  @column()
+  public title: string
+
+  @column()
+  public description: string
+
+  @hasMany(() => File)
+  public files: HasMany<typeof File>
+
+  @column()
+  public profileId: number
+
+  @belongsTo(() => Profile)
+  public profile: BelongsTo<typeof Profile>
 }
