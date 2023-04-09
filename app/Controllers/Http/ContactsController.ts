@@ -43,7 +43,7 @@ export default class ContactsController {
     profile: Profile,
     contact: Contact
   ) {
-    await bouncer.with('ContactPolicy').authorize('update', profile)
+    await bouncer.with('ContactPolicy').authorize('update', profile, contact)
 
     const payload = await request.validate(ContactsUpdateValidator)
 
@@ -72,7 +72,7 @@ export default class ContactsController {
 
   @bind()
   public async destroy({ bouncer }: HttpContextContract, profile: Profile, contact: Contact) {
-    await bouncer.with('ContactPolicy').authorize('delete', profile)
+    await bouncer.with('ContactPolicy').authorize('delete', profile, contact)
 
     await contact.delete()
   }

@@ -9,12 +9,12 @@ export default class ContactPolicy extends BasePolicy {
 
     return !!exists
   }
-  public async update(user: User, contact: Contact) {
+  public async update(user: User, profile: Profile, contact: Contact) {
     const exists = await user.related('contacts').query().where('id', contact.id).first()
 
     return !!exists
   }
-  public async delete(user: User, contact: Contact) {
+  public async delete(user: User, profile: Profile, contact: Contact) {
     const exists = await user.related('contacts').query().where('id', contact.id).first()
 
     return !!exists
