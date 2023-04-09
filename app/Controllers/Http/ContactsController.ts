@@ -22,7 +22,7 @@ export default class ContactsController {
   }
 
   @bind()
-  public async show({}: HttpContextContract, profile: Profile, contact: Contact) {
+  public async show({}: HttpContextContract, _profile: Profile, contact: Contact) {
     return { data: contact }
   }
 

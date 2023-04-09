@@ -16,7 +16,7 @@ export default class MembershipsController {
   }
 
   @bind()
-  public async show({}: HttpContextContract, project: Project, membership: Membership) {
+  public async show({}: HttpContextContract, _project: Project, membership: Membership) {
     return { data: membership }
   }
 

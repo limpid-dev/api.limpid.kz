@@ -15,7 +15,7 @@ export default class ResourcesController {
   }
 
   @bind()
-  public static async show({}: HttpContextContract, profile: Profile, resource: Resource) {
+  public static async show({}: HttpContextContract, _profile: Profile, resource: Resource) {
     return {
       data: resource,
     }
@@ -37,7 +37,7 @@ export default class ResourcesController {
   @bind()
   public async update(
     { bouncer, request }: HttpContextContract,
-    profile: Profile,
+    _profile: Profile,
     resource: Resource
   ) {
     await bouncer.with('ResourcePolicy').authorize('update', resource)
@@ -54,7 +54,7 @@ export default class ResourcesController {
   }
 
   @bind()
-  public async destroy({ bouncer }: HttpContextContract, profile: Profile, resource: Resource) {
+  public async destroy({ bouncer }: HttpContextContract, _profile: Profile, resource: Resource) {
     await bouncer.with('ResourcePolicy').authorize('delete', resource)
 
     await resource.delete()

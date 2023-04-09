@@ -9,12 +9,12 @@ export default class EducationPolicy extends BasePolicy {
 
     return !!exists
   }
-  public async update(user: User, profile: Profile, education: Education) {
+  public async update(user: User, _profile: Profile, education: Education) {
     const exists = await user.related('educations').query().where('id', education.id).first()
 
     return !!exists
   }
-  public async delete(user: User, profile: Profile, education: Education) {
+  public async delete(user: User, _profile: Profile, education: Education) {
     const exists = await user.related('educations').query().where('id', education.id).first()
 
     return !!exists

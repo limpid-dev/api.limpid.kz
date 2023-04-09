@@ -15,7 +15,7 @@ export default class CertificatesController {
   }
 
   @bind()
-  public async show({}: HttpContextContract, profile: Profile, certificate: Certificate) {
+  public async show({}: HttpContextContract, _profile: Profile, certificate: Certificate) {
     return { data: { certificate } }
   }
 

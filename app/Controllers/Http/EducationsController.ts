@@ -15,7 +15,7 @@ export default class EducationsController {
   }
 
   @bind()
-  public async show({}: HttpContextContract, profile: Profile, education: Education) {
+  public async show({}: HttpContextContract, _profile: Profile, education: Education) {
     return { data: education }
   }
 
