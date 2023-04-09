@@ -3,6 +3,7 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Procurement from 'App/Models/Procurement'
 import Profile from 'App/Models/Profile'
 import PaginationValidator from 'App/Validators/PaginationValidator'
+import ProcurementShowValidator from 'App/Validators/ProcurementShowValidator'
 import ProcurementStoreValidator from 'App/Validators/ProcurementStoreValidator'
 import ProcurementUpdateValidator from 'App/Validators/ProcurementUpdateValidator'
 
@@ -28,8 +29,12 @@ export default class ProcurementsController {
   }
 
   @bind()
-  public async show({ bouncer }: HttpContextContract, procurement: Procurement) {
-    await bouncer.with('ProcurementPolicy').authorize('view', procurement)
+  public async show({ request, bouncer }: HttpContextContract, procurement: Procurement) {
+    const { profileId } = await request.validate(ProcurementShowValidator)
+
+    const profile = await Profile.findOrFail(profileId)
+
+    await bouncer.with('ProcurementPolicy').authorize('view', profile)
 
     return { data: procurement }
   }

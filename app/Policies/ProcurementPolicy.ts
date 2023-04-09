@@ -5,15 +5,23 @@ import Profile from 'App/Models/Profile'
 
 export default class ProcurementPolicy extends BasePolicy {
   public async viewList(user: User) {
-    return true
+    return !!user.verifiedAt
   }
 
-  public async view(user: User, procurement: Procurement) {
-    return true
+  public async view(user: User, profile: Profile) {
+    if (user.id !== profile.userId) {
+      return false
+    }
+
+    return !!user.verifiedAt && !!profile.verifiedAt
   }
 
   public async create(user: User, profile: Profile) {
-    return !!profile.verifiedAt
+    if (user.id !== profile.userId) {
+      return false
+    }
+
+    return !!user.verifiedAt && !!profile.verifiedAt
   }
 
   public async update(user: User, profile: Profile, procurement: Procurement) {
@@ -25,7 +33,7 @@ export default class ProcurementPolicy extends BasePolicy {
       return false
     }
 
-    return !!profile.verifiedAt
+    return !!user.verifiedAt && !!profile.verifiedAt
   }
 
   public async delete(user: User, profile: Profile, procurement: Procurement) {
@@ -37,6 +45,6 @@ export default class ProcurementPolicy extends BasePolicy {
       return false
     }
 
-    return !!profile.verifiedAt
+    return !!user.verifiedAt && !!profile.verifiedAt
   }
 }
