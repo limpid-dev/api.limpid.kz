@@ -6,6 +6,7 @@ import {
   belongsTo,
   column,
   hasMany,
+  hasManyThrough,
 } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 import Certificate from './Certificate'
@@ -18,6 +19,7 @@ import Skill from './Skill'
 import User from './User'
 import Project from './Project'
 import Message from './Message'
+import File from './File'
 
 export default class Profile extends BaseModel {
   @column({ isPrimary: true })
@@ -76,6 +78,9 @@ export default class Profile extends BaseModel {
 
   @hasMany(() => Message)
   public messages: HasMany<typeof Message>
+
+  @hasMany(() => File)
+  public files: HasMany<typeof File>
 
   @beforeSave()
   public static async beforeSave(profile: Profile) {
