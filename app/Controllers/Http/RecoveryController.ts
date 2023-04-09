@@ -29,7 +29,7 @@ export default class RecoveryController {
 
   @bind()
   public async show({ request, response }: HttpContextContract, user: User) {
-    if (request.hasValidSignature('verification')) {
+    if (request.hasValidSignature('recovery')) {
       await user.merge({ password: request.qs().password }).save()
       response.redirect(request.qs().redirectUri)
     }
