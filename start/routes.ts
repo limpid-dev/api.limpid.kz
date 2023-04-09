@@ -20,8 +20,8 @@
 
 import Route from '@ioc:Adonis/Core/Route'
 
-Route.post('users', 'UsersController.store')
 Route.get('users/:user', 'UsersController.show')
+Route.post('users', 'UsersController.store')
 
 Route.post('recovery', 'RecoveryController.store')
 Route.patch('recovery', 'RecoveryController.update')
