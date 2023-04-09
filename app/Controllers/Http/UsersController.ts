@@ -19,7 +19,8 @@ export default class UsersController {
   }
 
   @bind()
-  public async update({ request }: HttpContextContract, user: User) {
+  public async update({ request, bouncer }: HttpContextContract, user: User) {
+    await bouncer.with('UserPolicy').authorize('update', user)
     const payload = await request.validate(UsersUpdateValidator)
 
     user.merge(payload)

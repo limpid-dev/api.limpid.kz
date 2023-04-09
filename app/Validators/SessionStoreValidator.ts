@@ -29,9 +29,6 @@ export default class SessionStoreValidator {
       rules.exists({
         table: 'users',
         column: 'email',
-        whereNot: {
-          verified_at: null,
-        },
       }),
     ]),
     password: schema.string({}, [rules.minLength(8), rules.maxLength(128)]),
