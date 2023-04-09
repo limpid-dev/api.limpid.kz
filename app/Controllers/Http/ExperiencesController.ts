@@ -50,6 +50,6 @@ export default class ExperiencesController {
   public async destroy({ bouncer }: HttpContextContract, profile: Profile, experience: Experience) {
     await bouncer.with('ExperiencePolicy').authorize('delete', profile)
 
-    return await experience.delete()
+    await experience.delete()
   }
 }

@@ -24,7 +24,7 @@ export default class SkillsController {
     await bouncer.with('SkillPolicy').authorize('create', profile)
     const payload = await request.validate(SkillsStoreValidator)
 
-    const skill = profile.related('skills').create(payload)
+    const skill = await profile.related('skills').create(payload)
 
     return { data: skill }
   }

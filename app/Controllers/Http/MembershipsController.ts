@@ -3,37 +3,22 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Membership from 'App/Models/Membership'
 import Profile from 'App/Models/Profile'
 import Project from 'App/Models/Project'
-import MembershipsIndexValidator from 'App/Validators/MembershipsIndexValidator'
 import MembershipsStoreValidator from 'App/Validators/MembershipsStoreValidator'
 import MembershipsUpdateValidator from 'App/Validators/MembershipsUpdateValidator'
-import MembershipsViewValidator from 'App/Validators/MembershipsViewValidator'
 import MembershipsDestroyValidator from 'App/Validators/MembershipsDestroyValidator'
 import { DateTime } from 'luxon'
+import PaginationValidator from 'App/Validators/PaginationValidator'
 
 export default class MembershipsController {
   @bind()
-  public async index({ bouncer, request }: HttpContextContract, project: Project) {
-    const payload = await request.validate(MembershipsIndexValidator)
+  public async index({ request }: HttpContextContract, project: Project) {
+    const payload = await request.validate(PaginationValidator)
 
-    const profile = await Profile.findOrFail(payload.profileId)
-
-    await bouncer.with('MembershipPolicy').authorize('viewList', profile, project)
-
-    return project.related('memberships').query().paginate(payload.page, payload.perPage)
+    return await project.related('memberships').query().paginate(payload.page, payload.perPage)
   }
 
   @bind()
-  public async show(
-    { request, bouncer }: HttpContextContract,
-    project: Project,
-    membership: Membership
-  ) {
-    const payload = await request.validate(MembershipsViewValidator)
-
-    const profile = await Profile.findOrFail(payload.profileId)
-
-    await bouncer.with('MembershipPolicy').authorize('view', profile, project, membership)
-
+  public async show({}: HttpContextContract, project: Project, membership: Membership) {
     return { data: membership }
   }
 

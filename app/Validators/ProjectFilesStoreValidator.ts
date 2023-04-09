@@ -24,7 +24,6 @@ export default class ProjectFilesStoreValidator {
    *    ```
    */
   public schema = schema.create({
-    profileId: schema.number([rules.exists({ table: 'profiles', column: 'id' })]),
     file: schema.file({
       extnames: ['jpg', 'jpeg', 'png', 'pdf', 'docx', 'xlsx', 'pptx'],
       size: '64mb',

@@ -16,7 +16,7 @@ export default class SessionController {
     return { data: auth.user }
   }
 
-  public destroy({ auth }: HttpContextContract) {
-    return auth.logout()
+  public async destroy({ auth }: HttpContextContract) {
+    await auth.logout()
   }
 }
