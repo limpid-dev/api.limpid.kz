@@ -1,39 +1,38 @@
-import Redis from '@ioc:Adonis/Addons/Redis'
-import Hash from '@ioc:Adonis/Core/Hash'
-import { string } from '@ioc:Adonis/Core/Helpers'
+import Env from '@ioc:Adonis/Core/Env'
+import Route from '@ioc:Adonis/Core/Route'
+import { bind } from '@adonisjs/route-model-binding'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import VerifyEmail from 'App/Mailers/VerifyEmail'
+import RecoveryEmail from 'App/Mailers/RecoveryEmail'
 import User from 'App/Models/User'
 import RecoveryStoreValidator from 'App/Validators/RecoveryStoreValidator'
-import RecoveryUpdateValidator from 'App/Validators/RecoveryUpdateValidator'
 
 export default class RecoveryController {
-  public async store({ request }: HttpContextContract) {
+  @bind()
+  public async store({ request }: HttpContextContract, user: User) {
     const payload = await request.validate(RecoveryStoreValidator)
 
-    const user = await User.findByOrFail('email', payload.email)
+    const url = Route.builder()
+      .params({
+        email: user.email,
+      })
+      .qs({
+        password: payload.password,
+        redirectUri: payload.redirectUri,
+      })
+      .prefixUrl(Env.get('DOMAIN'))
+      .makeSigned('/recoveries/:email', {
+        expiresIn: '5m',
+        purpose: 'recovery',
+      })
 
-    const token = string.generateRandom(64)
-
-    const hashedToken = await Hash.make(token)
-
-    await Redis.set(`recovery:${user.id}`, hashedToken, 'EX', 60 * 60 * 5)
-
-    await new VerifyEmail(user, token).sendLater()
+    await new RecoveryEmail(user, url).sendLater()
   }
 
-  public async update({ request }: HttpContextContract) {
-    const payload = await request.validate(RecoveryUpdateValidator)
-
-    const user = await User.findByOrFail('email', payload.email)
-
-    const token = await Redis.get(`recovery:${user.id}`)
-
-    if (token) {
-      if (await Hash.verify(token, payload.token)) {
-        user.merge({ password: payload.password })
-        await user.save()
-      }
+  @bind()
+  public async show({ request, response }: HttpContextContract, user: User) {
+    if (request.hasValidSignature('verification')) {
+      await user.merge({ password: request.qs().password }).save()
+      response.redirect(request.qs().redirectUri)
     }
   }
 }
