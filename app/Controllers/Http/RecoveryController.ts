@@ -1,11 +1,11 @@
+import Redis from '@ioc:Adonis/Addons/Redis'
+import Hash from '@ioc:Adonis/Core/Hash'
 import { string } from '@ioc:Adonis/Core/Helpers'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import RecoveryEmail from 'App/Mailers/RecoveryEmail'
-import Token from 'App/Models/Token'
+import VerifyEmail from 'App/Mailers/VerifyEmail'
 import User from 'App/Models/User'
 import RecoveryStoreValidator from 'App/Validators/RecoveryStoreValidator'
 import RecoveryUpdateValidator from 'App/Validators/RecoveryUpdateValidator'
-import { DateTime } from 'luxon'
 
 export default class RecoveryController {
   public async store({ request }: HttpContextContract) {
@@ -13,33 +13,27 @@ export default class RecoveryController {
 
     const user = await User.findByOrFail('email', payload.email)
 
-    await user.related('tokens').query().where('type', 'RECOVERY').delete()
-
     const token = string.generateRandom(64)
 
-    await user.related('tokens').create({
-      expiredAt: DateTime.now().plus({ hours: 1 }),
-      type: 'RECOVERY',
-      token,
-    })
+    const hashedToken = await Hash.make(token)
 
-    await new RecoveryEmail(user, token).sendLater()
+    await Redis.set(`recovery:${user.id}`, hashedToken, 'EX', 60 * 60 * 5)
+
+    await new VerifyEmail(user, token).sendLater()
   }
 
   public async update({ request }: HttpContextContract) {
     const payload = await request.validate(RecoveryUpdateValidator)
 
-    const token = await Token.query()
-      .where('token', payload.token)
-      .andWhere('type', 'RECOVERY')
-      .andWhere('expiredAt', '>', DateTime.now().toSQL())
-      .preload('user')
-      .firstOrFail()
+    const user = await User.findByOrFail('email', payload.email)
 
-    token.user.merge({ password: payload.password })
+    const token = await Redis.get(`recovery:${user.id}`)
 
-    await token.user.save()
-
-    await token.delete()
+    if (token) {
+      if (await Hash.verify(token, payload.token)) {
+        user.merge({ password: payload.password })
+        await user.save()
+      }
+    }
   }
 }

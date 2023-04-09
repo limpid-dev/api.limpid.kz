@@ -1,43 +1,32 @@
+import Redis from '@ioc:Adonis/Addons/Redis'
+import Hash from '@ioc:Adonis/Core/Hash'
 import { string } from '@ioc:Adonis/Core/Helpers'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import VerifyEmail from 'App/Mailers/VerifyEmail'
-import Token from 'App/Models/Token'
 import VerificationUpdateValidator from 'App/Validators/VerificationUpdateValidator'
 import { DateTime } from 'luxon'
 
 export default class VerificationController {
   public async store({ auth }: HttpContextContract) {
-    const user = auth.user!
-
-    await user.related('tokens').query().where('type', 'VERIFICATION').delete()
-
     const token = string.generateRandom(64)
 
-    await user.related('tokens').create({
-      expiredAt: DateTime.now().plus({ hours: 1 }),
-      type: 'VERIFICATION',
-      token,
-    })
+    const hashedToken = await Hash.make(token)
 
-    await new VerifyEmail(user, token).sendLater()
+    await Redis.set(`verification:${auth.user!.id}`, hashedToken, 'EX', 60 * 60 * 5)
+
+    await new VerifyEmail(auth.user!, token).sendLater()
   }
 
-  public async update({ request }: HttpContextContract) {
+  public async update({ request, auth }: HttpContextContract) {
     const payload = await request.validate(VerificationUpdateValidator)
 
-    const token = await Token.query()
-      .where('token', payload.token)
-      .andWhere('type', 'VERIFICATION')
-      .andWhere('expiredAt', '>', DateTime.now().toSQL())
-      .preload('user')
-      .firstOrFail()
+    const token = await Redis.get(`verification:${auth.user!.id}`)
 
-    const user = await token.related('user').query().firstOrFail()
-
-    user.merge({ verifiedAt: DateTime.now() })
-
-    await user.save()
-
-    await token.delete()
+    if (token) {
+      if (await Hash.verify(token, payload.token)) {
+        auth.user!.merge({ verifiedAt: DateTime.now() })
+        await auth.user!.save()
+      }
+    }
   }
 }

@@ -10,7 +10,6 @@ import {
 } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 import Profile from './Profile'
-import Token from './Token'
 import Project from './Project'
 import Membership from './Membership'
 import Contact from './Contact'
@@ -35,9 +34,6 @@ export default class User extends BaseModel {
   @column.dateTime()
   public verifiedAt: DateTime | null
 
-  @column.date()
-  public bornAt: DateTime
-
   @column()
   public email: string
 
@@ -52,9 +48,6 @@ export default class User extends BaseModel {
 
   @column()
   public lastName: string
-
-  @hasMany(() => Token)
-  public tokens: HasMany<typeof Token>
 
   @hasMany(() => Profile)
   public profiles: HasMany<typeof Profile>

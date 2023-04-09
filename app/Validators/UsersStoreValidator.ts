@@ -32,7 +32,6 @@ export default class UsersStoreValidator {
     ]),
     firstName: schema.string({}, [rules.minLength(1), rules.maxLength(255)]),
     lastName: schema.string({}, [rules.minLength(1), rules.maxLength(255)]),
-    bornAt: schema.date(),
   })
 
   /**
