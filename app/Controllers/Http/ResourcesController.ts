@@ -40,7 +40,7 @@ export default class ResourcesController {
     profile: Profile,
     resource: Resource
   ) {
-    await bouncer.with('ResourcePolicy').authorize('update', profile)
+    await bouncer.with('ResourcePolicy').authorize('update', resource)
 
     const payload = await request.validate(ResourcesUpdateValidator)
 
@@ -55,7 +55,7 @@ export default class ResourcesController {
 
   @bind()
   public async destroy({ bouncer }: HttpContextContract, profile: Profile, resource: Resource) {
-    await bouncer.with('ResourcePolicy').authorize('delete', profile)
+    await bouncer.with('ResourcePolicy').authorize('delete', resource)
 
     await resource.delete()
   }
