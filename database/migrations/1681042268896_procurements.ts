@@ -15,6 +15,7 @@ export default class extends BaseSchema {
         .notNullable()
       table.string('title', 255).notNullable()
       table.string('description', 1024).notNullable()
+      table.decimal('budget', 20, 4).notNullable()
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

@@ -25,6 +25,9 @@ export default class Procurement extends BaseModel {
   @column()
   public description: string
 
+  @column()
+  public budget: number
+
   @hasMany(() => File)
   public files: HasMany<typeof File>
 
