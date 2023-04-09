@@ -17,7 +17,7 @@ export default class Procurement extends BaseModel {
   public startedAt: DateTime
 
   @column.dateTime()
-  public finishedAt: DateTime | null
+  public finishedAt: DateTime
 
   @column()
   public title: string
