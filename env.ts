@@ -50,4 +50,10 @@ export default Env.rules({
   EPAY_CLIENT_ID: Env.schema.string(),
   EPAY_CLIENT_SECRET: Env.schema.string(),
   EPAY_TERMINAL_ID: Env.schema.string(),
+
+  S3_KEY: Env.schema.string(),
+  S3_SECRET: Env.schema.string(),
+  S3_REGION: Env.schema.string(),
+  S3_BUCKET: Env.schema.string(),
+  S3_ENDPOINT: Env.schema.string({ format: 'url' }),
 })
