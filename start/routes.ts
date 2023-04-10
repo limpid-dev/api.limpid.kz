@@ -45,15 +45,12 @@ Route.get('profiles/:profile/skills', 'SkillsController.index')
 Route.get('profiles/:profile/certificates', 'CertificatesController.index')
 
 Route.get('profiles/:profile/certificates/:>certificate/files', 'CertificateFilesController.index')
-Route.get(
-  'profiles/:profile/certificates/:>certificate/files/:>file',
-  'CertificateFilesController.show'
-)
 
 Route.get('profiles/:profile/experiences', 'ExperiencesController.index')
 
 Route.get('projects', 'ProjectsController.index')
 Route.get('projects/:project', 'ProjectsController.show')
+
 Route.get('projects/:project/files', 'ProjectFilesController.index')
 
 Route.group(() => {
@@ -108,7 +105,6 @@ Route.group(() => {
     Route.delete('projects/:project/files/:>file', 'ProjectFilesController.destroy')
 
     Route.get('projects/:project/memberships', 'MembershipsController.index')
-    Route.get('projects/:project/memberships/:>membership', 'MembershipsController.show')
     Route.post('projects/:project/memberships', 'MembershipsController.store')
     Route.patch('projects/:project/memberships/:>membership', 'MembershipsController.update')
     Route.delete('projects/:project/memberships/:>membership', 'MembershipsController.destroy')
