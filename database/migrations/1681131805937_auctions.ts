@@ -9,13 +9,13 @@ export default class extends BaseSchema {
       table.string('title', 256).notNullable()
       table.string('description', 1024).notNullable()
       table.decimal('starting_price', 20, 4).nullable()
+      table.decimal('purchase_price', 20, 4).nullable()
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */
       table.timestamp('created_at', { useTz: true }).notNullable()
       table.timestamp('updated_at', { useTz: true }).notNullable()
-      table.timestamp('started_at', { useTz: true }).notNullable()
       table.timestamp('finished_at', { useTz: true }).notNullable()
     })
   }

@@ -29,11 +29,11 @@ export default class Auction extends BaseModel {
   public description: string
 
   @column.dateTime()
-  public startedAt: DateTime
-
-  @column.dateTime()
   public finishedAt: DateTime
 
   @column()
   public startingPrice: number | null
+
+  @column()
+  public purchasePrice: number | null
 }
