@@ -40,7 +40,9 @@ export default class AuctionStoreValidator {
       rules.before(this.refs.maximumFinishedDate),
     ]),
     startingPrice: schema.number.optional([rules.range(1, 999999999999999.9999)]),
-    purchasePrice: schema.number.optional([rules.range(1, 999999999999999.9999)]),
+    purchasePrice: schema.number.optional([
+      rules.range(this.ctx.request.input('startingPrice'), 999999999999999.9999),
+    ]),
   })
 
   /**
