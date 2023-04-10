@@ -18,6 +18,7 @@ import Resource from './Resource'
 import Skill from './Skill'
 import User from './User'
 import Auction from './Auction'
+import AuctionBid from './AuctionBid'
 
 export default class Profile extends BaseModel {
   @column({ isPrimary: true })
@@ -76,6 +77,9 @@ export default class Profile extends BaseModel {
 
   @hasMany(() => Auction)
   public auctions: HasMany<typeof Auction>
+
+  @hasMany(() => AuctionBid)
+  public auctionBids: HasMany<typeof AuctionBid>
 
   @beforeSave()
   public static async beforeSave(profile: Profile) {
