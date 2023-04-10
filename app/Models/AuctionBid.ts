@@ -13,6 +13,9 @@ export default class AuctionBid extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
 
+  @column.dateTime()
+  public wondAt: DateTime
+
   @column()
   public auctionId: number
 
