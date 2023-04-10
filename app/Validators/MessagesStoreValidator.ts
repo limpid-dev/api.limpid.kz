@@ -24,7 +24,6 @@ export default class MessagesStoreValidator {
    *    ```
    */
   public schema = schema.create({
-    profileId: schema.number([rules.exists({ table: 'profiles', column: 'id' })]),
     content: schema.string([rules.minLength(1), rules.maxLength(1024)]),
   })
 

@@ -3,9 +3,9 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Membership from 'App/Models/Membership'
 import Profile from 'App/Models/Profile'
 import Project from 'App/Models/Project'
-import MembershipsStoreValidator from 'App/Validators/MembershipsStoreValidator'
 import { DateTime } from 'luxon'
 import PaginationValidator from 'App/Validators/PaginationValidator'
+import ProfileActionValidator from 'App/Validators/ProfileActionValidator'
 
 export default class MembershipsController {
   @bind()
@@ -16,13 +16,8 @@ export default class MembershipsController {
   }
 
   @bind()
-  public async show({}: HttpContextContract, _project: Project, membership: Membership) {
-    return { data: membership }
-  }
-
-  @bind()
   public async store({ request, bouncer }: HttpContextContract, project: Project) {
-    const payload = await request.validate(MembershipsStoreValidator)
+    const payload = await request.validate(ProfileActionValidator)
 
     const profile = await Profile.findOrFail(payload.profileId)
 
@@ -34,8 +29,17 @@ export default class MembershipsController {
   }
 
   @bind()
-  public async update({ bouncer }: HttpContextContract, project: Project, membership: Membership) {
-    await bouncer.with('MembershipPolicy').authorize('update', project, membership)
+  public async update(
+    request,
+    { bouncer }: HttpContextContract,
+    project: Project,
+    membership: Membership
+  ) {
+    const { profileId } = await request.validate(ProfileActionValidator)
+
+    const profile = await Profile.findOrFail(profileId)
+
+    await bouncer.with('MembershipPolicy').authorize('update', profile, project, membership)
 
     membership.merge({ acceptedAt: DateTime.now() })
 
@@ -45,8 +49,16 @@ export default class MembershipsController {
   }
 
   @bind()
-  public async destroy({ bouncer }: HttpContextContract, project: Project, membership: Membership) {
-    await bouncer.with('MembershipPolicy').authorize('delete', project, membership)
+  public async destroy(
+    { request, bouncer }: HttpContextContract,
+    project: Project,
+    membership: Membership
+  ) {
+    const { profileId } = await request.validate(ProfileActionValidator)
+
+    const profile = await Profile.findOrFail(profileId)
+
+    await bouncer.with('MembershipPolicy').authorize('delete', profile, project, membership)
 
     await membership.delete()
   }

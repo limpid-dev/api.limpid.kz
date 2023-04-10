@@ -30,10 +30,10 @@ export default class ResourcesController {
   @bind()
   public async update(
     { bouncer, request }: HttpContextContract,
-    _profile: Profile,
+    profile: Profile,
     resource: Resource
   ) {
-    await bouncer.with('ResourcePolicy').authorize('update', resource)
+    await bouncer.with('ResourcePolicy').authorize('update', profile, resource)
 
     const payload = await request.validate(ResourcesUpdateValidator)
 
@@ -47,8 +47,8 @@ export default class ResourcesController {
   }
 
   @bind()
-  public async destroy({ bouncer }: HttpContextContract, _profile: Profile, resource: Resource) {
-    await bouncer.with('ResourcePolicy').authorize('delete', resource)
+  public async destroy({ bouncer }: HttpContextContract, profile: Profile, resource: Resource) {
+    await bouncer.with('ResourcePolicy').authorize('delete', profile, resource)
 
     await resource.delete()
   }

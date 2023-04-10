@@ -5,17 +5,17 @@ import Profile from 'App/Models/Profile'
 import Project from 'App/Models/Project'
 
 export default class MembershipPolicy extends BasePolicy {
-  public async create(user: User, project: Project) {
+  public async create(user: User, profile: Profile, project: Project) {
     return user.id === profile.userId && project.profileId !== profile.id
   }
-  public async update(user: User, project: Project, membership: Membership) {
+  public async update(user: User, profile: Profile, project: Project, membership: Membership) {
     return (
       user.id === profile.userId &&
       project.profileId === profile.id &&
       membership.projectId === project.id
     )
   }
-  public async delete(user: User, project: Project, membership: Membership) {
+  public async delete(user: User, profile: Profile, project: Project, membership: Membership) {
     return (
       user.id === profile.userId &&
       membership.projectId === project.id &&
