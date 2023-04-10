@@ -14,4 +14,19 @@ export default class Auction extends BaseModel {
 
   @hasMany(() => File)
   public files: HasMany<typeof File>
+
+  @column()
+  public title: string
+
+  @column()
+  public description: string
+
+  @column.dateTime()
+  public startedAt: DateTime
+
+  @column.dateTime()
+  public finishedAt: DateTime
+
+  @column()
+  public startingPrice: number | null
 }
