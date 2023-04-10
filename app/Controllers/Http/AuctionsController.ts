@@ -3,7 +3,6 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Auction from 'App/Models/Auction'
 import Profile from 'App/Models/Profile'
 import AuctionStoreValidator from 'App/Validators/AuctionStoreValidator'
-import AuctionUpdateValidator from 'App/Validators/AuctionUpdateValidator'
 import PaginationValidator from 'App/Validators/PaginationValidator'
 import ProfileActionValidator from 'App/Validators/ProfileActionValidator'
 
@@ -28,22 +27,6 @@ export default class AuctionsController {
     const profile = await Profile.findOrFail(profileId)
 
     const auction = await profile.related('auctions').create(payload)
-
-    return {
-      data: auction,
-    }
-  }
-
-  @bind()
-  public async update({ request, bouncer }: HttpContextContract, auction: Auction) {
-    const payload = await request.validate(AuctionUpdateValidator)
-    const { profileId } = await request.validate(ProfileActionValidator)
-
-    const profile = await Profile.findOrFail(profileId)
-
-    await bouncer.with('AuctionPolicy').authorize('update', profile, auction)
-
-    await auction.merge(payload).save()
 
     return {
       data: auction,
