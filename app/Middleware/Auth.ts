@@ -39,10 +39,6 @@ export default class AuthMiddleware {
          */
         auth.defaultGuard = guard
 
-        if (!auth.user?.verifiedAt) {
-          throw new UnVerifiedException('Unverified access', 403, 'E_UNVERIFIED_ACCESS')
-        }
-
         return true
       }
     }
