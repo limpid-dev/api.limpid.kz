@@ -14,7 +14,7 @@ export default class AuctionBid extends BaseModel {
   public updatedAt: DateTime
 
   @column.dateTime()
-  public wondAt: DateTime
+  public wondAt: DateTime | null
 
   @column()
   public auctionId: number
