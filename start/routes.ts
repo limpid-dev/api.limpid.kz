@@ -35,6 +35,7 @@ import './routes/contact'
 import './routes/certificate'
 import './routes/education'
 import './routes/auction'
+import './routes/auction-file'
 
 Route.get('health', async ({ response }) => {
   const report = await HealthCheck.getReport()
