@@ -4,13 +4,9 @@ import Profile from 'App/Models/Profile'
 
 export default class ProfilePolicy extends BasePolicy {
   public async update(user: User, profile: Profile) {
-    const exists = await user.related('profiles').query().where('id', profile.id).first()
-
-    return !!exists
+    return user.id === profile.userId
   }
   public async delete(user: User, profile: Profile) {
-    const exists = await user.related('profiles').query().where('id', profile.id).first()
-
-    return !!exists
+    return user.id === profile.userId
   }
 }

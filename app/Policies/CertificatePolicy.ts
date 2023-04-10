@@ -5,18 +5,12 @@ import Profile from 'App/Models/Profile'
 
 export default class CertificatePolicy extends BasePolicy {
   public async create(user: User, profile: Profile) {
-    const exists = await user.related('profiles').query().where('id', profile.id).first()
-
-    return !!exists
+    return user.id === profile.userId
   }
-  public async update(user: User, _profile: Profile, certificate: Certificate) {
-    const exists = await user.related('certificates').query().where('id', certificate.id).first()
-
-    return !!exists
+  public async update(user: User, profile: Profile, certificate: Certificate) {
+    return user.id === profile.userId && certificate.profileId === profile.id
   }
-  public async delete(user: User, _profile: Profile, certificate: Certificate) {
-    const exists = await user.related('certificates').query().where('id', certificate.id).first()
-
-    return !!exists
+  public async delete(user: User, profile: Profile, certificate: Certificate) {
+    return user.id === profile.userId && certificate.profileId === profile.id
   }
 }

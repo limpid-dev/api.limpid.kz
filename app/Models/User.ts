@@ -12,14 +12,6 @@ import { DateTime } from 'luxon'
 import Profile from './Profile'
 import Project from './Project'
 import Membership from './Membership'
-import Contact from './Contact'
-import Certificate from './Certificate'
-import Education from './Education'
-import Experience from './Experience'
-import File from './File'
-import Message from './Message'
-import Resource from './Resource'
-import Skill from './Skill'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -52,35 +44,11 @@ export default class User extends BaseModel {
   @hasMany(() => Profile)
   public profiles: HasMany<typeof Profile>
 
-  @hasManyThrough([() => Contact, () => Profile])
-  public contacts: HasManyThrough<typeof Contact>
-
-  @hasManyThrough([() => Skill, () => Profile])
-  public skills: HasManyThrough<typeof Skill>
-
-  @hasManyThrough([() => Membership, () => Profile])
-  public memberships: HasManyThrough<typeof Membership>
-
-  @hasManyThrough([() => Resource, () => Profile])
-  public resources: HasManyThrough<typeof Resource>
-
-  @hasManyThrough([() => Education, () => Profile])
-  public educations: HasManyThrough<typeof Education>
-
-  @hasManyThrough([() => Certificate, () => Profile])
-  public certificates: HasManyThrough<typeof Certificate>
-
-  @hasManyThrough([() => Experience, () => Profile])
-  public experiences: HasManyThrough<typeof Experience>
-
   @hasManyThrough([() => Project, () => Profile])
   public projects: HasManyThrough<typeof Project>
 
-  @hasManyThrough([() => Message, () => Profile])
-  public messages: HasManyThrough<typeof Message>
-
-  @hasManyThrough([() => File, () => Profile])
-  public files: HasManyThrough<typeof File>
+  @hasManyThrough([() => Membership, () => Profile])
+  public memberships: HasManyThrough<typeof Membership>
 
   @beforeSave()
   public static async beforeSave(user: User) {

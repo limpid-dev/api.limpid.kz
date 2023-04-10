@@ -50,7 +50,6 @@ export default class CertificateFilesController {
       contentType,
       size,
       extname,
-      profileId: profile.id,
     })
 
     return { data: file }

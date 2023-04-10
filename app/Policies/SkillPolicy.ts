@@ -5,18 +5,12 @@ import Profile from 'App/Models/Profile'
 
 export default class SkillPolicy extends BasePolicy {
   public async create(user: User, profile: Profile) {
-    const exists = await user.related('profiles').query().where('id', profile.id).first()
-
-    return !!exists
+    return user.id === profile.userId
   }
-  public async update(user: User, skill: Skill) {
-    const exists = await user.related('skills').query().where('id', skill.id).first()
-
-    return !!exists
+  public async update(user: User, profile: Profile, skill: Skill) {
+    return user.id === profile.userId && skill.profileId === profile.id
   }
-  public async delete(user: User, skill: Skill) {
-    const exists = await user.related('skills').query().where('id', skill.id).first()
-
-    return !!exists
+  public async delete(user: User, profile: Profile, skill: Skill) {
+    return user.id === profile.userId && skill.profileId === profile.id
   }
 }

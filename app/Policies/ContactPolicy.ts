@@ -5,18 +5,12 @@ import Contact from 'App/Models/Contact'
 
 export default class ContactPolicy extends BasePolicy {
   public async create(user: User, profile: Profile) {
-    const exists = await user.related('profiles').query().where('id', profile.id).first()
-
-    return !!exists
+    return user.id === profile.userId
   }
-  public async update(user: User, _profile: Profile, contact: Contact) {
-    const exists = await user.related('contacts').query().where('id', contact.id).first()
-
-    return !!exists
+  public async update(user: User, profile: Profile, contact: Contact) {
+    return user.id === profile.userId && contact.profileId === profile.id
   }
-  public async delete(user: User, _profile: Profile, contact: Contact) {
-    const exists = await user.related('contacts').query().where('id', contact.id).first()
-
-    return !!exists
+  public async delete(user: User, profile: Profile, contact: Contact) {
+    return user.id === profile.userId && contact.profileId === profile.id
   }
 }

@@ -2,8 +2,8 @@ import { BaseModel, BelongsTo, HasMany, belongsTo, column, hasMany } from '@ioc:
 import { DateTime } from 'luxon'
 import File from './File'
 import Membership from './Membership'
-import Message from './Message'
 import Profile from './Profile'
+import Message from './Message'
 
 export default class Project extends BaseModel {
   @column({ isPrimary: true })
@@ -60,9 +60,9 @@ export default class Project extends BaseModel {
   @hasMany(() => Membership)
   public memberships: HasMany<typeof Membership>
 
-  @hasMany(() => Message)
-  public messages: HasMany<typeof Message>
-
   @hasMany(() => File)
   public files: HasMany<typeof File>
+
+  @hasMany(() => Message)
+  public messages: HasMany<typeof Message>
 }

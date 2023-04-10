@@ -41,7 +41,6 @@ export default class ProjectFilesController {
       contentType,
       size,
       extname,
-      profileId: project.profileId,
     })
 
     return { data: file }

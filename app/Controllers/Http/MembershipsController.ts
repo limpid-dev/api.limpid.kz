@@ -26,7 +26,7 @@ export default class MembershipsController {
 
     const profile = await Profile.findOrFail(payload.profileId)
 
-    await bouncer.with('MembershipPolicy').authorize('create', profile)
+    await bouncer.with('MembershipPolicy').authorize('create', profile, project)
 
     const membership = await project.related('memberships').create({ profileId: profile.id })
 

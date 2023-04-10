@@ -5,23 +5,21 @@ import Profile from 'App/Models/Profile'
 import Project from 'App/Models/Project'
 
 export default class MembershipPolicy extends BasePolicy {
-  public async create(user: User, profile: Profile) {
-    const exists = await user.related('profiles').query().where('id', profile.id).first()
-
-    return !!exists
+  public async create(user: User, project: Project) {
+    return user.id === profile.userId && project.profileId !== profile.id
   }
   public async update(user: User, project: Project, membership: Membership) {
-    const admin = await user.related('projects').query().where('id', project.id).first()
-
-    const member = await user.related('memberships').query().where('id', membership.id).first()
-
-    return !!admin || !!member
+    return (
+      user.id === profile.userId &&
+      project.profileId === profile.id &&
+      membership.projectId === project.id
+    )
   }
   public async delete(user: User, project: Project, membership: Membership) {
-    const admin = await user.related('projects').query().where('id', project.id).first()
-
-    const member = await user.related('memberships').query().where('id', membership.id).first()
-
-    return !!admin || !!member
+    return (
+      user.id === profile.userId &&
+      membership.projectId === project.id &&
+      (project.profileId === profile.id || membership.profileId === profile.id)
+    )
   }
 }

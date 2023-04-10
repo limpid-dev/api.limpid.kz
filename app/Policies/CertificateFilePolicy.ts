@@ -11,7 +11,7 @@ export default class CertificateFilePolicy extends BasePolicy {
   public async delete(user: User, profile: Profile, certificate: Certificate, file: File) {
     return (
       user.id === profile.userId &&
-      file.profileId === profile.id &&
+      certificate.profileId === profile.id &&
       certificate.id === file.certificateId
     )
   }

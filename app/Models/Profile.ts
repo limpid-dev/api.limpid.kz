@@ -12,9 +12,7 @@ import Certificate from './Certificate'
 import Contact from './Contact'
 import Education from './Education'
 import Experience from './Experience'
-import File from './File'
 import Membership from './Membership'
-import Message from './Message'
 import Project from './Project'
 import Resource from './Resource'
 import Skill from './Skill'
@@ -74,12 +72,6 @@ export default class Profile extends BaseModel {
 
   @hasMany(() => Project)
   public projects: HasMany<typeof Project>
-
-  @hasMany(() => Message)
-  public messages: HasMany<typeof Message>
-
-  @hasMany(() => File)
-  public files: HasMany<typeof File>
 
   @beforeSave()
   public static async beforeSave(profile: Profile) {

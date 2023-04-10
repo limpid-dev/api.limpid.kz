@@ -53,6 +53,8 @@ Route.get('projects/:project', 'ProjectsController.show')
 
 Route.get('projects/:project/files', 'ProjectFilesController.index')
 
+Route.get('projects/:project/memberships', 'MembershipsController.index')
+
 Route.group(() => {
   Route.patch('users/:user', 'UsersController.update')
 
@@ -104,7 +106,6 @@ Route.group(() => {
     Route.post('projects/:project/files', 'ProjectFilesController.store')
     Route.delete('projects/:project/files/:>file', 'ProjectFilesController.destroy')
 
-    Route.get('projects/:project/memberships', 'MembershipsController.index')
     Route.post('projects/:project/memberships', 'MembershipsController.store')
     Route.patch('projects/:project/memberships/:>membership', 'MembershipsController.update')
     Route.delete('projects/:project/memberships/:>membership', 'MembershipsController.destroy')

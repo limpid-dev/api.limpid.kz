@@ -5,18 +5,12 @@ import Education from 'App/Models/Education'
 
 export default class EducationPolicy extends BasePolicy {
   public async create(user: User, profile: Profile) {
-    const exists = await user.related('profiles').query().where('id', profile.id).first()
-
-    return !!exists
+    return user.id === profile.userId
   }
-  public async update(user: User, _profile: Profile, education: Education) {
-    const exists = await user.related('educations').query().where('id', education.id).first()
-
-    return !!exists
+  public async update(user: User, profile: Profile, education: Education) {
+    return user.id === profile.userId && education.profileId === profile.id
   }
-  public async delete(user: User, _profile: Profile, education: Education) {
-    const exists = await user.related('educations').query().where('id', education.id).first()
-
-    return !!exists
+  public async delete(user: User, profile: Profile, education: Education) {
+    return user.id === profile.userId && education.profileId === profile.id
   }
 }
