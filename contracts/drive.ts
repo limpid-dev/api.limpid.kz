@@ -10,7 +10,5 @@ import type driveConfig from '../config/drive'
 
 declare module '@ioc:Adonis/Core/Drive' {
   interface DisksList extends InferDisksFromConfig<typeof driveConfig> {}
-  interface DriversList {
-    s3: import('@ioc:Adonis/Core/Drive').DriversList
-  }
+  interface DriversList {}
 }

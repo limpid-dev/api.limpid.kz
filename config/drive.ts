@@ -95,7 +95,7 @@ export default driveConfig({
     */
     s3: {
       driver: 's3',
-      visibility: 'public',
+      visibility: 'private',
       key: Env.get('S3_KEY'),
       secret: Env.get('S3_SECRET'),
       region: Env.get('S3_REGION'),
