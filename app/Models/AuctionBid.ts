@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import Auction from './Auction'
 
 export default class AuctionBid extends BaseModel {
   @column({ isPrimary: true })
@@ -10,4 +11,10 @@ export default class AuctionBid extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  @column()
+  public auctionId: number
+
+  @belongsTo(() => Auction)
+  public auction: BelongsTo<typeof Auction>
 }
