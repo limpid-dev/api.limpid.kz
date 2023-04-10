@@ -1,6 +1,7 @@
 import { AuthenticationException } from '@adonisjs/auth/build/standalone'
 import type { GuardsList } from '@ioc:Adonis/Addons/Auth'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import UnVerifiedException from 'App/Exceptions/UnVerifiedException'
 
 /**
  * Auth middleware is meant to restrict un-authenticated access to a given route
@@ -37,6 +38,11 @@ export default class AuthMiddleware {
          * succeeded here
          */
         auth.defaultGuard = guard
+
+        if (!auth.user?.verifiedAt) {
+          throw new UnVerifiedException('Unverified access', 403, 'E_UNVERIFIED_ACCESS')
+        }
+
         return true
       }
     }
