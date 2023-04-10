@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon'
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, HasMany, column, hasMany } from '@ioc:Adonis/Lucid/Orm'
+import File from './File'
 
 export default class Auction extends BaseModel {
   @column({ isPrimary: true })
@@ -10,4 +11,7 @@ export default class Auction extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  @hasMany(() => File)
+  public files: HasMany<typeof File>
 }
