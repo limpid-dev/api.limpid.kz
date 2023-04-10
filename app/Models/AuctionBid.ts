@@ -1,22 +1,15 @@
-import { DateTime } from 'luxon'
 import {
   BaseModel,
   BelongsTo,
-  ModelQueryBuilderContract,
-  afterCreate,
   beforeCreate,
   beforeDelete,
-  beforeFetch,
-  beforeFind,
-  beforeSave,
   beforeUpdate,
   belongsTo,
   column,
 } from '@ioc:Adonis/Lucid/Orm'
+import { DateTime } from 'luxon'
 import Auction from './Auction'
 import Profile from './Profile'
-
-type AuctionBidQuery = ModelQueryBuilderContract<typeof AuctionBid>
 
 export default class AuctionBid extends BaseModel {
   @column({ isPrimary: true })
