@@ -16,7 +16,7 @@ export default class RecoveryController {
       .params([user.email])
       .qs({
         password: payload.password,
-        redirectUri: payload.redirectUri,
+        redirectUrl: payload.redirectUrl,
       })
       .prefixUrl(Env.get('DOMAIN'))
       .makeSigned('RecoveryController.show', {

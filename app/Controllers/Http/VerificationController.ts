@@ -16,7 +16,7 @@ export default class VerificationController {
     const url = Route.builder()
       .params([user.email])
       .qs({
-        redirectUri: payload.redirectUri,
+        redirectUrl: payload.redirectUrl,
       })
       .prefixUrl(Env.get('DOMAIN'))
       .makeSigned('VerificationController.show', {
