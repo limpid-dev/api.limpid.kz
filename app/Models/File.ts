@@ -1,8 +1,22 @@
-import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import { MultipartFileContract } from '@ioc:Adonis/Core/BodyParser'
+import Drive from '@ioc:Adonis/Core/Drive'
+import { cuid } from '@ioc:Adonis/Core/Helpers'
+import {
+  BaseModel,
+  BelongsTo,
+  ModelPaginatorContract,
+  afterCreate,
+  afterDelete,
+  afterFetch,
+  afterFind,
+  afterPaginate,
+  belongsTo,
+  column,
+} from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
+import Auction from './Auction'
 import Certificate from './Certificate'
 import Project from './Project'
-import Auction from './Auction'
 
 export default class File extends BaseModel {
   @column({ isPrimary: true })
@@ -21,16 +35,10 @@ export default class File extends BaseModel {
   public size: number
 
   @column()
-  public contentType: string
+  public mimeType: string
 
   @column()
   public extname: string
-
-  @column()
-  public visibility: string
-
-  @column()
-  public location: string
 
   @column()
   public certificateId: number | null
@@ -49,4 +57,54 @@ export default class File extends BaseModel {
 
   @belongsTo(() => Auction)
   public auction: BelongsTo<typeof Auction>
+
+  public static from(multipart: MultipartFileContract) {
+    const file = new File()
+
+    file.size = multipart.size
+    file.mimeType = `${multipart.type}/${multipart.subtype}`
+    file.extname = `.${multipart.extname}`
+    file.name = `${cuid()}.${multipart.extname}`
+
+    file.$extras._multipart = multipart
+
+    return file
+  }
+
+  public serializeExtras() {
+    return {
+      url: this.$extras._url,
+    }
+  }
+
+  public async preComputeUrl() {
+    this.$extras._url = await Drive.getUrl(this.name)
+  }
+
+  @afterCreate()
+  public static async afterCreate(file: File) {
+    const multipart = file.$extras._multipart as MultipartFileContract
+
+    await multipart.moveToDisk('./', { name: file.name })
+  }
+
+  @afterDelete()
+  public static async afterDelete(file: File) {
+    await Drive.delete(file.name)
+  }
+
+  @afterFind()
+  public static async afterFind(file: File) {
+    await file.preComputeUrl()
+  }
+
+  @afterFetch()
+  public static async afterFetch(file: File[]) {
+    await Promise.all(file.map(File.afterFind))
+  }
+
+  @afterPaginate()
+  public static async afterPaginate(paginator: ModelPaginatorContract<File>) {
+    await Promise.all(paginator.all().map(File.afterFind))
+  }
 }

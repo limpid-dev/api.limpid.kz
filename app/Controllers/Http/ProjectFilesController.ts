@@ -1,5 +1,4 @@
 import { bind } from '@adonisjs/route-model-binding'
-import Drive from '@ioc:Adonis/Core/Drive'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import File from 'App/Models/File'
 import Profile from 'App/Models/Profile'
@@ -26,28 +25,11 @@ export default class ProjectFilesController {
 
     const payload = await request.validate(ProjectFilesStoreValidator)
 
-    const location = `./projects/${project.id}/files`
-    const contentType = `${payload.file.extname}/${payload.file.subtype}`
-    const visibility = 'public'
-    const name = payload.file.clientName
-    const size = payload.file.size
-    const extname = payload.file.extname
-
-    await payload.file.moveToDisk(location, {
-      name,
-      contentType,
-      visibility,
-      contentLength: size,
-    })
-
-    const file = await project.related('files').create({
-      name,
-      location,
-      visibility,
-      contentType,
-      size,
-      extname,
-    })
+    const file = await File.from(payload.file)
+      .merge({
+        projectId: project.id,
+      })
+      .save()
 
     return { data: file }
   }
@@ -58,8 +40,6 @@ export default class ProjectFilesController {
     const profile = await Profile.findOrFail(profileId)
 
     await bouncer.with('ProjectFilePolicy').authorize('delete', profile, project, file)
-
-    await Drive.delete(file.location)
 
     await file.delete()
   }

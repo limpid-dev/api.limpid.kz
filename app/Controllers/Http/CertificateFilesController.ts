@@ -1,5 +1,4 @@
 import { bind } from '@adonisjs/route-model-binding'
-import Drive from '@ioc:Adonis/Core/Drive'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Certificate from 'App/Models/Certificate'
 import File from 'App/Models/File'
@@ -29,32 +28,18 @@ export default class CertificateFilesController {
 
     const payload = await request.validate(CertificateFilesStoreValidator)
 
-    const location = `./profiles/${profile.id}/certificates/${certificate.id}/files`
-    const contentType = `${payload.file.extname}/${payload.file.subtype}`
-    const visibility = 'public'
-    const name = payload.file.clientName
-    const size = payload.file.size
-    const extname = payload.file.extname
+    const file = await File.from(payload.file)
+      .merge({
+        certificateId: certificate.id,
+      })
+      .save()
 
-    await payload.file.moveToDisk(location, {
-      name,
-      contentType,
-      visibility,
-      contentLength: size,
-    })
-
-    const file = await certificate.related('files').create({
-      name,
-      location,
-      visibility,
-      contentType,
-      size,
-      extname,
-    })
-
-    return { data: file }
+    return {
+      file,
+    }
   }
 
+  @bind()
   public async destroy(
     { bouncer }: HttpContextContract,
     profile: Profile,
@@ -62,7 +47,7 @@ export default class CertificateFilesController {
     file: File
   ) {
     await bouncer.with('CertificateFilePolicy').authorize('delete', profile, certificate, file)
-    await Drive.delete(file.location)
+
     await file.delete()
   }
 }

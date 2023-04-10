@@ -1,4 +1,3 @@
-import Drive from '@ioc:Adonis/Core/Drive'
 import { bind } from '@adonisjs/route-model-binding'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Auction from 'App/Models/Auction'
@@ -26,28 +25,11 @@ export default class AuctionFilesController {
 
     const payload = await request.validate(AuctionFilesStoreValidator)
 
-    const location = `./auctions/${auction.id}/files`
-    const contentType = `${payload.file.extname}/${payload.file.subtype}`
-    const visibility = 'public'
-    const name = payload.file.clientName
-    const size = payload.file.size
-    const extname = payload.file.extname
-
-    await payload.file.moveToDisk(location, {
-      name,
-      contentType,
-      visibility,
-      contentLength: size,
-    })
-
-    const file = await auction.related('files').create({
-      name,
-      location,
-      visibility,
-      contentType,
-      size,
-      extname,
-    })
+    const file = await File.from(payload.file)
+      .merge({
+        auctionId: auction.id,
+      })
+      .save()
 
     return {
       data: file,
@@ -61,8 +43,6 @@ export default class AuctionFilesController {
     const profile = await Profile.findOrFail(profileId)
 
     await bouncer.with('AuctionFilePolicy').authorize('delete', profile, auction, file)
-
-    await Drive.delete(file.location)
 
     await file.delete()
   }
