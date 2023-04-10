@@ -28,7 +28,7 @@ export default class EducationsStoreValidator {
     description: schema.string({ trim: true }, [rules.maxLength(255)]),
     institution: schema.string({ trim: true }, [rules.maxLength(64)]),
     startedAt: schema.date(),
-    finishedAt: schema.date.optional(),
+    finishedAt: schema.date.optional({}, [rules.afterField('startedAt')]),
   })
 
   /**

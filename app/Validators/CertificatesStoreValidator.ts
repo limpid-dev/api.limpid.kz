@@ -28,7 +28,7 @@ export default class CertificatesStoreValidator {
     description: schema.string({ trim: true }, [rules.maxLength(255)]),
     institution: schema.string({ trim: true }, [rules.maxLength(64)]),
     issuedAt: schema.date(),
-    expiredAt: schema.date.optional(),
+    expiredAt: schema.date.optional({}, [rules.afterField('issuedAt')]),
   })
 
   /**

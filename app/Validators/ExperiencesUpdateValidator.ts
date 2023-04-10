@@ -28,7 +28,7 @@ export default class ExperiencesUpdateValidator {
     description: schema.string.optional({ trim: true }, [rules.maxLength(255)]),
     organization: schema.string.optional({ trim: true }, [rules.maxLength(64)]),
     startedAt: schema.date.optional(),
-    finishedAt: schema.date.optional(),
+    finishedAt: schema.date.optional({}, [rules.afterField('startedAt')]),
   })
 
   /**
