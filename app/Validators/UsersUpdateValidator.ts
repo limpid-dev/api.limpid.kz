@@ -23,6 +23,7 @@ export default class UsersUpdateValidator {
    *     ])
    *    ```
    */
+
   public schema = schema.create({
     email: schema.string.optional({}, [
       rules.email(),
@@ -35,7 +36,6 @@ export default class UsersUpdateValidator {
     ]),
     firstName: schema.string.optional({}, [rules.minLength(1), rules.maxLength(255)]),
     lastName: schema.string.optional({}, [rules.minLength(1), rules.maxLength(255)]),
-    bornAt: schema.date.optional(),
   })
 
   /**
