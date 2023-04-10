@@ -56,16 +56,6 @@ export default class CertificateFilesController {
     return { data: file }
   }
 
-  @bind()
-  public async show(
-    {}: HttpContextContract,
-    _profile: Profile,
-    _certificate: Certificate,
-    file: File
-  ) {
-    return { data: file }
-  }
-
   public async destroy(
     { bouncer }: HttpContextContract,
     profile: Profile,

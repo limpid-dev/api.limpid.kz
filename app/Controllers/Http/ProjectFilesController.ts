@@ -47,11 +47,6 @@ export default class ProjectFilesController {
     return { data: file }
   }
 
-  @bind()
-  public async show({}: HttpContextContract, _project: Project, file: File) {
-    return { data: file }
-  }
-
   public async destroy({ bouncer }: HttpContextContract, project: Project, file: File) {
     await bouncer.with('ProjectFilePolicy').authorize('delete', project, file)
     await Drive.delete(file.location)
