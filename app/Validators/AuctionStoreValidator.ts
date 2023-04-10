@@ -26,8 +26,6 @@ export default class AuctionStoreValidator {
    */
 
   public refs = schema.refs({
-    maximumStartedDate: DateTime.now().plus({ days: 30 }),
-    minimumStartedDate: DateTime.now().plus({ hours: 1 }),
     maximumFinishedDate: DateTime.fromISO(this.ctx.request.input('startedAt')).plus({ days: 30 }),
     minimumFinishedDate: DateTime.fromISO(this.ctx.request.input('startedAt')).plus({
       minutes: 15,
@@ -37,15 +35,12 @@ export default class AuctionStoreValidator {
   public schema = schema.create({
     title: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
     description: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(1024)]),
-    startedAt: schema.date({}, [
-      rules.after(this.refs.minimumStartedDate),
-      rules.before(this.refs.maximumStartedDate),
-    ]),
     finishedAt: schema.date({}, [
       rules.after(this.refs.minimumFinishedDate),
       rules.before(this.refs.maximumFinishedDate),
     ]),
     startingPrice: schema.number.optional([rules.range(1, 999999999999999.9999)]),
+    purchasePrice: schema.number.optional([rules.range(1, 999999999999999.9999)]),
   })
 
   /**
