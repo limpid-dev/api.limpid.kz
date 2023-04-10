@@ -1,4 +1,5 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import UnVerifiedException from 'App/Exceptions/UnVerifiedException'
 import SessionStoreValidator from 'App/Validators/SessionStoreValidator'
 
 export default class SessionController {
@@ -6,6 +7,10 @@ export default class SessionController {
     const payload = await request.validate(SessionStoreValidator)
 
     const attempt = await auth.use(payload.mode).attempt(payload.email, payload.password)
+
+    if (!auth.user!.verifiedAt) {
+      throw new UnVerifiedException('Unverified access', 403, 'E_UNVERIFIED_ACCESS')
+    }
 
     return {
       data: attempt,
