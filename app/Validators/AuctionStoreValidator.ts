@@ -1,5 +1,6 @@
 import { rules, schema, CustomMessages } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { DateTime } from 'luxon'
 
 export default class AuctionStoreValidator {
   constructor(protected ctx: HttpContextContract) {}
@@ -23,11 +24,27 @@ export default class AuctionStoreValidator {
    *     ])
    *    ```
    */
+
+  public refs = schema.refs({
+    maximumStartedDate: DateTime.now().plus({ days: 30 }),
+    minimumStartedDate: DateTime.now().plus({ hours: 1 }),
+    maximumFinishedDate: DateTime.fromISO(this.ctx.request.input('startedAt')).plus({ days: 30 }),
+    minimumFinishedDate: DateTime.fromISO(this.ctx.request.input('startedAt')).plus({
+      minutes: 15,
+    }),
+  })
+
   public schema = schema.create({
     title: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
     description: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(1024)]),
-    startedAt: schema.date(),
-    finishedAt: schema.date(),
+    startedAt: schema.date({}, [
+      rules.after(this.refs.minimumStartedDate),
+      rules.before(this.refs.maximumStartedDate),
+    ]),
+    finishedAt: schema.date({}, [
+      rules.after(this.refs.minimumFinishedDate),
+      rules.before(this.refs.maximumFinishedDate),
+    ]),
     startingPrice: schema.number.optional([rules.range(1, 999999999999999.9999)]),
   })
 
