@@ -44,7 +44,7 @@ services:
   caddy:
     image: "caddy:2.6.4-alpine"
     command: |
-      caddy reverse-proxy --from ${DOMAIN} --to api:${PORT}
+      caddy reverse-proxy --from http://${DOMAIN} --to api:${PORT}
     volumes:
       - caddy_data:/data
       - caddy_config:/config
