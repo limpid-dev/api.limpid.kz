@@ -36,4 +36,4 @@ services:
       - mysql
       - redis
     ports:
-      - ${PORT}:${PORT}
+      - 127.0.0.1:3001:${PORT}
