@@ -8,7 +8,7 @@
     "build"
   ],
   "compilerOptions": {
-    "jsx": "react",
+    "jsx": "preserve",
     "esModuleInterop": true,
     "lib": [
       "DOM"
