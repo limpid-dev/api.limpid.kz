@@ -7,7 +7,7 @@ interface Props {
 const fontFamily =
   "-apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue', sans-serif"
 
-export default function Verify({ token = '$TEST' }: Props) {
+export default function Recovery({ token = '$TEST' }: Props) {
   return (
     <Html>
       <Preview>Limpid.kz</Preview>
@@ -31,7 +31,7 @@ export default function Verify({ token = '$TEST' }: Props) {
               fontFamily,
             }}
           >
-            Верификация аккаунта
+            Восстановление пароля
           </Heading>
           <Text
             style={{
@@ -71,8 +71,8 @@ export default function Verify({ token = '$TEST' }: Props) {
               color: '#6A716E',
             }}
           >
-            Если вы не отправляли запрос на верификацию, то можете спокойно проигнорировать это
-            письмо.
+            Если вы не отправляли запрос на восстановление пароля, то можете спокойно
+            проигнорировать это письмо.
           </Text>
           <Link
             href="https://limpid.kz"

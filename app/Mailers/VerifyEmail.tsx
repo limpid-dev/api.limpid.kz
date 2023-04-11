@@ -28,7 +28,7 @@ export default class VerifyEmail extends BaseMailer {
     const html = await renderAsync(<Verify token={this.token} />)
 
     message
-      .subject('Активируйте свой аккаунт')
+      .subject('Верификация аккаунта')
       .from(Env.get('SMTP_USERNAME'))
       .to(this.user.email)
       .html(html)
