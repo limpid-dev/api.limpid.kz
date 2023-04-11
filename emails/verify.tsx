@@ -1,5 +1,5 @@
 import { Heading } from '@react-email/components'
 
-export const Email = () => {
-  return <Heading as="h1">Lorem ipsum</Heading>
+export function Email({ token }: { token: string }) {
+  return <Heading as="h1">Lorem ipsum ${token}</Heading>
 }
