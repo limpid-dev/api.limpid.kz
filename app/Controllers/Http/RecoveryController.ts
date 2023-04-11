@@ -19,7 +19,7 @@ export default class RecoveryController {
     await new RecoveryEmail(user, token).sendLater()
   }
 
-  public async show({ request, response }: HttpContextContract) {
+  public async update({ request, response }: HttpContextContract) {
     const payload = await request.validate(RecoveryUpdateValidator)
 
     const user = await User.findByOrFail('email', payload.email)
