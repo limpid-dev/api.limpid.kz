@@ -30,6 +30,7 @@ export default class RecoveryController {
       if (safeEqual(token, payload.token)) {
         await user.merge({ password: payload.password }).save()
         await Redis.del(`recovery:${user.id}`)
+        return
       }
     }
 

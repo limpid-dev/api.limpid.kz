@@ -31,6 +31,7 @@ export default class VerificationController {
       if (safeEqual(token, payload.token)) {
         await user.merge({ verifiedAt: DateTime.now() }).save()
         await Redis.del(`verification:${user.id}`)
+        return
       }
     }
 
