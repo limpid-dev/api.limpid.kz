@@ -22,7 +22,7 @@ export default Env.rules({
   APP_NAME: Env.schema.string(),
   DRIVE_DISK: Env.schema.enum(['local', 's3'] as const),
 
-  DOMAIN: Env.schema.string({ format: 'url' }),
+  DOMAIN: Env.schema.string({ format: 'host' }),
 
   DB_CONNECTION: Env.schema.string(),
 
