@@ -28,13 +28,13 @@ export default Env.rules({
   MYSQL_HOST: Env.schema.string({ format: 'host' }),
   MYSQL_PORT: Env.schema.number(),
   MYSQL_USER: Env.schema.string(),
-  MYSQL_PASSWORD: Env.schema.string.optional(),
+  MYSQL_PASSWORD: Env.schema.string(),
   MYSQL_DATABASE: Env.schema.string(),
 
   REDIS_CONNECTION: Env.schema.enum(['local'] as const),
   REDIS_HOST: Env.schema.string({ format: 'host' }),
   REDIS_PORT: Env.schema.number(),
-  REDIS_PASSWORD: Env.schema.string.optional(),
+  REDIS_PASSWORD: Env.schema.string(),
 
   SMTP_HOST: Env.schema.string({ format: 'host' }),
   SMTP_PORT: Env.schema.number(),
@@ -54,5 +54,5 @@ export default Env.rules({
   S3_SECRET: Env.schema.string(),
   S3_BUCKET: Env.schema.string(),
   S3_REGION: Env.schema.string(),
-  S3_ENDPOINT: Env.schema.string.optional(),
+  S3_ENDPOINT: Env.schema.string(),
 })
