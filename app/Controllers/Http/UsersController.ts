@@ -8,7 +8,7 @@ export default class UsersController {
   public async store({ request }: HttpContextContract) {
     const payload = await request.validate(UsersStoreValidator)
 
-    const user = await User.create(payload)
+    const user = await User.updateOrCreate({ email: payload.email }, payload)
 
     return { data: user }
   }

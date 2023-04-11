@@ -24,7 +24,16 @@ export default class UsersStoreValidator {
    *    ```
    */
   public schema = schema.create({
-    email: schema.string({}, [rules.email(), rules.unique({ table: 'users', column: 'email' })]),
+    email: schema.string({}, [
+      rules.email(),
+      rules.unique({
+        table: 'users',
+        column: 'email',
+        whereNot: {
+          verified_at: null,
+        },
+      }),
+    ]),
     password: schema.string({}, [
       rules.minLength(8),
       rules.maxLength(128),

@@ -1,11 +1,11 @@
-import { bind } from '@adonisjs/route-model-binding'
-import Env from '@ioc:Adonis/Core/Env'
+import { string, safeEqual } from '@ioc:Adonis/Core/Helpers'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Route from '@ioc:Adonis/Core/Route'
 import VerifyEmail from 'App/Mailers/VerifyEmail'
 import User from 'App/Models/User'
 import VerificationStoreValidator from 'App/Validators/VerificationStoreValidator'
 import { DateTime } from 'luxon'
+import Redis from '@ioc:Adonis/Addons/Redis'
+import VerificationUpdateValidator from 'App/Validators/VerificationUpdateValidator'
 
 export default class VerificationController {
   public async store({ request }: HttpContextContract) {
@@ -13,25 +13,36 @@ export default class VerificationController {
 
     const user = await User.findByOrFail('email', payload.email)
 
-    const url = Route.builder()
-      .params([user.email])
-      .qs({
-        redirectUrl: payload.redirectUrl,
-      })
-      .prefixUrl(Env.get('DOMAIN'))
-      .makeSigned('VerificationController.show', {
-        expiresIn: '5m',
-        purpose: 'verification',
-      })
+    const token = string.generateRandom(6)
 
-    await new VerifyEmail(user, url).sendLater()
+    await Redis.set(`verification:${user.id}`, token, 'EX', 60 * 5)
+
+    await new VerifyEmail(user, token).sendLater()
   }
 
-  @bind()
-  public async show({ request, response }: HttpContextContract, user: User) {
-    if (request.hasValidSignature('verification')) {
-      await user.merge({ verifiedAt: DateTime.now() }).save()
-      response.redirect(request.qs().redirectUri)
+  public async update({ request, response }: HttpContextContract) {
+    const payload = await request.validate(VerificationUpdateValidator)
+
+    const user = await User.findByOrFail('email', payload.email)
+
+    const token = await Redis.get(`verification:${user.id}`)
+
+    if (token) {
+      if (safeEqual(token, payload.token)) {
+        await user.merge({ verifiedAt: DateTime.now() }).save()
+        await Redis.del(`verification:${user.id}`)
+      }
     }
+
+    return response.abort(
+      {
+        errors: [
+          {
+            message: 'Invalid token',
+          },
+        ],
+      },
+      422
+    )
   }
 }

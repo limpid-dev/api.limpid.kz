@@ -3,7 +3,7 @@ import { BaseMailer, MessageContract } from '@ioc:Adonis/Addons/Mail'
 import User from 'App/Models/User'
 
 export default class VerifyEmail extends BaseMailer {
-  constructor(private readonly user: User, private readonly url: string) {
+  constructor(private readonly user: User, private readonly token: string) {
     super()
   }
   /**
@@ -27,6 +27,6 @@ export default class VerifyEmail extends BaseMailer {
       .subject('Email verification')
       .from(Env.get('SMTP_USERNAME'))
       .to(this.user.email)
-      .text(this.url)
+      .text(this.token)
   }
 }
