@@ -1,4 +1,4 @@
-version: "3.9"
+version: '3.9'
 networks:
   mysql:
   redis:
@@ -18,7 +18,7 @@ services:
     expose:
       - ${MYSQL_PORT}
   redis:
-    image: "redis:7.0.10-alpine"
+    image: 'redis:7.0.10-alpine'
     volumes:
       - redis:/data
     networks:
