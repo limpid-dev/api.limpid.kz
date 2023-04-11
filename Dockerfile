@@ -1,6 +1,6 @@
 FROM node:18.15-alpine AS base
-RUN mkdir -p /home/node/application && chown node:node /home/node/application
-WORKDIR /home/node/application
+RUN mkdir -p /home/node/api && chown node:node /home/node/api
+WORKDIR /home/node/api
 USER node
 
 FROM base AS dependencies
@@ -14,5 +14,5 @@ RUN node ace build --production
 FROM base AS production
 COPY --chown=node:node ./package*.json ./
 RUN npm ci --omit=dev
-COPY --chown=node:node --from=build /home/node/application/build .
+COPY --chown=node:node --from=build /home/node/api/build .
 CMD [ "node", "server.js" ]
