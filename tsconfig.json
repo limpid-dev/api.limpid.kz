@@ -10,9 +10,6 @@
   "compilerOptions": {
     "jsx": "react-jsx",
     "esModuleInterop": true,
-    "lib": [
-      "DOM"
-    ],
     "outDir": "build",
     "rootDir": "./",
     "sourceMap": true,
