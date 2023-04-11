@@ -1,0 +1,40 @@
+version: "3.9"
+
+services:
+  mysql:
+    image: mysql:8.0.32
+    volumes:
+      - mysql:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
+      MYSQL_DATABASE: ${MYSQL_DATABASE}
+    expose:
+      - ${MYSQL_PORT}
+
+  redis:
+    image: redis:7.0.10-alpine
+    volumes:
+      - redis:/data
+    expose:
+      - ${REDIS_PORT}
+
+  api:
+    build: ./
+    depends_on:
+      - mysql
+      - redis
+    env_file:
+      - .env
+    expose:
+      - ${PORT}
+
+  caddy:
+    image: caddy:2.6.4-alpine
+    command: |
+      caddy reverse-proxy --from http://localhost:${CADDY_PORT} --to :${PORT} --debug
+    ports:
+      - ${CADDY_PORT}:${CADDY_PORT}
+
+volumes:
+  mysql:
+  redis:
