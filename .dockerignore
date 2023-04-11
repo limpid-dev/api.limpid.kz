@@ -1,4 +1,3 @@
-# Adonis default .gitignore ignores
 node_modules
 build
 coverage
@@ -7,10 +6,8 @@ coverage
 .env
 tmp
 
-# Additional good to have ignores for dockerignore
 Dockerfile*
 docker-compose*
 .dockerignore
-*.md
 .git
 .gitignore
