@@ -29,7 +29,7 @@ export default Env.rules({
   MYSQL_PORT: Env.schema.number(),
   MYSQL_USER: Env.schema.string(),
   MYSQL_PASSWORD: Env.schema.string.optional(),
-  MYSQL_DB_NAME: Env.schema.string(),
+  MYSQL_DATABASE: Env.schema.string(),
 
   REDIS_CONNECTION: Env.schema.enum(['local'] as const),
   REDIS_HOST: Env.schema.string({ format: 'host' }),
