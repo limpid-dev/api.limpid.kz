@@ -25,7 +25,7 @@ export default class ProjectFilesStoreValidator {
    */
   public schema = schema.create({
     file: schema.file({
-      extnames: ['jpg', 'jpeg', 'png', 'pdf', 'docx', 'xlsx', 'pptx'],
+      extnames: ['jpg', 'jpeg', 'png', 'pdf'],
       size: '8mb',
     }),
   })
