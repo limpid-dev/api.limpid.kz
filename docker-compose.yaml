@@ -6,6 +6,8 @@ networks:
 volumes:
   mysql: null
   redis: null
+  caddy_data: null
+  caddy_config: null
 services:
   mysql:
     image: "mysql:8.0.32"
@@ -43,8 +45,12 @@ services:
     image: "caddy:2.6.4-alpine"
     command: |
       caddy reverse-proxy --from ${DOMAIN} --to api:${PORT}
+    volumes:
+      - caddy_data:/data
+      - caddy_config:/config
     networks:
       - api
     ports:
       - "80:80"
       - "443:443"
+      - "443:443/udp"
