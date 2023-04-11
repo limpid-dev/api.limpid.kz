@@ -1,40 +1,50 @@
 version: "3.9"
-
+networks:
+  mysql: null
+  redis: null
+  api: null
+volumes:
+  mysql: null
+  redis: null
 services:
   mysql:
-    image: mysql:8.0.32
+    image: "mysql:8.0.32"
     volumes:
-      - mysql:/var/lib/mysql
+      - "mysql:/var/lib/mysql"
     environment:
-      MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
-      MYSQL_DATABASE: ${MYSQL_DATABASE}
+      MYSQL_ROOT_PASSWORD: "${MYSQL_PASSWORD}"
+      MYSQL_DATABASE: "${MYSQL_DATABASE}"
+    networks:
+      - mysql
     expose:
-      - ${MYSQL_PORT}
-
+      - "${MYSQL_PORT}"
   redis:
-    image: redis:7.0.10-alpine
+    image: "redis:7.0.10-alpine"
     volumes:
-      - redis:/data
+      - "redis:/data"
+    networks:
+      - redis
     expose:
-      - ${REDIS_PORT}
-
+      - "${REDIS_PORT}"
   api:
     build: ./
-    depends_on:
-      - mysql
-      - redis
     env_file:
       - .env
+    environment:
+      - MYSQL_HOST=mysql
+      - REDIS_HOST=redis
+    networks:
+      - mysql
+      - redis
+      - api
     expose:
-      - ${PORT}
-
+      - "${PORT}"
   caddy:
-    image: caddy:2.6.4-alpine
+    image: "caddy:2.6.4-alpine"
     command: |
-      caddy reverse-proxy --from http://localhost:${CADDY_PORT} --to :${PORT} --debug
+      caddy reverse-proxy --from ${DOMAIN} --to api:${PORT}
+    networks:
+      - api
     ports:
-      - ${CADDY_PORT}:${CADDY_PORT}
-
-volumes:
-  mysql:
-  redis:
+      - "80:80"
+      - "443:443"
