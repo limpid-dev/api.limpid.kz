@@ -4,8 +4,8 @@ Route.get('profiles/:profile/certificates/:>certificate/files', 'CertificateFile
 Route.post(
   'profiles/:profile/certificates/:>certificate/files',
   'CertificateFilesController.store'
-).middleware('auth')
+).middleware('auth:web,api')
 Route.delete(
   'profiles/:profile/certificates/:>certificate/files/:>file',
   'CertificateFilesController.destroy'
-).middleware('auth')
+).middleware('auth:web,api')

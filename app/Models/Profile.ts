@@ -3,13 +3,15 @@ import {
   BaseModel,
   BelongsTo,
   HasMany,
-  LucidModel,
   beforeSave,
   belongsTo,
   column,
   hasMany,
 } from '@ioc:Adonis/Lucid/Orm'
+import { Searchable } from 'App/Mixins/Searchable'
 import { DateTime } from 'luxon'
+import Auction from './Auction'
+import AuctionBid from './AuctionBid'
 import Certificate from './Certificate'
 import Contact from './Contact'
 import Education from './Education'
@@ -19,9 +21,6 @@ import Project from './Project'
 import Resource from './Resource'
 import Skill from './Skill'
 import User from './User'
-import Auction from './Auction'
-import AuctionBid from './AuctionBid'
-import { Searchable } from 'App/Mixins/Searchable'
 
 export default class Profile extends compose(BaseModel, Searchable) {
   public static search = ['title', 'description', 'location', 'industry']

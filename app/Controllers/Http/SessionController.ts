@@ -7,11 +7,9 @@ export default class SessionController {
     const payload = await request.validate(SessionStoreValidator)
 
     if (payload.mode === 'web') {
-      await auth.use('web').attempt(payload.email, payload.password)
+      const attempt = await auth.use('web').attempt(payload.email, payload.password)
 
-      const user = await auth.authenticate()
-
-      if (!user.verifiedAt) {
+      if (!attempt.verifiedAt) {
         throw new AuthenticationException('Unverified access', 'E_UNVERIFIED_ACCESS', payload.mode)
       }
     }
