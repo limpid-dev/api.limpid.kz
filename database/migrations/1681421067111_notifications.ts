@@ -9,7 +9,7 @@ export default class extends BaseSchema {
       table.foreign('user_id').references('id').inTable('users').onDelete('CASCADE').notNullable()
       table.string('title', 64).notNullable()
       table.string('body', 256).notNullable()
-      table.json('data').nullable()
+      table.json('data').notNullable()
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
