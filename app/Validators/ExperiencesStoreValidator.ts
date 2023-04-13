@@ -28,8 +28,7 @@ export default class ExperiencesStoreValidator {
     description: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
     organization: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(64)]),
     startedAt: schema.date(),
-    // FIXME: This should be optional, but it's not working
-    finishedAt: schema.date.optional({}, []),
+    finishedAt: schema.date.optional({}, [rules.afterField('startedAt')]),
   })
 
   /**
