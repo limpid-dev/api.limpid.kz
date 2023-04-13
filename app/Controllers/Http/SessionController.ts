@@ -6,14 +6,26 @@ export default class SessionController {
   public async store({ request, auth }: HttpContextContract) {
     const payload = await request.validate(SessionStoreValidator)
 
-    const attempt = await auth.use(payload.mode).attempt(payload.email, payload.password)
+    if (payload.mode === 'web') {
+      await auth.use('web').attempt(payload.email, payload.password)
 
-    if (!auth.user?.verifiedAt) {
-      throw new AuthenticationException('Unverified access', 'E_UNVERIFIED_ACCESS', payload.mode)
+      const user = await auth.authenticate()
+
+      if (!user.verifiedAt) {
+        throw new AuthenticationException('Unverified access', 'E_UNVERIFIED_ACCESS', payload.mode)
+      }
     }
 
-    return {
-      data: attempt,
+    if (payload.mode === 'api') {
+      const attempt = await auth.use('api').attempt(payload.email, payload.password)
+
+      if (!attempt.user.verifiedAt) {
+        throw new AuthenticationException('Unverified access', 'E_UNVERIFIED_ACCESS', payload.mode)
+      }
+
+      return {
+        data: attempt,
+      }
     }
   }
 
