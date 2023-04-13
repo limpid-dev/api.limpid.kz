@@ -37,4 +37,21 @@ export default class Notification extends BaseModel {
 
   @belongsTo(() => User)
   public user: BelongsTo<typeof User>
+
+  public async read(this: Notification) {
+    await this.merge({ readAt: DateTime.now() }).save()
+  }
+
+  public static async notify(
+    user: User,
+    title: string,
+    body: string,
+    data: Record<string, unknown> = {}
+  ) {
+    return await user.related('notifications').create({
+      title,
+      body,
+      data,
+    })
+  }
 }
