@@ -2,6 +2,7 @@ import Hash from '@ioc:Adonis/Core/Hash'
 import { BaseModel, HasMany, beforeSave, column, hasMany } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 import Profile from './Profile'
+import Notification from './Notification'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -33,6 +34,9 @@ export default class User extends BaseModel {
 
   @hasMany(() => Profile)
   public profiles: HasMany<typeof Profile>
+
+  @hasMany(() => Notification)
+  public notifications: HasMany<typeof Notification>
 
   @beforeSave()
   public static async beforeSave(user: User) {
