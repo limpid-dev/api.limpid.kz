@@ -56,7 +56,7 @@ export default class AppProvider {
           this.where((query) => {
             search.forEach((field) => {
               if (columns.has(field)) {
-                query.orWhere(string.snakeCase(field), 'LIKE', `%${value}%`)
+                query.orWhereILike(string.snakeCase(field), `%${value}%`)
               }
             })
           })
