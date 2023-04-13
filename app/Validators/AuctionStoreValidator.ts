@@ -26,8 +26,8 @@ export default class AuctionStoreValidator {
    */
 
   public refs = schema.refs({
-    maximumFinishedDate: DateTime.fromISO(this.ctx.request.input('startedAt')).plus({ days: 30 }),
-    minimumFinishedDate: DateTime.fromISO(this.ctx.request.input('startedAt')).plus({
+    maximumFinishedDate: DateTime.now().plus({ days: 30 }),
+    minimumFinishedDate: DateTime.now().plus({
       minutes: 15,
     }),
   })
