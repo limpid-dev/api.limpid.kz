@@ -24,7 +24,7 @@ export default class SkillsUpdateValidator {
    *    ```
    */
   public schema = schema.create({
-    name: schema.string.optional({ trim: true }, [rules.minLength(4), rules.maxLength(64)]),
+    name: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(64)]),
   })
 
   /**

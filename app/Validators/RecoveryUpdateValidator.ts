@@ -34,7 +34,7 @@ export default class RecoveryUpdateValidator {
         },
       }),
     ]),
-    token: schema.string({ trim: true }),
+    token: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(64)]),
     password: schema.string({}, [
       rules.minLength(8),
       rules.maxLength(128),

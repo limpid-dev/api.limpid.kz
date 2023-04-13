@@ -31,7 +31,11 @@ export default class SessionStoreValidator {
         column: 'email',
       }),
     ]),
-    password: schema.string({}, [rules.minLength(8), rules.maxLength(128)]),
+    password: schema.string({}, [
+      rules.minLength(8),
+      rules.maxLength(128),
+      rules.regex(/^(?=.*[A-Za-z])(?=.*\d)(?=.*[@$!%*#?&])[A-Za-z\d@$!%*#?&]+$/),
+    ]),
     mode: schema.enum(['web', 'api'] as const),
   })
 

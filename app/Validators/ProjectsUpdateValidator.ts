@@ -32,6 +32,28 @@ export default class ProjectsUpdateValidator {
     location: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
     industry: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
     stage: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(64)]),
+    requiredMoneyAmount: schema.number.optional([rules.range(1, 999999999999999.9999)]),
+    ownedMoneyAmount: schema.number.optional([rules.range(1, 999999999999999.9999)]),
+    requiredIntellectualResources: schema.string.optional({ trim: true }, [
+      rules.minLength(1),
+      rules.maxLength(1024),
+    ]),
+    ownedIntellectualResources: schema.string.optional({ trim: true }, [
+      rules.minLength(1),
+      rules.maxLength(1024),
+    ]),
+    requiredMaterialResources: schema.string.optional({ trim: true }, [
+      rules.minLength(1),
+      rules.maxLength(1024),
+    ]),
+    ownedMaterialResources: schema.string.optional({ trim: true }, [
+      rules.minLength(1),
+      rules.maxLength(1024),
+    ]),
+    profitability: schema.string.optional({ trim: true }, [
+      rules.minLength(1),
+      rules.maxLength(1024),
+    ]),
   })
 
   /**

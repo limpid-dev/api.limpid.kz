@@ -24,7 +24,7 @@ export default class ProfilesUpdateValidator {
    *    ```
    */
   public schema = schema.create({
-    title: schema.string.optional({ trim: true }, [rules.minLength(4), rules.maxLength(255)]),
+    title: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
     description: schema.string.optional({ trim: true }, [
       rules.minLength(255),
       rules.maxLength(1024),

@@ -24,9 +24,9 @@ export default class ExperiencesStoreValidator {
    *    ```
    */
   public schema = schema.create({
-    title: schema.string({ trim: true }, [rules.maxLength(64)]),
-    description: schema.string({ trim: true }, [rules.maxLength(255)]),
-    organization: schema.string({ trim: true }, [rules.maxLength(64)]),
+    title: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(64)]),
+    description: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
+    organization: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(64)]),
     startedAt: schema.date(),
     // FIXME: This should be optional, but it's not working
     finishedAt: schema.date.optional({}, []),

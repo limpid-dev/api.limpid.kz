@@ -24,7 +24,7 @@ export default class SkillsStoreValidator {
    *    ```
    */
   public schema = schema.create({
-    name: schema.string({ trim: true }, [rules.minLength(4), rules.maxLength(64)]),
+    name: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(64)]),
   })
 
   /**

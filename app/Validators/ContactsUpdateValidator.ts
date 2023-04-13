@@ -25,8 +25,8 @@ export default class ContactsUpdateValidator {
    */
   public schema = schema.create({
     type: schema.enum.optional(['EMAIL', 'MOBILE', 'URL'] as const),
-    name: schema.string.optional({}, [rules.minLength(1)]),
-    value: schema.string.optional({}, [rules.minLength(1)]),
+    name: schema.string({}, [rules.minLength(1), rules.maxLength(64)]),
+    value: schema.string({}, [rules.minLength(1), rules.maxLength(256)]),
   })
 
   /**
