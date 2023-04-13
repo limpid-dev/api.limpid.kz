@@ -87,7 +87,8 @@ export default sessionConfig({
   cookie: {
     path: '/',
     httpOnly: true,
-    sameSite: false,
+    sameSite: true,
+    secure: Env.get('NODE_ENV') === 'production',
   },
 
   /*
