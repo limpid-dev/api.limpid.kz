@@ -1,5 +1,5 @@
+import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
-import { BaseModel, BelongsTo, belongsTo, column, computed } from '@ioc:Adonis/Lucid/Orm'
 import User from './User'
 
 export default class Notification extends BaseModel {
@@ -14,13 +14,6 @@ export default class Notification extends BaseModel {
 
   @column.dateTime()
   public readAt: DateTime | null
-
-  @computed({
-    serializeAs: 'is_read',
-  })
-  public get isRead() {
-    return !!this.readAt
-  }
 
   @column()
   public title: string
