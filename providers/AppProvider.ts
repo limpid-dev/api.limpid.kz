@@ -12,6 +12,10 @@ function isSearch(query: unknown): query is string {
   return typeof query === 'string' && query !== ''
 }
 
+function isSearchable(searchable: unknown): searchable is string[] {
+  return Array.isArray(searchable) && searchable.every((item) => typeof item === 'string')
+}
+
 export default class AppProvider {
   constructor(protected app: ApplicationContract) {}
 
@@ -36,6 +40,7 @@ export default class AppProvider {
             })
           }
         }
+
         if (key === 'sort' && isSort(value)) {
           value.forEach((field) => {
             if (field.startsWith('-')) {
@@ -51,15 +56,17 @@ export default class AppProvider {
         }
 
         if (key === 'search' && isSearch(value)) {
-          const search = this.model.search as Set<string>
+          const search = this.model.search as unknown
 
-          this.where((query) => {
-            search.forEach((field) => {
-              if (columns.has(field)) {
-                query.orWhereILike(string.snakeCase(field), `%${value}%`)
-              }
+          if (isSearchable(search)) {
+            this.where((query) => {
+              search.forEach((field) => {
+                if (columns.has(field)) {
+                  query.orWhereILike(string.snakeCase(field), `%${value}%`)
+                }
+              })
             })
-          })
+          }
         }
       })
 
