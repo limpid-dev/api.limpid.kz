@@ -111,6 +111,7 @@ export const csrf: ShieldConfig['csrf'] = {
   cookieOptions: {
     secure: Env.get('NODE_ENV') === 'production',
     sameSite: true,
+    domain: 'localhost',
   },
 
   /*
