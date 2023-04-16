@@ -34,12 +34,8 @@ export default class AuctionsController {
   }
 
   @bind()
-  public async destroy({ request, bouncer }: HttpContextContract, auction: Auction) {
-    const { profileId } = await request.validate(ProfileActionValidator)
-
-    const profile = await Profile.findOrFail(profileId)
-
-    await bouncer.with('AuctionPolicy').authorize('delete', profile, auction)
+  public async destroy({ bouncer }: HttpContextContract, auction: Auction) {
+    await bouncer.with('AuctionPolicy').authorize('delete', auction)
 
     await auction.delete()
   }

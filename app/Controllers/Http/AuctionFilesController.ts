@@ -2,10 +2,8 @@ import { bind } from '@adonisjs/route-model-binding'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Auction from 'App/Models/Auction'
 import File from 'App/Models/File'
-import Profile from 'App/Models/Profile'
 import AuctionFilesStoreValidator from 'App/Validators/AuctionFilesStoreValidator'
 import PaginationValidator from 'App/Validators/PaginationValidator'
-import ProfileActionValidator from 'App/Validators/ProfileActionValidator'
 
 export default class AuctionFilesController {
   @bind()
@@ -17,11 +15,7 @@ export default class AuctionFilesController {
 
   @bind()
   public async store({ request, bouncer }: HttpContextContract, auction: Auction) {
-    const { profileId } = await request.validate(ProfileActionValidator)
-
-    const profile = await Profile.findOrFail(profileId)
-
-    await bouncer.with('AuctionFilePolicy').authorize('create', profile, auction)
+    await bouncer.with('AuctionFilePolicy').authorize('create', auction)
 
     const payload = await request.validate(AuctionFilesStoreValidator)
 
@@ -37,12 +31,8 @@ export default class AuctionFilesController {
   }
 
   @bind()
-  public async destroy({ request, bouncer }: HttpContextContract, auction: Auction, file: File) {
-    const { profileId } = await request.validate(ProfileActionValidator)
-
-    const profile = await Profile.findOrFail(profileId)
-
-    await bouncer.with('AuctionFilePolicy').authorize('delete', profile, auction, file)
+  public async destroy({ bouncer }: HttpContextContract, auction: Auction, file: File) {
+    await bouncer.with('AuctionFilePolicy').authorize('delete', auction, file)
 
     await file.delete()
   }
