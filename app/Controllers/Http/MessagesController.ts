@@ -9,11 +9,7 @@ import ProfileActionValidator from 'App/Validators/ProfileActionValidator'
 export default class MessagesController {
   @bind()
   public async index({ request, bouncer }: HttpContextContract, project: Project) {
-    const { profileId } = await request.validate(ProfileActionValidator)
-
-    const profile = await Profile.findOrFail(profileId)
-
-    await bouncer.with('MessagePolicy').authorize('viewList', profile, project)
+    await bouncer.with('MessagePolicy').authorize('viewList', project)
 
     const payload = await request.validate(PaginationValidator)
 

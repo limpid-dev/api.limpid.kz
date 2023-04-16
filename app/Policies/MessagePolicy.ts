@@ -4,16 +4,16 @@ import Project from 'App/Models/Project'
 import User from 'App/Models/User'
 
 export default class MessagePolicy extends BasePolicy {
-  public async viewList(_user: User, profile: Profile, project: Project) {
-    const isMember = !!(await profile
+  public async viewList(user: User, project: Project) {
+    const isMember = await user
       .related('memberships')
       .query()
       .where('projectId', project.id)
-      .first())
+      .first()
 
-    const isAdmin = !!(await profile.related('projects').query().where('id', project.id).first())
+    const isAdmin = await user.related('projects').query().where('id', project.id).first()
 
-    return isMember || isAdmin
+    return !!isMember || !!isAdmin
   }
 
   public async create(_user: User, profile: Profile, project: Project) {

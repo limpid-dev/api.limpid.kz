@@ -1,10 +1,8 @@
 import { bind } from '@adonisjs/route-model-binding'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import File from 'App/Models/File'
-import Profile from 'App/Models/Profile'
 import Project from 'App/Models/Project'
 import PaginationValidator from 'App/Validators/PaginationValidator'
-import ProfileActionValidator from 'App/Validators/ProfileActionValidator'
 import ProjectFilesStoreValidator from 'App/Validators/ProjectFilesStoreValidator'
 
 export default class ProjectFilesController {
@@ -17,11 +15,7 @@ export default class ProjectFilesController {
 
   @bind()
   public async store({ request, bouncer }: HttpContextContract, project: Project) {
-    const { profileId } = await request.validate(ProfileActionValidator)
-
-    const profile = await Profile.findOrFail(profileId)
-
-    await bouncer.with('ProjectFilePolicy').authorize('create', profile, project)
+    await bouncer.with('ProjectFilePolicy').authorize('create', project)
 
     const payload = await request.validate(ProjectFilesStoreValidator)
 
@@ -34,12 +28,8 @@ export default class ProjectFilesController {
     return { data: file }
   }
 
-  public async destroy({ request, bouncer }: HttpContextContract, project: Project, file: File) {
-    const { profileId } = await request.validate(ProfileActionValidator)
-
-    const profile = await Profile.findOrFail(profileId)
-
-    await bouncer.with('ProjectFilePolicy').authorize('delete', profile, project, file)
+  public async destroy({ bouncer }: HttpContextContract, project: Project, file: File) {
+    await bouncer.with('ProjectFilePolicy').authorize('delete', project, file)
 
     await file.delete()
   }

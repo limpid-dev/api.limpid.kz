@@ -21,7 +21,7 @@ export default class MembershipsController {
 
     const profile = await Profile.findOrFail(payload.profileId)
 
-    await bouncer.with('MembershipPolicy').authorize('create', profile, project)
+    await bouncer.with('MembershipPolicy').authorize('create', project)
 
     const membership = await project.related('memberships').create({ profileId: profile.id })
 
@@ -29,17 +29,8 @@ export default class MembershipsController {
   }
 
   @bind()
-  public async update(
-    request,
-    { bouncer }: HttpContextContract,
-    project: Project,
-    membership: Membership
-  ) {
-    const { profileId } = await request.validate(ProfileActionValidator)
-
-    const profile = await Profile.findOrFail(profileId)
-
-    await bouncer.with('MembershipPolicy').authorize('update', profile, project, membership)
+  public async update({ bouncer }: HttpContextContract, project: Project, membership: Membership) {
+    await bouncer.with('MembershipPolicy').authorize('update', project, membership)
 
     membership.merge({ acceptedAt: DateTime.now() })
 
@@ -49,16 +40,8 @@ export default class MembershipsController {
   }
 
   @bind()
-  public async destroy(
-    { request, bouncer }: HttpContextContract,
-    project: Project,
-    membership: Membership
-  ) {
-    const { profileId } = await request.validate(ProfileActionValidator)
-
-    const profile = await Profile.findOrFail(profileId)
-
-    await bouncer.with('MembershipPolicy').authorize('delete', profile, project, membership)
+  public async destroy({ bouncer }: HttpContextContract, project: Project, membership: Membership) {
+    await bouncer.with('MembershipPolicy').authorize('delete', project, membership)
 
     await membership.delete()
   }

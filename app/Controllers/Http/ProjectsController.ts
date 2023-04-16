@@ -35,11 +35,8 @@ export default class ProjectsController {
   @bind()
   public async update({ request, bouncer }: HttpContextContract, project: Project) {
     const payload = await request.validate(ProjectsUpdateValidator)
-    const { profileId } = await request.validate(ProfileActionValidator)
 
-    const profile = await Profile.findOrFail(profileId)
-
-    await bouncer.with('ProjectPolicy').authorize('update', profile, project)
+    await bouncer.with('ProjectPolicy').authorize('update', project)
 
     await project.merge(payload).save()
 
@@ -47,12 +44,8 @@ export default class ProjectsController {
   }
 
   @bind()
-  public async destroy({ request, bouncer }: HttpContextContract, project: Project) {
-    const { profileId } = await request.validate(ProfileActionValidator)
-
-    const profile = await Profile.findOrFail(profileId)
-
-    await bouncer.with('ProjectPolicy').authorize('delete', profile, project)
+  public async destroy({ bouncer }: HttpContextContract, project: Project) {
+    await bouncer.with('ProjectPolicy').authorize('delete', project)
 
     await project.delete()
   }
