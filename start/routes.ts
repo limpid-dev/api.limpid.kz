@@ -41,9 +41,9 @@ import './routes/experience'
 import './routes/notification'
 
 Route.get('health', async ({ response }) => {
-  const report = await HealthCheck.getReport()
+  const data = await HealthCheck.getReport()
 
-  return report.healthy ? response.ok(report) : response.badRequest(report)
+  return data.healthy ? response.ok({ data }) : response.badRequest({ data })
 })
 
 Route.get('csrf', () => {})
