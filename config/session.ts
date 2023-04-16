@@ -87,10 +87,8 @@ export default sessionConfig({
   cookie: {
     path: '/',
     httpOnly: true,
-    sameSite: true,
-    secure: Env.get('NODE_ENV') === 'production',
+    sameSite: false,
   },
-
   /*
   |--------------------------------------------------------------------------
   | Configuration for the file driver

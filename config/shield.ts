@@ -108,11 +108,6 @@ export const csrf: ShieldConfig['csrf'] = {
   |
   */
   enableXsrfCookie: true,
-  cookieOptions: {
-    secure: Env.get('NODE_ENV') === 'production',
-    sameSite: true,
-    domain: Env.get('DOMAIN'),
-  },
 
   /*
   |--------------------------------------------------------------------------
