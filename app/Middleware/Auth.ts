@@ -66,6 +66,11 @@ export default class AuthMiddleware {
      */
     const guards = customGuards.length ? customGuards : [auth.name]
     await this.authenticate(auth, guards)
+
+    if (!auth.user?.verifiedAt) {
+      throw new AuthenticationException('Unverified account', 'E_UNVERIFIED_ACCOUNT')
+    }
+
     await next()
   }
 }
