@@ -46,6 +46,4 @@ Route.get('health', async ({ response }) => {
   return report.healthy ? response.ok(report) : response.badRequest(report)
 })
 
-Route.get('csrf', async ({ response }) => {
-  return response.ok({})
-})
+Route.get('csrf', () => {})
