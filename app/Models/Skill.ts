@@ -1,8 +1,9 @@
+import { BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
-import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import AppBaseModel from './AppBaseModel'
 import Profile from './Profile'
 
-export default class Skill extends BaseModel {
+export default class Skill extends AppBaseModel {
   @column({ isPrimary: true })
   public id: number
 

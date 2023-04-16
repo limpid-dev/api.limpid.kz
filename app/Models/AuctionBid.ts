@@ -1,5 +1,4 @@
 import {
-  BaseModel,
   BelongsTo,
   beforeCreate,
   beforeDelete,
@@ -10,8 +9,9 @@ import {
 import { DateTime } from 'luxon'
 import Auction from './Auction'
 import Profile from './Profile'
+import AppBaseModel from './AppBaseModel'
 
-export default class AuctionBid extends BaseModel {
+export default class AuctionBid extends AppBaseModel {
   @column({ isPrimary: true })
   public id: number
 

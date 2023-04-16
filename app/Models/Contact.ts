@@ -1,10 +1,11 @@
+import { BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
-import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import AppBaseModel from './AppBaseModel'
 import Profile from './Profile'
 
 export type Type = 'EMAIL' | 'MOBILE' | 'URL'
 
-export default class Contact extends BaseModel {
+export default class Contact extends AppBaseModel {
   @column({ isPrimary: true })
   public id: number
 

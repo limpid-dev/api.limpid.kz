@@ -1,13 +1,14 @@
 import { compose } from '@ioc:Adonis/Core/Helpers'
-import { BaseModel, BelongsTo, HasMany, belongsTo, column, hasMany } from '@ioc:Adonis/Lucid/Orm'
+import { BelongsTo, HasMany, belongsTo, column, hasMany } from '@ioc:Adonis/Lucid/Orm'
+import { Searchable } from 'App/Mixins/Searchable'
 import { DateTime } from 'luxon'
+import AppBaseModel from './AppBaseModel'
 import File from './File'
 import Membership from './Membership'
-import Profile from './Profile'
 import Message from './Message'
-import { Searchable } from 'App/Mixins/Searchable'
+import Profile from './Profile'
 
-export default class Project extends compose(BaseModel, Searchable) {
+export default class Project extends compose(AppBaseModel, Searchable) {
   public static search = [
     'title',
     'description',

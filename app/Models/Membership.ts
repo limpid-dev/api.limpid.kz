@@ -1,10 +1,11 @@
-import { BaseModel, BelongsTo, HasMany, belongsTo, column, hasMany } from '@ioc:Adonis/Lucid/Orm'
+import { BelongsTo, HasMany, belongsTo, column, hasMany } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
+import AppBaseModel from './AppBaseModel'
+import Message from './Message'
 import Profile from './Profile'
 import Project from './Project'
-import Message from './Message'
 
-export default class Membership extends BaseModel {
+export default class Membership extends AppBaseModel {
   @column({ isPrimary: true })
   public id: number
 

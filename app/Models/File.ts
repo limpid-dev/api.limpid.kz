@@ -2,7 +2,6 @@ import { MultipartFileContract } from '@ioc:Adonis/Core/BodyParser'
 import Drive from '@ioc:Adonis/Core/Drive'
 import { cuid } from '@ioc:Adonis/Core/Helpers'
 import {
-  BaseModel,
   BelongsTo,
   ModelPaginatorContract,
   afterCreate,
@@ -14,11 +13,12 @@ import {
   column,
 } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
+import AppBaseModel from './AppBaseModel'
 import Auction from './Auction'
 import Certificate from './Certificate'
 import Project from './Project'
 
-export default class File extends BaseModel {
+export default class File extends AppBaseModel {
   @column({ isPrimary: true })
   public id: number
 

@@ -1,8 +1,9 @@
-import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import { BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
+import AppBaseModel from './AppBaseModel'
 import User from './User'
 
-export default class Notification extends BaseModel {
+export default class Notification extends AppBaseModel {
   @column({ isPrimary: true })
   public id: number
 

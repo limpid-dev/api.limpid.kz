@@ -1,12 +1,13 @@
 import { compose } from '@ioc:Adonis/Core/Helpers'
+import { BelongsTo, HasMany, belongsTo, column, hasMany } from '@ioc:Adonis/Lucid/Orm'
+import { Searchable } from 'App/Mixins/Searchable'
 import { DateTime } from 'luxon'
-import { BaseModel, BelongsTo, HasMany, belongsTo, column, hasMany } from '@ioc:Adonis/Lucid/Orm'
+import AppBaseModel from './AppBaseModel'
+import AuctionBid from './AuctionBid'
 import File from './File'
 import Profile from './Profile'
-import AuctionBid from './AuctionBid'
-import { Searchable } from 'App/Mixins/Searchable'
 
-export default class Auction extends compose(BaseModel, Searchable) {
+export default class Auction extends compose(AppBaseModel, Searchable) {
   public static search = ['title', 'description']
 
   @column({ isPrimary: true })
