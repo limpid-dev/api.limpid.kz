@@ -28,6 +28,14 @@ export default class ProfilesStoreValidator {
     description: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(1024)]),
     location: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
     industry: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
+    ownedIntellectualResources: schema.string({ trim: true }, [
+      rules.minLength(1),
+      rules.maxLength(1024),
+    ]),
+    ownedMaterialResources: schema.string({ trim: true }, [
+      rules.minLength(1),
+      rules.maxLength(1024),
+    ]),
   })
 
   /**

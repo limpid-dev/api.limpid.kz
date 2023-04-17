@@ -31,6 +31,14 @@ export default class ProfilesUpdateValidator {
     ]),
     location: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
     industry: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
+    ownedIntellectualResources: schema.string.optional({ trim: true }, [
+      rules.minLength(1),
+      rules.maxLength(1024),
+    ]),
+    ownedMaterialResources: schema.string.optional({ trim: true }, [
+      rules.minLength(1),
+      rules.maxLength(1024),
+    ]),
   })
 
   /**

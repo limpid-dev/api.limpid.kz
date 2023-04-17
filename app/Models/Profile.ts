@@ -11,7 +11,6 @@ import Education from './Education'
 import Experience from './Experience'
 import Membership from './Membership'
 import Project from './Project'
-import Resource from './Resource'
 import Skill from './Skill'
 import User from './User'
 
@@ -43,6 +42,12 @@ export default class Profile extends compose(AppBaseModel, Searchable) {
   public industry: string
 
   @column()
+  public ownedIntellectualResources: string
+
+  @column()
+  public ownedMaterialResources: string
+
+  @column()
   public userId: number
 
   @belongsTo(() => User)
@@ -56,9 +61,6 @@ export default class Profile extends compose(AppBaseModel, Searchable) {
 
   @hasMany(() => Membership)
   public memberships: HasMany<typeof Membership>
-
-  @hasMany(() => Resource)
-  public resources: HasMany<typeof Resource>
 
   @hasMany(() => Education)
   public educations: HasMany<typeof Education>
