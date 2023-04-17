@@ -42,13 +42,6 @@ export default Env.rules({
 
   SESSION_DRIVER: Env.schema.string(),
 
-  EPAY_URL: Env.schema.string({ format: 'url' }),
-  EPAY_EMAIL: Env.schema.string(),
-  EPAY_PASSWORD: Env.schema.string(),
-  EPAY_CLIENT_ID: Env.schema.string(),
-  EPAY_CLIENT_SECRET: Env.schema.string(),
-  EPAY_TERMINAL_ID: Env.schema.string(),
-
   S3_KEY: Env.schema.string(),
   S3_SECRET: Env.schema.string(),
   S3_BUCKET: Env.schema.string(),
