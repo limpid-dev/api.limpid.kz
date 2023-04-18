@@ -17,6 +17,7 @@ import AppBaseModel from './AppBaseModel'
 import Auction from './Auction'
 import Certificate from './Certificate'
 import Project from './Project'
+import User from './User'
 
 export default class File extends AppBaseModel {
   @column({ isPrimary: true })
@@ -39,6 +40,12 @@ export default class File extends AppBaseModel {
 
   @column()
   public extname: string
+
+  @column()
+  public userId: number | null
+
+  @belongsTo(() => User)
+  public user: BelongsTo<typeof User>
 
   @column()
   public certificateId: number | null

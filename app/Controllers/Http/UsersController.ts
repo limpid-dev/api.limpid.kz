@@ -1,14 +1,27 @@
 import { bind } from '@adonisjs/route-model-binding'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import File from 'App/Models/File'
 import User from 'App/Models/User'
 import UsersStoreValidator from 'App/Validators/UsersStoreValidator'
 import UsersUpdateValidator from 'App/Validators/UsersUpdateValidator'
 
 export default class UsersController {
   public async store({ request }: HttpContextContract) {
-    const payload = await request.validate(UsersStoreValidator)
+    const { file, ...payload } = await request.validate(UsersStoreValidator)
 
     const user = await User.updateOrCreate({ email: payload.email }, payload)
+
+    if (file) {
+      const avatar = File.from(file)
+
+      await avatar
+        .merge({
+          userId: user.id,
+        })
+        .save()
+
+      await user.merge({ fileId: avatar.id }).save()
+    }
 
     return { data: user }
   }
@@ -21,7 +34,23 @@ export default class UsersController {
   @bind()
   public async update({ request, bouncer }: HttpContextContract, user: User) {
     await bouncer.with('UserPolicy').authorize('update', user)
-    const payload = await request.validate(UsersUpdateValidator)
+    const { file, ...payload } = await request.validate(UsersUpdateValidator)
+
+    if (file) {
+      const avatar = File.from(file)
+
+      await avatar
+        .merge({
+          userId: user.id,
+        })
+        .save()
+
+      const old = await File.findOrFail(user.fileId)
+
+      await old.delete()
+
+      user.merge({ fileId: avatar.id })
+    }
 
     user.merge(payload)
 

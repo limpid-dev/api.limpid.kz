@@ -2,10 +2,12 @@ import Hash from '@ioc:Adonis/Core/Hash'
 import {
   HasMany,
   HasManyThrough,
+  HasOne,
   beforeSave,
   column,
   hasMany,
   hasManyThrough,
+  hasOne,
 } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 import AppBaseModel from './AppBaseModel'
@@ -15,6 +17,7 @@ import Message from './Message'
 import Notification from './Notification'
 import Profile from './Profile'
 import Project from './Project'
+import File from './File'
 
 export default class User extends AppBaseModel {
   @column({ isPrimary: true })
@@ -28,6 +31,12 @@ export default class User extends AppBaseModel {
 
   @column.dateTime()
   public verifiedAt: DateTime | null
+
+  @column()
+  public fileId: number | null
+
+  @hasOne(() => File)
+  public file: HasOne<typeof File>
 
   @column()
   public email: string

@@ -36,6 +36,10 @@ export default class UsersUpdateValidator {
     ]),
     firstName: schema.string.optional({}, [rules.minLength(1), rules.maxLength(255)]),
     lastName: schema.string.optional({}, [rules.minLength(1), rules.maxLength(255)]),
+    file: schema.file.optional({
+      extnames: ['jpg', 'jpeg', 'png'],
+      size: '2mb',
+    }),
   })
 
   /**
