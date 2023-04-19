@@ -19,8 +19,8 @@ export default class extends BaseSchema {
       table.string('description', 1024).notNullable()
       table.string('location', 255).nullable()
       table.string('industry', 255).notNullable()
-      table.string('ownedIntellectualResources', 1024).notNullable()
-      table.string('ownedMaterialResources', 1024).notNullable()
+      table.string('owned_intellectual_resources', 1024).notNullable()
+      table.string('owned_material_resources', 1024).notNullable()
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */
