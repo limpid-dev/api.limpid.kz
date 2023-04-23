@@ -21,7 +21,7 @@ export default class extends BaseSchema {
         .onDelete('CASCADE')
         .notNullable()
 
-      table.integer('price').notNullable()
+      table.decimal('price', 20, 4).notNullable()
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
