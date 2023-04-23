@@ -7,11 +7,7 @@ export default class TenderPolicy extends BasePolicy {
   public async create(user: User, profile: Profile) {
     return user.id === profile.userId
   }
-  public async update(user: User, tender: Tender) {
-    const profile = await user.related('profiles').query().where('id', tender.profileId).first()
 
-    return !!profile && !tender.verifiedAt
-  }
   public async delete(user: User, tender: Tender) {
     const profile = await user.related('profiles').query().where('id', tender.profileId).first()
 
