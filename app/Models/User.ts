@@ -18,6 +18,8 @@ import Notification from './Notification'
 import Profile from './Profile'
 import Project from './Project'
 import File from './File'
+import Tender from './Tender'
+import TenderBid from './TenderBid'
 
 export default class User extends AppBaseModel {
   @column({ isPrimary: true })
@@ -70,6 +72,12 @@ export default class User extends AppBaseModel {
 
   @hasManyThrough([() => Message, () => Profile])
   public messages: HasManyThrough<typeof Message>
+
+  @hasManyThrough([() => Tender, () => Profile])
+  public tenders: HasManyThrough<typeof Tender>
+
+  @hasManyThrough([() => TenderBid, () => Profile])
+  public tenderBids: HasManyThrough<typeof TenderBid>
 
   @beforeSave()
   public static async beforeSave(user: User) {
