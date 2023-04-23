@@ -1,5 +1,13 @@
 import { DateTime } from 'luxon'
-import { BaseModel, BelongsTo, HasMany, belongsTo, column, hasMany } from '@ioc:Adonis/Lucid/Orm'
+import {
+  BaseModel,
+  BelongsTo,
+  HasMany,
+  belongsTo,
+  column,
+  computed,
+  hasMany,
+} from '@ioc:Adonis/Lucid/Orm'
 import TenderBid from './TenderBid'
 import File from './File'
 import Profile from './Profile'
@@ -37,6 +45,15 @@ export default class Tender extends BaseModel {
   // Duration in hours
   @column()
   public duration: number
+
+  @computed()
+  public get finishedAt() {
+    if (this.verifiedAt) {
+      return this.verifiedAt.plus({ hours: this.duration })
+    }
+
+    return null
+  }
 
   @column()
   public startingPrice: number | null
