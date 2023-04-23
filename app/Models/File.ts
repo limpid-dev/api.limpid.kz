@@ -18,6 +18,7 @@ import Auction from './Auction'
 import Certificate from './Certificate'
 import Project from './Project'
 import User from './User'
+import Tender from './Tender'
 
 export default class File extends AppBaseModel {
   @column({ isPrimary: true })
@@ -64,6 +65,12 @@ export default class File extends AppBaseModel {
 
   @belongsTo(() => Auction)
   public auction: BelongsTo<typeof Auction>
+
+  @column()
+  public tenderId: number | null
+
+  @belongsTo(() => Tender)
+  public tender: BelongsTo<typeof Tender>
 
   public static from(multipart: MultipartFileContract) {
     const file = new File()
