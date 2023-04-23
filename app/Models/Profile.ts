@@ -13,6 +13,8 @@ import Membership from './Membership'
 import Project from './Project'
 import Skill from './Skill'
 import User from './User'
+import Tender from './Tender'
+import TenderBid from './TenderBid'
 
 export default class Profile extends compose(AppBaseModel, Searchable) {
   public static search = ['title', 'description', 'location', 'industry']
@@ -79,6 +81,12 @@ export default class Profile extends compose(AppBaseModel, Searchable) {
 
   @hasMany(() => AuctionBid)
   public auctionBids: HasMany<typeof AuctionBid>
+
+  @hasMany(() => Tender)
+  public tenders: HasMany<typeof Tender>
+
+  @hasMany(() => TenderBid)
+  public tenderBids: HasMany<typeof TenderBid>
 
   @beforeSave()
   public static async beforeSave(profile: Profile) {
