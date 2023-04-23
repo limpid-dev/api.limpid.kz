@@ -40,6 +40,7 @@ import './routes/auction-bid'
 import './routes/experience'
 import './routes/notification'
 import './routes/skill'
+import './routes/tender'
 
 Route.get('health', async ({ response }) => {
   const data = await HealthCheck.getReport()
