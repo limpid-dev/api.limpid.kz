@@ -1,9 +1,10 @@
-import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import { BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
+import AppBaseModel from './AppBaseModel'
 import Profile from './Profile'
 import Tender from './Tender'
 
-export default class TenderBid extends BaseModel {
+export default class TenderBid extends AppBaseModel {
   @column({ isPrimary: true })
   public id: number
 
