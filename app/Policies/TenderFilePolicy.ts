@@ -7,6 +7,8 @@ export default class TenderFilePolicy extends BasePolicy {
   public async create(user: User, tender: Tender) {
     const profile = await user.related('profiles').query().where('id', tender.profileId).first()
 
+    console.log(!!profile && !tender.verifiedAt)
+
     return !!profile && !tender.verifiedAt
   }
   public async delete(user: User, tender: Tender, file: File) {

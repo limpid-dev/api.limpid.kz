@@ -2,8 +2,8 @@ import { bind } from '@adonisjs/route-model-binding'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import File from 'App/Models/File'
 import Tender from 'App/Models/Tender'
-import AuctionFilesStoreValidator from 'App/Validators/AuctionFilesStoreValidator'
 import PaginationValidator from 'App/Validators/PaginationValidator'
+import TenderFilesStoreValidator from 'App/Validators/TenderFilesStoreValidator'
 
 export default class TenderFilesController {
   @bind()
@@ -17,11 +17,11 @@ export default class TenderFilesController {
   public async store({ request, bouncer }: HttpContextContract, tender: Tender) {
     await bouncer.with('TenderFilePolicy').authorize('create', tender)
 
-    const payload = await request.validate(AuctionFilesStoreValidator)
+    const payload = await request.validate(TenderFilesStoreValidator)
 
     const file = await File.from(payload.file)
       .merge({
-        auctionId: tender.id,
+        tenderId: tender.id,
       })
       .save()
 

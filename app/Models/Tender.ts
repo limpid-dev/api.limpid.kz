@@ -32,10 +32,7 @@ export default class Tender extends AppBaseModel {
   @column()
   public description: string
 
-  @column.dateTime({
-    // Delete then
-    autoUpdate: true,
-  })
+  @column.dateTime()
   public verifiedAt: DateTime | null
 
   // Duration in hours
