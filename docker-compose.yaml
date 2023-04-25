@@ -18,6 +18,8 @@ services:
       - mysql
     expose:
       - ${MYSQL_PORT}
+    ports:
+      - ${MYSQL_PORT}
   redis:
     image: 'redis:7.0.10-alpine'
     volumes:
