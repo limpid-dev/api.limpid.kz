@@ -48,6 +48,11 @@ export default class Tender extends AppBaseModel {
     return null
   }
 
+  @computed()
+  public get isVerified() {
+    return !!this.verifiedAt
+  }
+
   @column()
   public startingPrice: number | null
 
