@@ -23,11 +23,14 @@ export default class UsersController {
       await user.merge({ fileId: avatar.id }).save()
     }
 
+    await user.load('file')
+
     return { data: user }
   }
 
   @bind()
   public async show({}: HttpContextContract, user: User) {
+    await user.load('file')
     return { data: user }
   }
 
@@ -37,24 +40,28 @@ export default class UsersController {
     const { file, ...payload } = await request.validate(UsersUpdateValidator)
 
     if (file) {
+      const old = await File.find(user.fileId)
+
+      if (old) {
+        await old.delete()
+      }
+
       const avatar = File.from(file)
 
-      await avatar
+      const saved = await avatar
         .merge({
           userId: user.id,
         })
         .save()
 
-      const old = await File.findOrFail(user.fileId)
-
-      await old.delete()
-
-      user.merge({ fileId: avatar.id })
+      user.merge({ fileId: saved.id })
     }
 
     user.merge(payload)
 
     await user.save()
+
+    await user.load('file')
 
     return { data: user }
   }
