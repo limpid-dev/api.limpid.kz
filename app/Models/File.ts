@@ -78,7 +78,7 @@ export default class File extends AppBaseModel {
     file.size = multipart.size
     file.mimeType = `${multipart.type}/${multipart.subtype}`
     file.extname = `.${multipart.extname}`
-    file.name = `${cuid()}.${multipart.extname}`
+    file.name = `${multipart.clientName}_${cuid()}.${multipart.extname}`
 
     file.$extras._multipart = multipart
 
