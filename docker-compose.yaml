@@ -1,4 +1,7 @@
 version: '3.9'
+networks:
+  mysql:
+  redis:
 volumes:
   mysql:
   redis:
@@ -10,12 +13,16 @@ services:
     environment:
       MYSQL_ROOT_PASSWORD: ${MYSQL_PASSWORD}
       MYSQL_DATABASE: ${MYSQL_DATABASE}
+    networks:
+      - mysql
     expose:
       - ${MYSQL_PORT}
   redis:
     image: 'redis:7.0.10-alpine'
     volumes:
       - redis:/data
+    networks:
+      - redis
     expose:
       - ${REDIS_PORT}
   api:
@@ -25,5 +32,8 @@ services:
     environment:
       - MYSQL_HOST=mysql
       - REDIS_HOST=redis
+    networks:
+      - mysql
+      - redis
     ports:
       - 127.0.0.1:3001:${PORT}
