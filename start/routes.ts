@@ -42,6 +42,7 @@ import './routes/notification'
 import './routes/skill'
 import './routes/tender'
 import './routes/tender-file'
+import './routes/tender-bid'
 
 Route.get('health', async ({ response }) => {
   const data = await HealthCheck.getReport()

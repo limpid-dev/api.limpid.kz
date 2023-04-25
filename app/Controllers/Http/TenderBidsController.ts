@@ -14,7 +14,7 @@ export default class TenderBidsController {
   public async index({ request }: HttpContextContract, tender: Tender) {
     const payload = await request.validate(PaginationValidator)
 
-    return tender.related('bids').query().paginate(payload.page, payload.perPage)
+    return tender.related('bids').query().preload('profile').paginate(payload.page, payload.perPage)
   }
 
   @bind()
@@ -28,12 +28,14 @@ export default class TenderBidsController {
     if (tender.startingPrice) {
       await request.validate({
         schema: schema.create({
-          price: schema.number([rules.range(1, tender.startingPrice)]),
+          price: schema.number([rules.range(1, Number.parseInt(`${tender.startingPrice}`))]),
         }),
       })
     }
 
     const bid = await tender.related('bids').create({ ...payload, profileId: profile.id })
+
+    await bid.load('profile')
 
     return { data: bid }
   }
@@ -57,6 +59,8 @@ export default class TenderBidsController {
     })
 
     await bid.merge(payload).save()
+
+    await bid.load('profile')
 
     return { data: bid }
   }
