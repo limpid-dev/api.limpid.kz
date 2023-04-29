@@ -1,9 +1,10 @@
+import { HasMany, column, hasMany } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
-import { BaseModel, HasMany, column, hasMany } from '@ioc:Adonis/Lucid/Orm'
-import File from './File'
+import AppBaseModel from './AppBaseModel'
 import Contact from './Contact'
+import File from './File'
 
-export default class Organization extends BaseModel {
+export default class Organization extends AppBaseModel {
   @column({ isPrimary: true })
   public id: number
 

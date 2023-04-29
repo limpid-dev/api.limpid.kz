@@ -18,6 +18,7 @@ export default class extends BaseSchema {
         .references('id')
         .inTable('projects')
         .onDelete('SET NULL')
+      table.string('type')
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

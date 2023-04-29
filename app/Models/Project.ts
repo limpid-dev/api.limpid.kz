@@ -1,12 +1,11 @@
 import { compose } from '@ioc:Adonis/Core/Helpers'
-import { BelongsTo, HasMany, belongsTo, column, hasMany } from '@ioc:Adonis/Lucid/Orm'
+import { HasMany, column, hasMany } from '@ioc:Adonis/Lucid/Orm'
 import { Searchable } from 'App/Mixins/Searchable'
 import { DateTime } from 'luxon'
 import AppBaseModel from './AppBaseModel'
 import File from './File'
 import Membership from './Membership'
 import Message from './Message'
-import Profile from './Profile'
 
 export default class Project extends compose(AppBaseModel, Searchable) {
   public static search = [
@@ -68,12 +67,6 @@ export default class Project extends compose(AppBaseModel, Searchable) {
 
   @column()
   public profitability: string
-
-  @column()
-  public profileId: number
-
-  @belongsTo(() => Profile)
-  public profile: BelongsTo<typeof Profile>
 
   @hasMany(() => Membership)
   public memberships: HasMany<typeof Membership>

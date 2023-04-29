@@ -1,3 +1,4 @@
+import { parse } from 'path'
 import { MultipartFileContract } from '@ioc:Adonis/Core/BodyParser'
 import Drive from '@ioc:Adonis/Core/Drive'
 import { cuid } from '@ioc:Adonis/Core/Helpers'
@@ -85,7 +86,9 @@ export default class File extends AppBaseModel {
     file.size = multipart.size
     file.mimeType = `${multipart.type}/${multipart.subtype}`
     file.extname = `.${multipart.extname}`
-    file.name = `${multipart.clientName}_${cuid()}.${multipart.extname}`
+    file.name = `${parse(multipart.clientName.replace(' ', '_')).name}_${cuid()}.${
+      multipart.extname
+    }`
 
     file.$extras._multipart = multipart
 

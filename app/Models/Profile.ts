@@ -10,11 +10,10 @@ import Contact from './Contact'
 import Education from './Education'
 import Experience from './Experience'
 import Membership from './Membership'
-import Project from './Project'
 import Skill from './Skill'
-import User from './User'
 import Tender from './Tender'
 import TenderBid from './TenderBid'
+import User from './User'
 
 export default class Profile extends compose(AppBaseModel, Searchable) {
   public static search = ['title', 'description', 'location', 'industry']
@@ -31,23 +30,26 @@ export default class Profile extends compose(AppBaseModel, Searchable) {
   @column.dateTime()
   public verifiedAt: DateTime | null
 
-  @column()
+  @column({})
   public title: string
 
-  @column()
+  @column({})
   public description: string
 
-  @column()
+  @column({})
   public location: string | null
 
-  @column()
+  @column({})
   public industry: string
 
-  @column()
+  @column({})
   public ownedIntellectualResources: string
 
-  @column()
+  @column({})
   public ownedMaterialResources: string
+
+  @column()
+  public isVisible: boolean
 
   @column()
   public userId: number
@@ -72,9 +74,6 @@ export default class Profile extends compose(AppBaseModel, Searchable) {
 
   @hasMany(() => Experience)
   public experiences: HasMany<typeof Experience>
-
-  @hasMany(() => Project)
-  public projects: HasMany<typeof Project>
 
   @hasMany(() => Auction)
   public auctions: HasMany<typeof Auction>

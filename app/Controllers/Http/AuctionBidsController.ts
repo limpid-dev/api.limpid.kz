@@ -40,7 +40,7 @@ export default class AuctionBidsController {
 
     if (auction.purchasePrice) {
       if (bid.price >= auction.purchasePrice) {
-        await bid.merge({ wondAt: DateTime.now() }).save()
+        await bid.merge({ wonAt: DateTime.now() }).save()
         await auction.merge({ finishedAt: DateTime.now() }).save()
       }
     }
@@ -74,7 +74,7 @@ export default class AuctionBidsController {
 
     if (auction.purchasePrice) {
       if (bid.price >= auction.purchasePrice) {
-        await bid.merge({ wondAt: DateTime.now() }).save()
+        await bid.merge({ wonAt: DateTime.now() }).save()
         await auction.merge({ finishedAt: DateTime.now() }).save()
       }
     }

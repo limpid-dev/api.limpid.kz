@@ -13,7 +13,7 @@ export default class extends BaseSchema {
       table.string('industry')
       table.string('owned_intellectual_resources', 2048)
       table.string('owned_material_resources', 2048)
-
+      table.boolean('is_visible').defaultTo(true)
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */

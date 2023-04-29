@@ -21,15 +21,26 @@ export default class MembershipPolicy extends BasePolicy {
     return !!admin && membership.projectId === project.id
   }
   public async delete(user: User, project: Project, membership: Membership) {
-    const admin = await user.related('profiles').query().where('id', project.profileId).first()
+    if (membership.projectId !== project.id) {
+      return false
+    }
 
-    const isMember = await user
-      .related('memberships')
-      .query()
-      .where('id', membership.id)
-      .andWhere('projectId', project.id)
-      .first()
+    if (membership.type === 'member') {
+      const m = await user
+        .related('memberships')
+        .query()
+        .where('profileId', membership.profileId)
+        .first()
 
-    return membership.projectId === project.id && (!!admin || !!isMember)
+      return m && m.id === membership.id
+    }
+
+    if (membership.type === 'owner') {
+      const admin = await user.related('profiles').query().where('id', project.profileId).first()
+
+      return !!admin
+    }
+
+    return false
   }
 }

@@ -5,6 +5,8 @@ import Message from './Message'
 import Profile from './Profile'
 import Project from './Project'
 
+export type Type = 'owner' | 'member'
+
 export default class Membership extends AppBaseModel {
   @column({ isPrimary: true })
   public id: number
@@ -17,6 +19,9 @@ export default class Membership extends AppBaseModel {
 
   @column.dateTime()
   public acceptedAt: DateTime | null
+
+  @column()
+  public type: Type
 
   @column()
   public profileId: number

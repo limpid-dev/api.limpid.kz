@@ -6,6 +6,7 @@ import PaginationValidator from 'App/Validators/PaginationValidator'
 import ProfileActionValidator from 'App/Validators/ProfileActionValidator'
 import ProjectsStoreValidator from 'App/Validators/ProjectsStoreValidator'
 import ProjectsUpdateValidator from 'App/Validators/ProjectsUpdateValidator'
+import { DateTime } from 'luxon'
 
 export default class ProjectsController {
   public async index({ request }: HttpContextContract) {
@@ -22,7 +23,13 @@ export default class ProjectsController {
 
     await bouncer.with('ProjectPolicy').authorize('create', profile)
 
-    const project = await profile.related('projects').create(payload)
+    const project = await Project.create(payload)
+
+    project.related('memberships').create({
+      profileId: profile.id,
+      type: 'owner',
+      acceptedAt: DateTime.now(),
+    })
 
     return { data: project }
   }

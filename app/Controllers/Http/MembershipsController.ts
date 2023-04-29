@@ -23,7 +23,9 @@ export default class MembershipsController {
 
     await bouncer.with('MembershipPolicy').authorize('create', project)
 
-    const membership = await project.related('memberships').create({ profileId: profile.id })
+    const membership = await project
+      .related('memberships')
+      .create({ profileId: profile.id, type: 'member' })
 
     return { data: membership }
   }

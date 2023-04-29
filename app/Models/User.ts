@@ -16,10 +16,10 @@ import Membership from './Membership'
 import Message from './Message'
 import Notification from './Notification'
 import Profile from './Profile'
-import Project from './Project'
 import File from './File'
 import Tender from './Tender'
 import TenderBid from './TenderBid'
+import AuctionBid from './AuctionBid'
 
 export default class User extends AppBaseModel {
   @column({ isPrimary: true })
@@ -67,11 +67,11 @@ export default class User extends AppBaseModel {
   @hasMany(() => Notification)
   public notifications: HasMany<typeof Notification>
 
-  @hasManyThrough([() => Project, () => Profile])
-  public projects: HasManyThrough<typeof Project>
-
   @hasManyThrough([() => Auction, () => Profile])
   public auctions: HasManyThrough<typeof Auction>
+
+  @hasManyThrough([() => AuctionBid, () => Profile])
+  public auctionBids: HasManyThrough<typeof AuctionBid>
 
   @hasManyThrough([() => Membership, () => Profile])
   public memberships: HasManyThrough<typeof Membership>
