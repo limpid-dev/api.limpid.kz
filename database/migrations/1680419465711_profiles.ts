@@ -6,27 +6,20 @@ export default class extends BaseSchema {
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
-      table
-        .integer('user_id')
-        .unsigned()
-        .notNullable()
-        .references('id')
-        .inTable('users')
-        .onDelete('CASCADE')
-        .notNullable()
+      table.integer('user_id').unsigned().references('id').inTable('users').onDelete('SET NULL')
+      table.string('title')
+      table.string('description', 2048)
+      table.string('location')
+      table.string('industry')
+      table.string('owned_intellectual_resources', 2048)
+      table.string('owned_material_resources', 2048)
 
-      table.string('title', 255).notNullable()
-      table.string('description', 1024).notNullable()
-      table.string('location', 255).nullable()
-      table.string('industry', 255).notNullable()
-      table.string('owned_intellectual_resources', 1024).notNullable()
-      table.string('owned_material_resources', 1024).notNullable()
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */
-      table.timestamp('created_at', { useTz: true }).notNullable()
-      table.timestamp('updated_at', { useTz: true }).notNullable()
-      table.timestamp('verified_at', { useTz: true }).nullable()
+      table.timestamp('created_at', { useTz: true })
+      table.timestamp('updated_at', { useTz: true })
+      table.timestamp('verified_at', { useTz: true })
     })
   }
 

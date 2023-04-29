@@ -11,18 +11,18 @@ export default class extends BaseSchema {
         .unsigned()
         .references('id')
         .inTable('profiles')
-        .onDelete('CASCADE')
-      table.string('title', 256).notNullable()
-      table.string('description', 1024).notNullable()
-      table.decimal('starting_price', 20, 4).nullable()
-      table.decimal('purchase_price', 20, 4).nullable()
+        .onDelete('SET NULL')
+      table.string('title')
+      table.string('description', 2048)
+      table.decimal('starting_price', 20, 4)
+      table.decimal('purchase_price', 20, 4)
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */
-      table.timestamp('created_at', { useTz: true }).notNullable()
-      table.timestamp('updated_at', { useTz: true }).notNullable()
-      table.timestamp('finished_at', { useTz: true }).notNullable()
+      table.timestamp('created_at', { useTz: true })
+      table.timestamp('updated_at', { useTz: true })
+      table.timestamp('finished_at', { useTz: true })
     })
   }
 

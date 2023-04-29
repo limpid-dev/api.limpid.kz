@@ -11,21 +11,20 @@ export default class extends BaseSchema {
         .unsigned()
         .references('id')
         .inTable('profiles')
-        .onDelete('CASCADE')
-        .notNullable()
+        .onDelete('SET NULL')
       table
         .integer('project_id')
         .unsigned()
         .references('id')
         .inTable('projects')
-        .onDelete('CASCADE')
-        .notNullable()
-      table.string('content', 1024).notNullable()
+        .onDelete('SET NULL')
+      table.string('content', 2048)
+
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */
-      table.timestamp('created_at', { useTz: true }).notNullable()
-      table.timestamp('updated_at', { useTz: true }).notNullable()
+      table.timestamp('created_at', { useTz: true })
+      table.timestamp('updated_at', { useTz: true })
     })
   }
 

@@ -1,4 +1,4 @@
-FROM node:18.15-alpine AS base
+FROM node:18-alpine AS base
 RUN mkdir -p /home/node/api && chown node:node /home/node/api
 WORKDIR /home/node/api
 USER node

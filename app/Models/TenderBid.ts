@@ -15,7 +15,7 @@ export default class TenderBid extends AppBaseModel {
   public updatedAt: DateTime
 
   @column.dateTime()
-  public wondAt: DateTime | null
+  public wonAt: DateTime | null
 
   @column()
   public tenderId: number

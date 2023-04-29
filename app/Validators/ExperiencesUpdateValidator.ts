@@ -26,7 +26,7 @@ export default class ExperiencesUpdateValidator {
   public schema = schema.create({
     title: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(64)]),
     description: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
-    organization: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(64)]),
+    company: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(64)]),
     startedAt: schema.date.optional(),
     finishedAt: schema.date.optional({}, [rules.afterField('startedAt')]),
   })

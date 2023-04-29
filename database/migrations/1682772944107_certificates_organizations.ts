@@ -1,17 +1,22 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
 
 export default class extends BaseSchema {
-  protected tableName = 'files'
+  protected tableName = 'certificates'
 
   public async up() {
     this.schema.alterTable(this.tableName, (table) => {
-      table.integer('tender_id').unsigned().references('id').inTable('tenders').onDelete('SET NULL')
+      table
+        .integer('organization_id')
+        .unsigned()
+        .references('id')
+        .inTable('organizations')
+        .onDelete('SET NULL')
     })
   }
 
   public async down() {
     this.schema.alterTable(this.tableName, (table) => {
-      table.dropForeign('tender_id')
+      table.dropForeign('organization_id')
     })
   }
 }

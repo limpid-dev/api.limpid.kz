@@ -10,8 +10,7 @@ export default class extends BaseSchema {
         .unsigned()
         .references('id')
         .inTable('auctions')
-        .onDelete('CASCADE')
-        .nullable()
+        .onDelete('SET NULL')
     })
   }
 

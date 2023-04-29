@@ -19,6 +19,7 @@ import Certificate from './Certificate'
 import Project from './Project'
 import User from './User'
 import Tender from './Tender'
+import Organization from './Organization'
 
 export default class File extends AppBaseModel {
   @column({ isPrimary: true })
@@ -41,6 +42,12 @@ export default class File extends AppBaseModel {
 
   @column()
   public extname: string
+
+  @column()
+  public organizationId: number | null
+
+  @belongsTo(() => Organization)
+  public organization: BelongsTo<typeof Organization>
 
   @column()
   public userId: number | null

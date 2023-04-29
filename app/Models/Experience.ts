@@ -2,6 +2,7 @@ import { BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 import AppBaseModel from './AppBaseModel'
 import Profile from './Profile'
+import Organization from './Organization'
 
 export default class Experience extends AppBaseModel {
   @column({ isPrimary: true })
@@ -14,7 +15,7 @@ export default class Experience extends AppBaseModel {
   public description: string
 
   @column()
-  public organization: string
+  public company: string
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
@@ -29,8 +30,14 @@ export default class Experience extends AppBaseModel {
   public finishedAt: DateTime | null
 
   @column()
-  public profileId: number
+  public profileId: number | null
 
   @belongsTo(() => Profile)
   public profile: BelongsTo<typeof Profile>
+
+  @column()
+  public organizationId: number | null
+
+  @belongsTo(() => Organization)
+  public organization: BelongsTo<typeof Organization>
 }

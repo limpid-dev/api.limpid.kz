@@ -22,7 +22,7 @@ export default class AuctionBid extends AppBaseModel {
   public updatedAt: DateTime
 
   @column.dateTime()
-  public wondAt: DateTime | null
+  public wonAt: DateTime | null
 
   @column()
   public auctionId: number
@@ -48,11 +48,11 @@ export default class AuctionBid extends AppBaseModel {
 
     if (winningBid) {
       if (bid.price > winningBid.price) {
-        await bid.merge({ wondAt: DateTime.now() }).save()
-        await winningBid.merge({ wondAt: null }).save()
+        await bid.merge({ wonAt: DateTime.now() }).save()
+        await winningBid.merge({ wonAt: null }).save()
       }
     } else {
-      await bid.merge({ wondAt: DateTime.now() }).save()
+      await bid.merge({ wonAt: DateTime.now() }).save()
     }
   }
 
@@ -64,8 +64,8 @@ export default class AuctionBid extends AppBaseModel {
       .firstOrFail()
 
     if (bid.price > winningBid.price) {
-      await bid.merge({ wondAt: DateTime.now() }).save()
-      await winningBid.merge({ wondAt: null }).save()
+      await bid.merge({ wonAt: DateTime.now() }).save()
+      await winningBid.merge({ wonAt: null }).save()
     }
   }
 
@@ -84,7 +84,7 @@ export default class AuctionBid extends AppBaseModel {
         .first()
 
       if (newWinningBid) {
-        await newWinningBid.merge({ wondAt: DateTime.now() }).save()
+        await newWinningBid.merge({ wonAt: DateTime.now() }).save()
       }
     }
   }
