@@ -1,7 +1,7 @@
 import { compose } from '@ioc:Adonis/Core/Helpers'
 import { DateTime } from 'luxon'
 import { BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
-import Membership from './Membership'
+import ProjectMembership from './ProjectMembership'
 import Project from './Project'
 import { Searchable } from 'App/Mixins/Searchable'
 import AppBaseModel from './AppBaseModel'
@@ -30,6 +30,6 @@ export default class Message extends compose(AppBaseModel, Searchable) {
   @column()
   public membershipId: number
 
-  @belongsTo(() => Membership)
-  public membership: BelongsTo<typeof Membership>
+  @belongsTo(() => ProjectMembership)
+  public membership: BelongsTo<typeof ProjectMembership>
 }

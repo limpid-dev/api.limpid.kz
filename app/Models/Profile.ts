@@ -9,7 +9,7 @@ import Certificate from './Certificate'
 import Contact from './Contact'
 import Education from './Education'
 import Experience from './Experience'
-import Membership from './Membership'
+import ProjectMembership from './ProjectMembership'
 import Skill from './Skill'
 import Tender from './Tender'
 import TenderBid from './TenderBid'
@@ -63,8 +63,8 @@ export default class Profile extends compose(AppBaseModel, Searchable) {
   @hasMany(() => Skill)
   public skills: HasMany<typeof Skill>
 
-  @hasMany(() => Membership)
-  public memberships: HasMany<typeof Membership>
+  @hasMany(() => ProjectMembership)
+  public projectMemberships: HasMany<typeof ProjectMembership>
 
   @hasMany(() => Education)
   public educations: HasMany<typeof Education>

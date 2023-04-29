@@ -12,7 +12,7 @@ import {
 import { DateTime } from 'luxon'
 import AppBaseModel from './AppBaseModel'
 import Auction from './Auction'
-import Membership from './Membership'
+import ProjectMembership from './ProjectMembership'
 import Message from './Message'
 import Notification from './Notification'
 import Profile from './Profile'
@@ -20,6 +20,7 @@ import File from './File'
 import Tender from './Tender'
 import TenderBid from './TenderBid'
 import AuctionBid from './AuctionBid'
+import OrganizationMembership from './OrganizationMembership'
 
 export default class User extends AppBaseModel {
   @column({ isPrimary: true })
@@ -73,8 +74,11 @@ export default class User extends AppBaseModel {
   @hasManyThrough([() => AuctionBid, () => Profile])
   public auctionBids: HasManyThrough<typeof AuctionBid>
 
-  @hasManyThrough([() => Membership, () => Profile])
-  public memberships: HasManyThrough<typeof Membership>
+  @hasManyThrough([() => ProjectMembership, () => Profile])
+  public projectMemberships: HasManyThrough<typeof ProjectMembership>
+
+  @hasMany(() => OrganizationMembership)
+  public organizationMemberships: HasMany<typeof OrganizationMembership>
 
   @hasManyThrough([() => Message, () => Profile])
   public messages: HasManyThrough<typeof Message>

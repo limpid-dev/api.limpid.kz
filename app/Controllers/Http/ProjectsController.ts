@@ -25,7 +25,7 @@ export default class ProjectsController {
 
     const project = await Project.create(payload)
 
-    project.related('memberships').create({
+    project.related('projectMemberships').create({
       profileId: profile.id,
       type: 'owner',
       acceptedAt: DateTime.now(),

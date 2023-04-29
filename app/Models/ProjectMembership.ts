@@ -7,7 +7,7 @@ import Project from './Project'
 
 export type Type = 'owner' | 'member'
 
-export default class Membership extends AppBaseModel {
+export default class ProjectMembership extends AppBaseModel {
   @column({ isPrimary: true })
   public id: number
 

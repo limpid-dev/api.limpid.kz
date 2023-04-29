@@ -3,7 +3,7 @@ import User from 'App/Models/User'
 import Profile from 'App/Models/Profile'
 import Contact from 'App/Models/Contact'
 
-export default class ContactPolicy extends BasePolicy {
+export default class ProfileContactPolicy extends BasePolicy {
   public async create(user: User, profile: Profile) {
     return user.id === profile.userId
   }

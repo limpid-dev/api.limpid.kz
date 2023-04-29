@@ -4,7 +4,7 @@ import { Searchable } from 'App/Mixins/Searchable'
 import { DateTime } from 'luxon'
 import AppBaseModel from './AppBaseModel'
 import File from './File'
-import Membership from './Membership'
+import ProjectMembership from './ProjectMembership'
 import Message from './Message'
 
 export default class Project extends compose(AppBaseModel, Searchable) {
@@ -68,8 +68,8 @@ export default class Project extends compose(AppBaseModel, Searchable) {
   @column()
   public profitability: string
 
-  @hasMany(() => Membership)
-  public memberships: HasMany<typeof Membership>
+  @hasMany(() => ProjectMembership)
+  public projectMemberships: HasMany<typeof ProjectMembership>
 
   @hasMany(() => File)
   public files: HasMany<typeof File>

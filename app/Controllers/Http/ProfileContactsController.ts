@@ -13,7 +13,7 @@ const ruleByType = {
   URL: rules.url(),
 } as const
 
-export default class ContactsController {
+export default class ProfileContactsController {
   @bind()
   public async index({ request }: HttpContextContract, profile: Profile) {
     const payload = await request.validate(PaginationValidator)
@@ -23,7 +23,7 @@ export default class ContactsController {
 
   @bind()
   public async store({ bouncer, request }: HttpContextContract, profile: Profile) {
-    await bouncer.with('ContactPolicy').authorize('create', profile)
+    await bouncer.with('ProfileContactPolicy').authorize('create', profile)
 
     const payload = await request.validate(ContactsStoreValidator)
 
@@ -38,7 +38,7 @@ export default class ContactsController {
     profile: Profile,
     contact: Contact
   ) {
-    await bouncer.with('ContactPolicy').authorize('update', profile, contact)
+    await bouncer.with('ProfileContactPolicy').authorize('update', profile, contact)
 
     const payload = await request.validate(ContactsUpdateValidator)
 
@@ -67,7 +67,7 @@ export default class ContactsController {
 
   @bind()
   public async destroy({ bouncer }: HttpContextContract, profile: Profile, contact: Contact) {
-    await bouncer.with('ContactPolicy').authorize('delete', profile, contact)
+    await bouncer.with('ProfileContactPolicy').authorize('delete', profile, contact)
 
     await contact.delete()
   }

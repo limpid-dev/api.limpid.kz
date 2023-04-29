@@ -10,7 +10,7 @@ export default class ProjectPolicy extends BasePolicy {
 
   public async update(user: User, project: Project) {
     const owner = await user
-      .related('memberships')
+      .related('projectMemberships')
       .query()
       .where('projectId', project.id)
       .andWhere('type', 'owner')
@@ -20,7 +20,7 @@ export default class ProjectPolicy extends BasePolicy {
   }
   public async delete(user: User, project: Project) {
     const owner = await user
-      .related('memberships')
+      .related('projectMemberships')
       .query()
       .where('projectId', project.id)
       .andWhere('type', 'owner')

@@ -3,7 +3,7 @@ import User from 'App/Models/User'
 import Certificate from 'App/Models/Certificate'
 import Profile from 'App/Models/Profile'
 
-export default class CertificatePolicy extends BasePolicy {
+export default class ProfileCertificatePolicy extends BasePolicy {
   public async create(user: User, profile: Profile) {
     return user.id === profile.userId
   }

@@ -3,6 +3,7 @@ import { DateTime } from 'luxon'
 import AppBaseModel from './AppBaseModel'
 import Contact from './Contact'
 import File from './File'
+import Certificate from './Certificate'
 
 export default class Organization extends AppBaseModel {
   @column({ isPrimary: true })
@@ -40,4 +41,7 @@ export default class Organization extends AppBaseModel {
 
   @hasMany(() => Contact)
   public contacts: HasMany<typeof Contact>
+
+  @hasMany(() => Certificate)
+  public certificates: HasMany<typeof Certificate>
 }

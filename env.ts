@@ -16,7 +16,7 @@ import Env from '@ioc:Adonis/Core/Env'
 
 export default Env.rules({
   NODE_ENV: Env.schema.enum(['development', 'production', 'testing'] as const),
-  HOST: Env.schema.string({ format: 'host' }),
+  HOST: Env.schema.string(),
   PORT: Env.schema.number(),
   APP_KEY: Env.schema.string(),
   APP_NAME: Env.schema.string(),
@@ -24,18 +24,18 @@ export default Env.rules({
 
   DB_CONNECTION: Env.schema.string(),
 
-  MYSQL_HOST: Env.schema.string({ format: 'host' }),
+  MYSQL_HOST: Env.schema.string(),
   MYSQL_PORT: Env.schema.number(),
   MYSQL_USER: Env.schema.string(),
   MYSQL_PASSWORD: Env.schema.string(),
   MYSQL_DATABASE: Env.schema.string(),
 
   REDIS_CONNECTION: Env.schema.enum(['local'] as const),
-  REDIS_HOST: Env.schema.string({ format: 'host' }),
+  REDIS_HOST: Env.schema.string(),
   REDIS_PORT: Env.schema.number(),
   REDIS_PASSWORD: Env.schema.string.optional(),
 
-  SMTP_HOST: Env.schema.string({ format: 'host' }),
+  SMTP_HOST: Env.schema.string(),
   SMTP_PORT: Env.schema.number(),
   SMTP_USERNAME: Env.schema.string(),
   SMTP_PASSWORD: Env.schema.string(),

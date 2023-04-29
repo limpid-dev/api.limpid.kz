@@ -27,11 +27,11 @@ import './routes/user'
 import './routes/profile'
 import './routes/project'
 import './routes/message'
-import './routes/membership'
+import './routes/project-membership'
 import './routes/project-file'
 import './routes/certificate-file'
 import './routes/resource'
-import './routes/contact'
+import './routes/profile-contact'
 import './routes/certificate'
 import './routes/education'
 import './routes/auction'
@@ -49,5 +49,3 @@ Route.get('health', async ({ response }) => {
 
   return data.healthy ? response.ok({ data }) : response.badRequest({ data })
 })
-
-Route.get('csrf', () => {})

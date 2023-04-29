@@ -16,7 +16,7 @@ export default class CertificatesController {
 
   @bind()
   public async store({ bouncer, request }: HttpContextContract, profile: Profile) {
-    await bouncer.with('CertificatePolicy').authorize('create', profile)
+    await bouncer.with('ProfileCertificatePolicy').authorize('create', profile)
     const payload = await request.validate(CertificatesStoreValidator)
 
     const certificate = await profile.related('certificates').create(payload)
@@ -30,7 +30,7 @@ export default class CertificatesController {
     profile: Profile,
     certificate: Certificate
   ) {
-    await bouncer.with('CertificatePolicy').authorize('update', profile, certificate)
+    await bouncer.with('ProfileCertificatePolicy').authorize('update', profile, certificate)
 
     const payload = await request.validate(CertificatesUpdateValidator)
 
@@ -47,7 +47,7 @@ export default class CertificatesController {
     profile: Profile,
     certificate: Certificate
   ) {
-    await bouncer.with('CertificatePolicy').authorize('delete', profile, certificate)
+    await bouncer.with('ProfileCertificatePolicy').authorize('delete', profile, certificate)
 
     return await certificate.delete()
   }
