@@ -30,22 +30,22 @@ export default class Profile extends compose(AppBaseModel, Searchable) {
   @column.dateTime()
   public verifiedAt: DateTime | null
 
-  @column({})
+  @column()
   public title: string
 
-  @column({})
+  @column()
   public description: string
 
-  @column({})
+  @column()
   public location: string | null
 
-  @column({})
+  @column()
   public industry: string
 
-  @column({})
+  @column()
   public ownedIntellectualResources: string
 
-  @column({})
+  @column()
   public ownedMaterialResources: string
 
   @column()
@@ -92,5 +92,16 @@ export default class Profile extends compose(AppBaseModel, Searchable) {
     if (profile.$isDirty) {
       profile.verifiedAt = null
     }
+  }
+
+  public static findForRequest(ctx, param, value) {
+    console.log('findForRequest', ctx, param, value)
+
+    return (
+      this.query()
+        .where('id', value)
+        // .where('isVisible', true)
+        .firstOrFail()
+    )
   }
 }

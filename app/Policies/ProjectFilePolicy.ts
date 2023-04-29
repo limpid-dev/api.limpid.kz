@@ -5,13 +5,23 @@ import Project from 'App/Models/Project'
 
 export default class ProjectFilePolicy extends BasePolicy {
   public async create(user: User, project: Project) {
-    const profile = await user.related('profiles').query().where('id', project.profileId).first()
+    const owner = await user
+      .related('memberships')
+      .query()
+      .where('projectId', project.id)
+      .andWhere('type', 'owner')
+      .first()
 
-    return !!profile
+    return !!owner
   }
   public async delete(user: User, project: Project, file: File) {
-    const profile = await user.related('profiles').query().where('id', project.profileId).first()
+    const owner = await user
+      .related('memberships')
+      .query()
+      .where('projectId', project.id)
+      .andWhere('type', 'owner')
+      .first()
 
-    return !!profile && file.projectId === project.id
+    return !!owner && file.projectId === project.id
   }
 }
