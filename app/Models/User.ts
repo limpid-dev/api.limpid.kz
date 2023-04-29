@@ -34,6 +34,9 @@ export default class User extends AppBaseModel {
   @column.dateTime()
   public verifiedAt: DateTime | null
 
+  @column.date()
+  public bornAt: DateTime
+
   @column()
   public fileId: number | null
 
@@ -54,6 +57,9 @@ export default class User extends AppBaseModel {
 
   @column()
   public lastName: string
+
+  @column()
+  public patronymicName: string
 
   @hasMany(() => Profile)
   public profiles: HasMany<typeof Profile>

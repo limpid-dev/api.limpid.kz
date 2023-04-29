@@ -11,6 +11,7 @@ export default class extends BaseSchema {
       table.string('remember_me_token', 255).nullable()
       table.string('first_name', 255).notNullable()
       table.string('last_name', 255).notNullable()
+      table.string('patronymic_name', 255).notNullable()
 
       /**
        * Uses timestampz for PostgreSQL and DATETIME2 for MSSQL
@@ -18,6 +19,7 @@ export default class extends BaseSchema {
       table.timestamp('created_at', { useTz: true }).notNullable()
       table.timestamp('updated_at', { useTz: true }).notNullable()
       table.timestamp('verified_at', { useTz: true }).nullable()
+      table.date('born_at').nullable()
     })
   }
 
