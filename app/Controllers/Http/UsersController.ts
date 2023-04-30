@@ -2,10 +2,17 @@ import { bind } from '@adonisjs/route-model-binding'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import File from 'App/Models/File'
 import User from 'App/Models/User'
+import PaginationValidator from 'App/Validators/PaginationValidator'
 import UsersStoreValidator from 'App/Validators/UsersStoreValidator'
 import UsersUpdateValidator from 'App/Validators/UsersUpdateValidator'
 
 export default class UsersController {
+  public async index({ request }: HttpContextContract) {
+    const payload = await request.validate(PaginationValidator)
+
+    return await User.query().qs(request.qs()).paginate(payload.page, payload.perPage)
+  }
+
   public async store({ request }: HttpContextContract) {
     const payload = await request.validate(UsersStoreValidator)
 

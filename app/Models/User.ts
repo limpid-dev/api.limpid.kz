@@ -23,6 +23,8 @@ import AuctionBid from './AuctionBid'
 import OrganizationMembership from './OrganizationMembership'
 
 export default class User extends AppBaseModel {
+  public static search = ['firstName', 'lastName', 'patronymicName', 'email']
+
   @column({ isPrimary: true })
   public id: number
 

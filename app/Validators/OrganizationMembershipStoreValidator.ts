@@ -1,7 +1,7 @@
 import { rules, schema, CustomMessages } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
-export default class PaginationValidator {
+export default class OrganizationMembershipStoreValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*
@@ -24,8 +24,7 @@ export default class PaginationValidator {
    *    ```
    */
   public schema = schema.create({
-    page: schema.number([rules.unsigned()]),
-    perPage: schema.number.optional([rules.unsigned()]),
+    userId: schema.number([rules.exists({ table: 'users', column: 'id' })]),
   })
 
   /**

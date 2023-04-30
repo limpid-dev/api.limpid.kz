@@ -5,10 +5,6 @@ Route.post(
   'organizations/:organization/memberships',
   'OrganizationMembershipsController.store'
 ).middleware('auth:web,api')
-Route.patch(
-  'organizations/:organization/memberships/:>membership',
-  'OrganizationMembershipsController.update'
-).middleware('auth:web,api')
 Route.delete(
   'organizations/:organization/memberships/:>membership',
   'OrganizationMembershipsController.destroy'

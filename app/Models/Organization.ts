@@ -4,8 +4,19 @@ import AppBaseModel from './AppBaseModel'
 import Contact from './Contact'
 import File from './File'
 import Certificate from './Certificate'
+import OrganizationMembership from './OrganizationMembership'
 
 export default class Organization extends AppBaseModel {
+  public static search = [
+    'name',
+    'bin',
+    'description',
+    'industry',
+    'ownedIntellectualResources',
+    'ownedMaterialResources',
+    'perfomance',
+  ]
+
   @column({ isPrimary: true })
   public id: number
 
@@ -28,6 +39,9 @@ export default class Organization extends AppBaseModel {
   public industry: string
 
   @column()
+  public type: string
+
+  @column()
   public ownedIntellectualResources: string
 
   @column()
@@ -44,4 +58,7 @@ export default class Organization extends AppBaseModel {
 
   @hasMany(() => Certificate)
   public certificates: HasMany<typeof Certificate>
+
+  @hasMany(() => OrganizationMembership)
+  public memberships: HasMany<typeof OrganizationMembership>
 }

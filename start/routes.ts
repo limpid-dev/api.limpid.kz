@@ -43,6 +43,10 @@ import './routes/skill'
 import './routes/tender'
 import './routes/tender-file'
 import './routes/tender-bid'
+import './routes/organization'
+import './routes/organization-file'
+import './routes/organization-contact'
+import './routes/organization-membership'
 
 Route.get('health', async ({ response }) => {
   const data = await HealthCheck.getReport()

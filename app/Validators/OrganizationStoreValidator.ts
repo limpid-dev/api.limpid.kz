@@ -1,7 +1,7 @@
 import { rules, schema, CustomMessages } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
-export default class PaginationValidator {
+export default class OrganizationStoreValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*
@@ -24,8 +24,20 @@ export default class PaginationValidator {
    *    ```
    */
   public schema = schema.create({
-    page: schema.number([rules.unsigned()]),
-    perPage: schema.number.optional([rules.unsigned()]),
+    name: schema.string({ trim: true }, [rules.minLength(1)]),
+    bin: schema.string({ trim: true }, [rules.minLength(1)]),
+    description: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(2048)]),
+    industry: schema.string({ trim: true }, [rules.minLength(1)]),
+    ownedIntellectualResources: schema.string({ trim: true }, [
+      rules.minLength(1),
+      rules.maxLength(2048),
+    ]),
+    ownedMaterialResources: schema.string({ trim: true }, [
+      rules.minLength(1),
+      rules.maxLength(2048),
+    ]),
+    type: schema.string({ trim: true }, [rules.minLength(1)]),
+    perfomance: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(2048)]),
   })
 
   /**
