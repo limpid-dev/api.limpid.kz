@@ -7,21 +7,9 @@ import UsersUpdateValidator from 'App/Validators/UsersUpdateValidator'
 
 export default class UsersController {
   public async store({ request }: HttpContextContract) {
-    const { file, ...payload } = await request.validate(UsersStoreValidator)
+    const payload = await request.validate(UsersStoreValidator)
 
     const user = await User.updateOrCreate({ email: payload.email }, payload)
-
-    if (file) {
-      const avatar = File.from(file)
-
-      await avatar
-        .merge({
-          userId: user.id,
-        })
-        .save()
-
-      await user.merge({ fileId: avatar.id }).save()
-    }
 
     await user.load('file')
 
