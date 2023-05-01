@@ -3,7 +3,6 @@ import { DateTime } from 'luxon'
 import AppBaseModel from './AppBaseModel'
 import File from './File'
 import Profile from './Profile'
-import Organization from './Organization'
 
 export default class Certificate extends AppBaseModel {
   @column({ isPrimary: true })
@@ -35,12 +34,6 @@ export default class Certificate extends AppBaseModel {
 
   @belongsTo(() => Profile)
   public profile: BelongsTo<typeof Profile>
-
-  @column()
-  public organizationId: number | null
-
-  @belongsTo(() => Organization)
-  public organization: BelongsTo<typeof Organization>
 
   @hasMany(() => File)
   public files: HasMany<typeof File>

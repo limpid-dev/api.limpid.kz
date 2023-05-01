@@ -56,9 +56,6 @@ export default class Organization extends AppBaseModel {
   @hasMany(() => Contact)
   public contacts: HasMany<typeof Contact>
 
-  @hasMany(() => Certificate)
-  public certificates: HasMany<typeof Certificate>
-
   @hasMany(() => OrganizationMembership)
   public memberships: HasMany<typeof OrganizationMembership>
 }
