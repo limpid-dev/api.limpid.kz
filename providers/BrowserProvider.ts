@@ -25,6 +25,7 @@ const minimalArgs = [
   '--disable-setuid-sandbox',
   '--disable-speech-api',
   '--disable-sync',
+  '--disable-gpu',
   '--hide-scrollbars',
   '--ignore-gpu-blacklist',
   '--metrics-recording-only',
