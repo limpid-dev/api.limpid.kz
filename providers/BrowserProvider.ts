@@ -83,6 +83,7 @@ export default class BrowserProvider {
         const browser = await puppeteer.launch({
           headless: 'new',
           args: minimalArgs,
+          executablePath: '/usr/bin/google-chrome',
         })
 
         await Redis.set('wsEndpoint', browser.wsEndpoint())
@@ -94,6 +95,7 @@ export default class BrowserProvider {
       const browser = await puppeteer.launch({
         headless: 'new',
         args: minimalArgs,
+        executablePath: '/usr/bin/google-chrome',
       })
 
       await Redis.set('wsEndpoint', browser.wsEndpoint())
