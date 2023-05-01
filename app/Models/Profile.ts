@@ -93,15 +93,4 @@ export default class Profile extends compose(AppBaseModel, Searchable) {
       profile.verifiedAt = null
     }
   }
-
-  public static findForRequest(ctx, param, value) {
-    console.log('findForRequest', ctx, param, value)
-
-    return (
-      this.query()
-        .where('id', value)
-        // .where('isVisible', true)
-        .firstOrFail()
-    )
-  }
 }

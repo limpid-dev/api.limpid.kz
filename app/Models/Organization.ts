@@ -3,7 +3,6 @@ import { DateTime } from 'luxon'
 import AppBaseModel from './AppBaseModel'
 import Contact from './Contact'
 import File from './File'
-import Certificate from './Certificate'
 import OrganizationMembership from './OrganizationMembership'
 
 export default class Organization extends AppBaseModel {

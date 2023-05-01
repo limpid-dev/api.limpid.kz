@@ -25,7 +25,8 @@
       "@adonisjs/bouncer",
       "@adonisjs/route-model-binding/build/adonis-typings",
       "@adonisjs/drive-s3",
-      "@adonisjs/shield"
+      "@adonisjs/shield",
+      "@adonisjs/view"
     ]
   }
 }

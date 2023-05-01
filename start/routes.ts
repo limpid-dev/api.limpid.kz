@@ -48,6 +48,8 @@ import './routes/organization-file'
 import './routes/organization-contact'
 import './routes/organization-membership'
 
+Route.get('templates/:template', 'TemplatesController.show')
+
 Route.get('health', async ({ response }) => {
   const data = await HealthCheck.getReport()
 
