@@ -1,6 +1,6 @@
 import puppeteer, { Browser } from 'puppeteer'
-
 import type { ApplicationContract } from '@ioc:Adonis/Core/Application'
+
 const minimalArgs = [
   '--autoplay-policy=user-gesture-required',
   '--disable-background-networking',
@@ -70,14 +70,26 @@ export default class BrowserProvider {
     const Redis = this.app.container.use('Adonis/Addons/Redis')
     const wsEndpoint = await Redis.get('wsEndpoint')
     // All bindings are ready, feel free to use them
+
     if (wsEndpoint) {
-      const browser = await puppeteer.connect({
-        browserWSEndpoint: wsEndpoint,
-      })
+      try {
+        const browser = await puppeteer.connect({
+          browserWSEndpoint: wsEndpoint,
+        })
+        this.browser = browser
 
-      this.browser = browser
+        this.app.container.singleton('Browser', () => browser)
+      } catch (error) {
+        const browser = await puppeteer.launch({
+          headless: 'new',
+          args: minimalArgs,
+        })
 
-      this.app.container.singleton('Browser', () => browser)
+        await Redis.set('wsEndpoint', browser.wsEndpoint())
+        this.browser = browser
+
+        this.app.container.singleton('Browser', () => browser)
+      }
     } else {
       const browser = await puppeteer.launch({
         headless: 'new',
