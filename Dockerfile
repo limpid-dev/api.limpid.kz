@@ -1,4 +1,4 @@
-FROM node:18-slim AS base
+FROM --platform=linux/amd64  node:18-slim AS base
 RUN mkdir -p /home/node/api && chown node:node /home/node/api
 WORKDIR /home/node/api
 USER node
@@ -12,6 +12,8 @@ FROM dependencies AS build
 RUN node ace build --production
 
 FROM base AS production
+
+USER root
 # We don't need the standalone Chromium
 ENV PUPPETEER_SKIP_CHROMIUM_DOWNLOAD true
 
@@ -23,6 +25,7 @@ RUN apt-get update && apt-get install curl gnupg -y \
   && apt-get update \
   && apt-get install google-chrome-stable -y --no-install-recommends \
   && rm -rf /var/lib/apt/lists/*
+  
 COPY --chown=node:node ./package*.json ./
 RUN npm ci --omit=dev
 COPY --chown=node:node --from=build /home/node/api/build .
