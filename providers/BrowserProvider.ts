@@ -68,6 +68,7 @@ export default class BrowserProvider {
   }
 
   public async boot() {
+    const Env = this.app.container.use('Adonis/Core/Env')
     const Redis = this.app.container.use('Adonis/Addons/Redis')
     const wsEndpoint = await Redis.get('wsEndpoint')
     // All bindings are ready, feel free to use them
@@ -84,7 +85,9 @@ export default class BrowserProvider {
         const browser = await puppeteer.launch({
           headless: 'new',
           args: minimalArgs,
-          executablePath: '/usr/bin/google-chrome',
+          ...(Env.get('NODE_ENV') === 'production' && {
+            executablePath: '/usr/bin/google-chrome',
+          }),
         })
 
         await Redis.set('wsEndpoint', browser.wsEndpoint())
@@ -96,7 +99,9 @@ export default class BrowserProvider {
       const browser = await puppeteer.launch({
         headless: 'new',
         args: minimalArgs,
-        executablePath: '/usr/bin/google-chrome',
+        ...(Env.get('NODE_ENV') === 'production' && {
+          executablePath: '/usr/bin/google-chrome',
+        }),
       })
 
       await Redis.set('wsEndpoint', browser.wsEndpoint())
