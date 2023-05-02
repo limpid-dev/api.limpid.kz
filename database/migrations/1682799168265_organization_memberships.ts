@@ -8,10 +8,10 @@ export default class extends BaseSchema {
       table.increments('id')
       table.integer('user_id').unsigned().references('id').inTable('users').onDelete('SET NULL')
       table
-        .integer('project_id')
+        .integer('organization_id')
         .unsigned()
         .references('id')
-        .inTable('projects')
+        .inTable('organizations')
         .onDelete('SET NULL')
       table.string('type')
 
@@ -20,7 +20,6 @@ export default class extends BaseSchema {
        */
       table.timestamp('created_at', { useTz: true })
       table.timestamp('updated_at', { useTz: true })
-      table.timestamp('accepted_at', { useTz: true })
     })
   }
 
