@@ -6,15 +6,15 @@ export default class extends BaseSchema {
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
       table.increments('id')
-      table.integer('tender_id').unsigned().references('id').inTable('tenders').onDelete('SET NULL')
+      table.integer('tender_id').unsigned().references('id').inTable('tenders').onDelete('CASCADE')
       table
         .integer('profile_id')
         .unsigned()
         .references('id')
         .inTable('profiles')
-        .onDelete('SET NULL')
+        .onDelete('CASCADE')
       table.decimal('price', 20, 4)
-
+      table.unique(['tender_id', 'profile_id'])
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */
