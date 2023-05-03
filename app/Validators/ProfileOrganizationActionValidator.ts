@@ -24,9 +24,8 @@ export default class ProfileOrganizationActionValidator {
    *    ```
    */
   public schema = schema.create({
-    profileId: schema.number([rules.exists({ table: 'profiles', column: 'id' })]),
-    organizationId: schema.number([
-      rules.requiredIfNotExists('profileId'),
+    profileId: schema.number.optional([rules.exists({ table: 'profiles', column: 'id' })]),
+    organizationId: schema.number.optional([
       rules.exists({ table: 'organizations', column: 'id' }),
     ]),
   })
