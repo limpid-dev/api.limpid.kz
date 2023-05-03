@@ -77,4 +77,7 @@ export const { policies } = Bouncer.registerPolicies({
   OrganizationMembershipPolicy: () => import('App/Policies/OrganizationMembershipPolicy'),
   OrganizationFilePolicy: () => import('App/Policies/OrganizationFilePolicy'),
   OrganizationContactPolicy: () => import('App/Policies/OrganizationContactPolicy'),
+  OrganizationExperiencePolicy: () => import('App/Policies/OrganizationExperiencePolicy'),
+  OrganizationCertificatePolicy: () => import('App/Policies/OrganizationCertificatePolicy'),
+  OrganizationCertificateFilePolicy: () => import('App/Policies/OrganizationCertificateFilePolicy'),
 })
