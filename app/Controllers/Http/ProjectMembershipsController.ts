@@ -1,3 +1,4 @@
+import { schema, rules } from '@ioc:Adonis/Core/Validator'
 import { bind } from '@adonisjs/route-model-binding'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import ProjectMembership from 'App/Models/ProjectMembership'
@@ -26,9 +27,15 @@ export default class ProjectMembershipsController {
 
     await bouncer.with('MembershipPolicy').authorize('create', project)
 
+    const { message } = await request.validate({
+      schema: schema.create({
+        message: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
+      }),
+    })
+
     const membership = await project
       .related('projectMemberships')
-      .create({ profileId: profile.id, type: 'member' })
+      .create({ profileId: profile.id, type: 'member', message })
 
     return { data: membership }
   }

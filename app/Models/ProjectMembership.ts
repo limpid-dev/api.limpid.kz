@@ -25,6 +25,9 @@ export default class ProjectMembership extends AppBaseModel {
   public type: Type
 
   @column()
+  public message: string | null
+
+  @column()
   public profileId: number | null
 
   @column()

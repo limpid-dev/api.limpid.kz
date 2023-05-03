@@ -19,6 +19,7 @@ export default class extends BaseSchema {
         .inTable('projects')
         .onDelete('SET NULL')
       table.string('type')
+      table.string('message')
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
