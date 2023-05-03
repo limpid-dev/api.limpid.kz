@@ -5,7 +5,7 @@ import Profile from 'App/Models/Profile'
 import Project from 'App/Models/Project'
 import { DateTime } from 'luxon'
 import PaginationValidator from 'App/Validators/PaginationValidator'
-import ProfileActionValidator from 'App/Validators/ProfileActionValidator'
+import ProfileOrganizationActionValidator from 'App/Validators/ProfileOrganizationActionValidator'
 
 export default class ProjectMembershipsController {
   @bind()
@@ -20,7 +20,7 @@ export default class ProjectMembershipsController {
 
   @bind()
   public async store({ request, bouncer }: HttpContextContract, project: Project) {
-    const payload = await request.validate(ProfileActionValidator)
+    const payload = await request.validate(ProfileOrganizationActionValidator)
 
     const profile = await Profile.findOrFail(payload.profileId)
 

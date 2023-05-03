@@ -7,7 +7,7 @@ import Profile from 'App/Models/Profile'
 import AuctionBidStoreValidator from 'App/Validators/AuctionBidStoreValidator'
 import AuctionBidUpdateValidator from 'App/Validators/AuctionBidUpdateValidator'
 import PaginationValidator from 'App/Validators/PaginationValidator'
-import ProfileActionValidator from 'App/Validators/ProfileActionValidator'
+import ProfileOrganizationActionValidator from 'App/Validators/ProfileOrganizationActionValidator'
 import { DateTime } from 'luxon'
 
 export default class AuctionBidsController {
@@ -20,7 +20,7 @@ export default class AuctionBidsController {
 
   @bind()
   public async store({ request, bouncer }: HttpContextContract, auction: Auction) {
-    const { profileId } = await request.validate(ProfileActionValidator)
+    const { profileId } = await request.validate(ProfileOrganizationActionValidator)
 
     const profile = await Profile.findOrFail(profileId)
 
@@ -54,7 +54,7 @@ export default class AuctionBidsController {
     auction: Auction,
     bid: AuctionBid
   ) {
-    const { profileId } = await request.validate(ProfileActionValidator)
+    const { profileId } = await request.validate(ProfileOrganizationActionValidator)
 
     const profile = await Profile.findOrFail(profileId)
 
@@ -88,7 +88,7 @@ export default class AuctionBidsController {
     auction: Auction,
     bid: AuctionBid
   ) {
-    const { profileId } = await request.validate(ProfileActionValidator)
+    const { profileId } = await request.validate(ProfileOrganizationActionValidator)
 
     const profile = await Profile.findOrFail(profileId)
 

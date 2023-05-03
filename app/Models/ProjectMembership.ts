@@ -4,6 +4,7 @@ import AppBaseModel from './AppBaseModel'
 import Message from './Message'
 import Profile from './Profile'
 import Project from './Project'
+import Organization from './Organization'
 
 export type Type = 'owner' | 'member'
 
@@ -24,7 +25,13 @@ export default class ProjectMembership extends AppBaseModel {
   public type: Type
 
   @column()
-  public profileId: number
+  public profileId: number | null
+
+  @column()
+  public organizationId: number | null
+
+  @belongsTo(() => Organization)
+  public organization: BelongsTo<typeof Organization>
 
   @belongsTo(() => Profile)
   public profile: BelongsTo<typeof Profile>

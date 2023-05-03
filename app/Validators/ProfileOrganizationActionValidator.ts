@@ -1,7 +1,7 @@
 import { rules, schema, CustomMessages } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
-export default class ProfileActionValidator {
+export default class ProfileOrganizationActionValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*
@@ -25,6 +25,10 @@ export default class ProfileActionValidator {
    */
   public schema = schema.create({
     profileId: schema.number([rules.exists({ table: 'profiles', column: 'id' })]),
+    organizationId: schema.number([
+      rules.requiredIfNotExists('profileId'),
+      rules.exists({ table: 'organizations', column: 'id' }),
+    ]),
   })
 
   /**

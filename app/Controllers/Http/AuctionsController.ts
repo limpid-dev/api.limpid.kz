@@ -4,7 +4,7 @@ import Auction from 'App/Models/Auction'
 import Profile from 'App/Models/Profile'
 import AuctionStoreValidator from 'App/Validators/AuctionStoreValidator'
 import PaginationValidator from 'App/Validators/PaginationValidator'
-import ProfileActionValidator from 'App/Validators/ProfileActionValidator'
+import ProfileOrganizationActionValidator from 'App/Validators/ProfileOrganizationActionValidator'
 
 export default class AuctionsController {
   public async index({ request }: HttpContextContract) {
@@ -22,7 +22,7 @@ export default class AuctionsController {
 
   public async store({ request }: HttpContextContract) {
     const payload = await request.validate(AuctionStoreValidator)
-    const { profileId } = await request.validate(ProfileActionValidator)
+    const { profileId } = await request.validate(ProfileOrganizationActionValidator)
 
     const profile = await Profile.findOrFail(profileId)
 

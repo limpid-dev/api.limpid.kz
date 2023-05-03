@@ -1,9 +1,10 @@
 import { bind } from '@adonisjs/route-model-binding'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import Organization from 'App/Models/Organization'
 import Profile from 'App/Models/Profile'
 import Project from 'App/Models/Project'
 import PaginationValidator from 'App/Validators/PaginationValidator'
-import ProfileActionValidator from 'App/Validators/ProfileActionValidator'
+import ProfileOrganizationActionValidator from 'App/Validators/ProfileOrganizationActionValidator'
 import ProjectsStoreValidator from 'App/Validators/ProjectsStoreValidator'
 import ProjectsUpdateValidator from 'App/Validators/ProjectsUpdateValidator'
 import { DateTime } from 'luxon'
@@ -17,21 +18,36 @@ export default class ProjectsController {
 
   public async store({ bouncer, request }: HttpContextContract) {
     const payload = await request.validate(ProjectsStoreValidator)
-    const { profileId } = await request.validate(ProfileActionValidator)
+    const { profileId, organizationId } = await request.validate(ProfileOrganizationActionValidator)
 
-    const profile = await Profile.findOrFail(profileId)
+    if (profileId) {
+      const profile = await Profile.findOrFail(profileId)
 
-    await bouncer.with('ProjectPolicy').authorize('create', profile)
+      await bouncer.with('ProjectPolicy').authorize('create', profile)
+      const project = await Project.create(payload)
 
-    const project = await Project.create(payload)
+      await project.related('projectMemberships').create({
+        profileId: profile.id,
+        type: 'owner',
+        acceptedAt: DateTime.now(),
+      })
 
-    await project.related('projectMemberships').create({
-      profileId: profile.id,
-      type: 'owner',
-      acceptedAt: DateTime.now(),
-    })
+      return { data: project }
+    }
+    if (organizationId) {
+      const organization = await Organization.findOrFail(organizationId)
 
-    return { data: project }
+      await bouncer.with('ProjectPolicy').authorize('create', organization)
+      const project = await Project.create(payload)
+
+      await project.related('projectMemberships').create({
+        organizationId: organization.id,
+        type: 'owner',
+        acceptedAt: DateTime.now(),
+      })
+
+      return { data: project }
+    }
   }
 
   @bind()

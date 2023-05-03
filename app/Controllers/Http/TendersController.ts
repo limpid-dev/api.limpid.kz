@@ -3,7 +3,7 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Profile from 'App/Models/Profile'
 import Tender from 'App/Models/Tender'
 import PaginationValidator from 'App/Validators/PaginationValidator'
-import ProfileActionValidator from 'App/Validators/ProfileActionValidator'
+import ProfileOrganizationActionValidator from 'App/Validators/ProfileOrganizationActionValidator'
 import TenderStoreValidator from 'App/Validators/TenderStoreValidator'
 
 export default class TendersController {
@@ -20,7 +20,7 @@ export default class TendersController {
 
   public async store({ request, bouncer }: HttpContextContract) {
     const payload = await request.validate(TenderStoreValidator)
-    const { profileId } = await request.validate(ProfileActionValidator)
+    const { profileId } = await request.validate(ProfileOrganizationActionValidator)
 
     const profile = await Profile.findOrFail(profileId)
 

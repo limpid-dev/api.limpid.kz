@@ -6,6 +6,7 @@ import File from './File'
 import OrganizationMembership from './OrganizationMembership'
 import Certificate from './Certificate'
 import Experience from './Experience'
+import ProjectMembership from './ProjectMembership'
 
 export default class Organization extends AppBaseModel {
   public static search = [
@@ -65,4 +66,7 @@ export default class Organization extends AppBaseModel {
 
   @hasMany(() => Experience)
   public experiences: HasMany<typeof Experience>
+
+  @hasMany(() => ProjectMembership)
+  public projectMemberships: HasMany<typeof ProjectMembership>
 }

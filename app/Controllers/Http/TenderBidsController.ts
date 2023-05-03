@@ -5,7 +5,7 @@ import Profile from 'App/Models/Profile'
 import Tender from 'App/Models/Tender'
 import AuctionBidStoreValidator from 'App/Validators/AuctionBidStoreValidator'
 import PaginationValidator from 'App/Validators/PaginationValidator'
-import ProfileActionValidator from 'App/Validators/ProfileActionValidator'
+import ProfileOrganizationActionValidator from 'App/Validators/ProfileOrganizationActionValidator'
 import TenderBid from 'App/Models/TenderBid'
 import AuctionBidUpdateValidator from 'App/Validators/AuctionBidUpdateValidator'
 
@@ -19,7 +19,7 @@ export default class TenderBidsController {
 
   @bind()
   public async store({ request }: HttpContextContract, tender: Tender) {
-    const { profileId } = await request.validate(ProfileActionValidator)
+    const { profileId } = await request.validate(ProfileOrganizationActionValidator)
 
     const profile = await Profile.findOrFail(profileId)
 

@@ -4,7 +4,7 @@ import Profile from 'App/Models/Profile'
 import Project from 'App/Models/Project'
 import MessagesStoreValidator from 'App/Validators/MessagesStoreValidator'
 import PaginationValidator from 'App/Validators/PaginationValidator'
-import ProfileActionValidator from 'App/Validators/ProfileActionValidator'
+import ProfileOrganizationActionValidator from 'App/Validators/ProfileOrganizationActionValidator'
 
 export default class MessagesController {
   @bind()
@@ -22,7 +22,7 @@ export default class MessagesController {
 
   @bind()
   public async store({ request, bouncer }: HttpContextContract, project: Project) {
-    const { profileId } = await request.validate(ProfileActionValidator)
+    const { profileId } = await request.validate(ProfileOrganizationActionValidator)
 
     const profile = await Profile.findOrFail(profileId)
 
