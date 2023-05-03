@@ -25,8 +25,7 @@ export default class CertificateFilesStoreValidator {
    */
   public schema = schema.create({
     file: schema.file({
-      extnames: ['jpg', 'jpeg', 'png', 'pdf'],
-      size: '8mb',
+      extnames: ['jpg', 'jpeg', 'png', 'pdf', 'docx', 'doc', 'pptx', 'ppt', 'xlsx', 'xls'],
     }),
   })
 

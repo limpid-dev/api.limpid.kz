@@ -26,7 +26,6 @@ export default class TenderFilesStoreValidator {
   public schema = schema.create({
     file: schema.file({
       extnames: ['jpg', 'jpeg', 'png', 'pdf', 'docx', 'doc', 'pptx', 'ppt', 'xlsx', 'xls'],
-      size: '8mb',
     }),
   })
 
