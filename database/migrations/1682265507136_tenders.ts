@@ -11,7 +11,7 @@ export default class extends BaseSchema {
         .unsigned()
         .references('id')
         .inTable('profiles')
-        .onDelete('SET NULL')
+        .onDelete('CASCADE')
       table.string('title')
       table.string('description', 2048)
       table.decimal('starting_price', 20, 4)

@@ -11,15 +11,15 @@ export default class extends BaseSchema {
         .unsigned()
         .references('id')
         .inTable('auctions')
-        .onDelete('SET NULL')
+        .onDelete('CASCADE')
       table
         .integer('profile_id')
         .unsigned()
         .references('id')
         .inTable('profiles')
-        .onDelete('SET NULL')
+        .onDelete('CASCADE')
       table.decimal('price', 20, 4)
-
+      table.unique(['auction_id', 'profile_id'])
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */
