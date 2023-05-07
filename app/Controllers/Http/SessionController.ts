@@ -28,6 +28,7 @@ export default class SessionController {
   }
 
   public async show({ auth }: HttpContextContract) {
+    await auth.user?.load('file')
     return { data: auth.user }
   }
 
