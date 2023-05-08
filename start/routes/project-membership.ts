@@ -5,10 +5,10 @@ Route.post('projects/:project/memberships', 'ProjectMembershipsController.store'
   'auth:web,api'
 )
 Route.patch(
-  'projects/:project/memberships/:>membership',
+  'projects/:project/memberships/:>projectMembership',
   'ProjectMembershipsController.update'
 ).middleware('auth:web,api')
 Route.delete(
-  'projects/:project/memberships/:>membership',
+  'projects/:project/memberships/:>projectMembership',
   'ProjectMembershipsController.destroy'
 ).middleware('auth:web,api')
