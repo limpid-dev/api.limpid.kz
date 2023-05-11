@@ -1,8 +1,7 @@
+import View from '@ioc:Adonis/Core/View'
 import Env from '@ioc:Adonis/Core/Env'
 import { BaseMailer, MessageContract } from '@ioc:Adonis/Addons/Mail'
 import User from 'App/Models/User'
-import Recovery from '../../emails/verify'
-import { renderAsync } from '@react-email/components'
 
 export default class RecoveryEmail extends BaseMailer {
   constructor(private readonly user: User, private readonly token: string) {
@@ -25,7 +24,7 @@ export default class RecoveryEmail extends BaseMailer {
    * also be async.
    */
   public async prepare(message: MessageContract) {
-    const html = await renderAsync(<Recovery token={this.token} />)
+    const html = await View.render('emails/recovery', { token: this.token })
 
     message
       .subject('Восстановление пароля')

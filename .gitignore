@@ -6,3 +6,5 @@ coverage
 .env
 tmp
 .react-email
+.mysql
+.redis

@@ -1,8 +1,7 @@
-import { renderAsync } from '@react-email/render'
+import View from '@ioc:Adonis/Core/View'
 import Env from '@ioc:Adonis/Core/Env'
 import { BaseMailer, MessageContract } from '@ioc:Adonis/Addons/Mail'
 import User from 'App/Models/User'
-import Verify from '../../emails/verify'
 
 export default class VerifyEmail extends BaseMailer {
   constructor(private readonly user: User, private readonly token: string) {
@@ -25,7 +24,7 @@ export default class VerifyEmail extends BaseMailer {
    * also be async.
    */
   public async prepare(message: MessageContract) {
-    const html = await renderAsync(<Verify token={this.token} />)
+    const html = await View.render('emails/verify', { token: this.token })
 
     message
       .subject('Верификация аккаунта')
