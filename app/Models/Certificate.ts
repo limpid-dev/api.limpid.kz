@@ -1,8 +1,8 @@
-import { BelongsTo, HasMany, belongsTo, column, hasMany, BaseModel } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, belongsTo, column, hasOne, HasOne } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 import File from './File'
-import Profile from './Profile'
 import Organization from './Organization'
+import Profile from './Profile'
 
 export default class Certificate extends BaseModel {
   @column({ isPrimary: true })
@@ -41,6 +41,8 @@ export default class Certificate extends BaseModel {
   @belongsTo(() => Profile)
   public profile: BelongsTo<typeof Profile>
 
-  @hasMany(() => File)
-  public files: HasMany<typeof File>
+  public fileId: number
+
+  @hasOne(() => File)
+  public files: HasOne<typeof File>
 }
