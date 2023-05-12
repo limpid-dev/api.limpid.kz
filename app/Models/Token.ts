@@ -13,6 +13,9 @@ export default class Token extends BaseModel {
   public expiresAt: DateTime | null
 
   @column()
+  public name: string
+
+  @column()
   public type: string
 
   @column()
