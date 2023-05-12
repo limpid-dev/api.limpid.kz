@@ -14,7 +14,6 @@ import AppBaseModel from './AppBaseModel'
 import Auction from './Auction'
 import ProjectMembership from './ProjectMembership'
 import Message from './Message'
-import Notification from './Notification'
 import Profile from './Profile'
 import File from './File'
 import Tender from './Tender'
@@ -66,9 +65,6 @@ export default class User extends AppBaseModel {
 
   @hasMany(() => Profile)
   public profiles: HasMany<typeof Profile>
-
-  @hasMany(() => Notification)
-  public notifications: HasMany<typeof Notification>
 
   @hasManyThrough([() => Auction, () => Profile])
   public auctions: HasManyThrough<typeof Auction>
