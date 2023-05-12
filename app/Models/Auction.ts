@@ -5,8 +5,6 @@ import File from './File'
 import Profile from './Profile'
 
 export default class Auction extends BaseModel {
-  public static search = ['title', 'description']
-
   @column({ isPrimary: true })
   public id: number
 

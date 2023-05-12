@@ -22,8 +22,6 @@ import TenderBid from './TenderBid'
 import Token from './Token'
 
 export default class User extends BaseModel {
-  public static search = ['firstName', 'lastName', 'patronymicName', 'email']
-
   @column({ isPrimary: true })
   public id: number
 
