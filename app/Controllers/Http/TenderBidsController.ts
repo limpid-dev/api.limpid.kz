@@ -3,11 +3,11 @@ import { bind } from '@adonisjs/route-model-binding'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Profile from 'App/Models/Profile'
 import Tender from 'App/Models/Tender'
-import AuctionBidStoreValidator from 'App/Validators/AuctionBidStoreValidator'
+import TenderBidStoreValidator from 'App/Validators/TenderBidStoreValidator'
 import PaginationValidator from 'App/Validators/PaginationValidator'
 import ProfileOrganizationActionValidator from 'App/Validators/ProfileOrganizationActionValidator'
 import TenderBid from 'App/Models/TenderBid'
-import AuctionBidUpdateValidator from 'App/Validators/AuctionBidUpdateValidator'
+import TenderBidUpdateValidator from 'App/Validators/TenderBidUpdateValidator'
 
 export default class TenderBidsController {
   @bind()
@@ -23,7 +23,7 @@ export default class TenderBidsController {
 
     const profile = await Profile.findOrFail(profileId)
 
-    const payload = await request.validate(AuctionBidStoreValidator)
+    const payload = await request.validate(TenderBidStoreValidator)
 
     if (tender.startingPrice) {
       await request.validate({
@@ -42,7 +42,7 @@ export default class TenderBidsController {
 
   @bind()
   public async update({ request }: HttpContextContract, tender: Tender, bid: TenderBid) {
-    const payload = await request.validate(AuctionBidUpdateValidator)
+    const payload = await request.validate(TenderBidUpdateValidator)
 
     if (tender.startingPrice) {
       await request.validate({
