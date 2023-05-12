@@ -14,7 +14,7 @@ export default class VerificationController {
 
     const token = string.generateRandom(6)
 
-    await user.related('tokens').query().where('type', "verification").delete()
+    await user.related('tokens').query().where('type', 'verification').delete()
 
     await user.related('tokens').create({
       token,

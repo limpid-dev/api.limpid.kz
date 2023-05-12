@@ -14,7 +14,7 @@ export default class RecoveryController {
 
     const token = string.generateRandom(6)
 
-    await user.related('tokens').query().where('type', "recovery").delete()
+    await user.related('tokens').query().where('type', 'recovery').delete()
 
     await user.related('tokens').create({
       token,
