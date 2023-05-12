@@ -8,8 +8,7 @@
     "start": "node server.js",
     "test": "node ace test",
     "lint": "eslint . --ext=.ts",
-    "format": "prettier --write .",
-    "compose": "docker-compose build && docker-compose up -d"
+    "format": "prettier --write ."
   },
   "eslintConfig": {
     "extends": [
