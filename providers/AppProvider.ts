@@ -1,4 +1,5 @@
 import type { ApplicationContract } from '@ioc:Adonis/Core/Application'
+import CamelCaseNamingStrategy from 'App/Strategies/CamelCaseNamingStrategy'
 
 function isFilter(query: unknown): query is Record<string, string> {
   return typeof query === 'object' && query !== null
@@ -17,17 +18,20 @@ function isSearchable(searchable: unknown): searchable is string[] {
 }
 
 export default class AppProvider {
-  constructor(protected app: ApplicationContract) {}
+  constructor(protected app: ApplicationContract) { }
 
   public register() {
     // Register your own bindings
   }
 
   public async boot() {
+    const { BaseModel } = this.app.container.use('Adonis/Lucid/Orm')
+    BaseModel.namingStrategy = new CamelCaseNamingStrategy()
+
     const { ModelQueryBuilder } = this.app.container.use('Adonis/Lucid/Database')
     const { string } = this.app.container.use('Adonis/Core/Helpers')
 
-    ModelQueryBuilder.macro('qs', function (qs: Record<string, unknown>) {
+    ModelQueryBuilder.macro('qs', function(qs: Record<string, unknown>) {
       const columns = this.model.$columnsDefinitions as Map<string, unknown>
 
       Object.entries(qs).forEach(([key, value]) => {
