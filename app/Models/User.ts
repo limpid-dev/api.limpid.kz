@@ -8,9 +8,9 @@ import {
   hasMany,
   hasManyThrough,
   hasOne,
+  BaseModel,
 } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
-import AppBaseModel from './AppBaseModel'
 import Auction from './Auction'
 import ProjectMembership from './ProjectMembership'
 import Message from './Message'
@@ -21,7 +21,7 @@ import TenderBid from './TenderBid'
 import AuctionBid from './AuctionBid'
 import OrganizationMembership from './OrganizationMembership'
 
-export default class User extends AppBaseModel {
+export default class User extends BaseModel {
   public static search = ['firstName', 'lastName', 'patronymicName', 'email']
 
   @column({ isPrimary: true })

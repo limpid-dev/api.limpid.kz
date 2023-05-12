@@ -1,10 +1,9 @@
 import { DateTime } from 'luxon'
-import { BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import ProjectMembership from './ProjectMembership'
 import Project from './Project'
-import AppBaseModel from './AppBaseModel'
 
-export default class Message extends AppBaseModel {
+export default class Message extends BaseModel {
   public static search = ['content']
 
   @column({ isPrimary: true })

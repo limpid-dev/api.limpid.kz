@@ -5,13 +5,13 @@ import {
   beforeUpdate,
   belongsTo,
   column,
+  BaseModel,
 } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 import Auction from './Auction'
 import Profile from './Profile'
-import AppBaseModel from './AppBaseModel'
 
-export default class AuctionBid extends AppBaseModel {
+export default class AuctionBid extends BaseModel {
   @column({ isPrimary: true })
   public id: number
 

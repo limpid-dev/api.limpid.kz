@@ -1,11 +1,10 @@
-import { HasMany, column, hasMany } from '@ioc:Adonis/Lucid/Orm'
+import { HasMany, column, hasMany, BaseModel } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
-import AppBaseModel from './AppBaseModel'
 import File from './File'
 import ProjectMembership from './ProjectMembership'
 import Message from './Message'
 
-export default class Project extends AppBaseModel {
+export default class Project extends BaseModel {
   public static search = [
     'title',
     'description',

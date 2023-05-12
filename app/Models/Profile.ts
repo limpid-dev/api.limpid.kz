@@ -1,6 +1,13 @@
-import { BelongsTo, HasMany, beforeSave, belongsTo, column, hasMany } from '@ioc:Adonis/Lucid/Orm'
+import {
+  BelongsTo,
+  HasMany,
+  beforeSave,
+  belongsTo,
+  column,
+  hasMany,
+  BaseModel,
+} from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
-import AppBaseModel from './AppBaseModel'
 import Auction from './Auction'
 import AuctionBid from './AuctionBid'
 import Certificate from './Certificate'
@@ -13,7 +20,7 @@ import Tender from './Tender'
 import TenderBid from './TenderBid'
 import User from './User'
 
-export default class Profile extends AppBaseModel {
+export default class Profile extends BaseModel {
   public static search = ['title', 'description', 'location', 'industry']
 
   @column({ isPrimary: true })

@@ -18,7 +18,7 @@ function isSearchable(searchable: unknown): searchable is string[] {
 }
 
 export default class AppProvider {
-  constructor(protected app: ApplicationContract) { }
+  constructor(protected app: ApplicationContract) {}
 
   public register() {
     // Register your own bindings
@@ -31,7 +31,7 @@ export default class AppProvider {
     const { ModelQueryBuilder } = this.app.container.use('Adonis/Lucid/Database')
     const { string } = this.app.container.use('Adonis/Core/Helpers')
 
-    ModelQueryBuilder.macro('qs', function(qs: Record<string, unknown>) {
+    ModelQueryBuilder.macro('qs', function (qs: Record<string, unknown>) {
       const columns = this.model.$columnsDefinitions as Map<string, unknown>
 
       Object.entries(qs).forEach(([key, value]) => {

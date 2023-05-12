@@ -12,9 +12,9 @@ import {
   afterPaginate,
   belongsTo,
   column,
+  BaseModel,
 } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
-import AppBaseModel from './AppBaseModel'
 import Auction from './Auction'
 import Certificate from './Certificate'
 import Project from './Project'
@@ -22,7 +22,7 @@ import User from './User'
 import Tender from './Tender'
 import Organization from './Organization'
 
-export default class File extends AppBaseModel {
+export default class File extends BaseModel {
   @column({ isPrimary: true })
   public id: number
 
