@@ -13,11 +13,7 @@ export default class MessagesController {
 
     const payload = await request.validate(PaginationValidator)
 
-    return project
-      .related('messages')
-      .query()
-      .qs(request.qs())
-      .paginate(payload.page, payload.perPage)
+    return project.related('messages').query().paginate(payload.page, payload.perPage)
   }
 
   @bind()

@@ -10,7 +10,7 @@ export default class UsersController {
   public async index({ request }: HttpContextContract) {
     const payload = await request.validate(PaginationValidator)
 
-    return await User.query().qs(request.qs()).paginate(payload.page, payload.perPage)
+    return await User.query().paginate(payload.page, payload.perPage)
   }
 
   public async store({ request }: HttpContextContract) {

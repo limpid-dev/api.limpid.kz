@@ -13,7 +13,7 @@ export default class ProjectsController {
   public async index({ request }: HttpContextContract) {
     const payload = await request.validate(PaginationValidator)
 
-    return await Project.query().qs(request.qs()).paginate(payload.page, payload.perPage)
+    return await Project.query().paginate(payload.page, payload.perPage)
   }
 
   public async store({ bouncer, request }: HttpContextContract) {

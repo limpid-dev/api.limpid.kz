@@ -1,10 +1,10 @@
-import Redis from '@ioc:Adonis/Addons/Redis'
 import { safeEqual, string } from '@ioc:Adonis/Core/Helpers'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import RecoveryEmail from 'App/Mailers/RecoveryEmail'
 import User from 'App/Models/User'
 import RecoveryStoreValidator from 'App/Validators/RecoveryStoreValidator'
 import RecoveryUpdateValidator from 'App/Validators/RecoveryUpdateValidator'
+import { DateTime } from 'luxon'
 
 export default class RecoveryController {
   public async store({ request }: HttpContextContract) {
@@ -14,7 +14,13 @@ export default class RecoveryController {
 
     const token = string.generateRandom(6)
 
-    await Redis.set(`recovery:${user.id}`, token, 'EX', 60 * 5)
+    await user.related('tokens').create({
+      token,
+      type: 'recovery',
+      expiresAt: DateTime.now().plus({
+        minutes: 5,
+      }),
+    })
 
     await new RecoveryEmail(user, token).sendLater()
   }
@@ -24,12 +30,18 @@ export default class RecoveryController {
 
     const user = await User.findByOrFail('email', payload.email)
 
-    const token = await Redis.get(`recovery:${user.id}`)
+    const token = await user
+      .related('tokens')
+      .query()
+      .where('token', payload.token)
+      .andWhere('type', 'recovery')
+      .andWhere('expiresAt', '<', DateTime.now().toSQL())
+      .first()
 
     if (token) {
-      if (safeEqual(token, payload.token)) {
+      if (safeEqual(token.token, payload.token)) {
         await user.merge({ password: payload.password }).save()
-        await Redis.del(`recovery:${user.id}`)
+        await token.delete()
         return
       }
     }

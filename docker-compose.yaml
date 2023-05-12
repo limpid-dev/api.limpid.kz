@@ -1,7 +1,6 @@
 version: '3.9'
 volumes:
   mysql:
-  redis:
 services:
   mysql:
     image: mysql:8.0.32
@@ -12,9 +11,3 @@ services:
       MYSQL_DATABASE: ${MYSQL_DATABASE}
     ports:
       - ${MYSQL_PORT}:${MYSQL_PORT}
-  redis:
-    image: 'redis:7.0.10-alpine'
-    volumes:
-      - redis:/data
-    ports:
-      - ${REDIS_PORT}:${REDIS_PORT}

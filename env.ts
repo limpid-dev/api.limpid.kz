@@ -30,11 +30,6 @@ export default Env.rules({
   MYSQL_PASSWORD: Env.schema.string(),
   MYSQL_DATABASE: Env.schema.string(),
 
-  REDIS_CONNECTION: Env.schema.enum(['local'] as const),
-  REDIS_HOST: Env.schema.string(),
-  REDIS_PORT: Env.schema.number(),
-  REDIS_PASSWORD: Env.schema.string.optional(),
-
   SMTP_HOST: Env.schema.string(),
   SMTP_PORT: Env.schema.number(),
   SMTP_USERNAME: Env.schema.string(),

@@ -10,7 +10,7 @@ export default class TendersController {
   public async index({ request }: HttpContextContract) {
     const payload = await request.validate(PaginationValidator)
 
-    return Tender.query().qs(request.qs()).paginate(payload.page, payload.perPage)
+    return Tender.query().paginate(payload.page, payload.perPage)
   }
 
   @bind()

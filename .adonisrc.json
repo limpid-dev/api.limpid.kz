@@ -19,7 +19,6 @@
     "./providers/AppProvider",
     "@adonisjs/core",
     "@adonisjs/lucid",
-    "@adonisjs/redis",
     "@adonisjs/auth",
     "@adonisjs/mail",
     "@adonisjs/session",

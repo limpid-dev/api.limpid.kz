@@ -20,6 +20,7 @@ import Tender from './Tender'
 import TenderBid from './TenderBid'
 import AuctionBid from './AuctionBid'
 import OrganizationMembership from './OrganizationMembership'
+import Token from './Token'
 
 export default class User extends BaseModel {
   public static search = ['firstName', 'lastName', 'patronymicName', 'email']
@@ -62,6 +63,9 @@ export default class User extends BaseModel {
 
   @column()
   public patronymicName: string
+
+  @hasMany(() => Token)
+  public tokens: HasMany<typeof Token>
 
   @hasMany(() => Profile)
   public profiles: HasMany<typeof Profile>

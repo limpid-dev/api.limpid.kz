@@ -10,7 +10,7 @@ export default class AuctionsController {
   public async index({ request }: HttpContextContract) {
     const payload = await request.validate(PaginationValidator)
 
-    return await Auction.query().qs(request.qs()).paginate(payload.page, payload.perPage)
+    return await Auction.query().paginate(payload.page, payload.perPage)
   }
 
   @bind()

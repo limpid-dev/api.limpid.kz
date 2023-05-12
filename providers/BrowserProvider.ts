@@ -70,16 +70,16 @@ export default class BrowserProvider {
 
   public async boot() {
     // All bindings are ready, feel free to use them
+  }
+
+  public async ready() {
+    // App is ready
     const browser = await puppeteer.launch({
       headless: 'new',
       args,
     })
 
     this.browser = browser
-  }
-
-  public async ready() {
-    // App is ready
   }
 
   public async shutdown() {
