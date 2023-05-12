@@ -14,6 +14,8 @@ export default class VerificationController {
 
     const token = string.generateRandom(6)
 
+    await user.related('tokens').query().where('type', "verification").delete()
+
     await user.related('tokens').create({
       token,
       type: 'verification',
@@ -35,7 +37,7 @@ export default class VerificationController {
       .query()
       .where('token', payload.token)
       .andWhere('type', 'verification')
-      .andWhere('expiresAt', '<', DateTime.now().toSQL())
+      .andWhere('expiresAt', '>', DateTime.now().toSQL())
       .first()
 
     if (token) {

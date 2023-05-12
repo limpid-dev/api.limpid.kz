@@ -14,6 +14,8 @@ export default class RecoveryController {
 
     const token = string.generateRandom(6)
 
+    await user.related('tokens').query().where('type', "recovery").delete()
+
     await user.related('tokens').create({
       token,
       type: 'recovery',
@@ -35,7 +37,7 @@ export default class RecoveryController {
       .query()
       .where('token', payload.token)
       .andWhere('type', 'recovery')
-      .andWhere('expiresAt', '<', DateTime.now().toSQL())
+      .andWhere('expiresAt', '>', DateTime.now().toSQL())
       .first()
 
     if (token) {
