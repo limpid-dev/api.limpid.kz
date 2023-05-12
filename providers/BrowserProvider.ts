@@ -1,7 +1,7 @@
 import puppeteer, { Browser } from 'puppeteer'
 import type { ApplicationContract } from '@ioc:Adonis/Core/Application'
 
-const minimalArgs = [
+const args = [
   '--autoplay-policy=user-gesture-required',
   '--disable-background-networking',
   '--disable-background-timer-throttling',
@@ -59,56 +59,23 @@ const minimalArgs = [
 |
 */
 export default class BrowserProvider {
-  constructor(protected app: ApplicationContract) {}
-
   private browser: Browser
+
+  constructor(protected app: ApplicationContract) {}
 
   public register() {
     // Register your own bindings
+    this.app.container.singleton('Browser', () => this.browser)
   }
 
   public async boot() {
-    const Env = this.app.container.use('Adonis/Core/Env')
-    const Redis = this.app.container.use('Adonis/Addons/Redis')
-    const wsEndpoint = await Redis.get('wsEndpoint')
     // All bindings are ready, feel free to use them
+    const browser = await puppeteer.launch({
+      headless: 'new',
+      args,
+    })
 
-    if (wsEndpoint) {
-      try {
-        const browser = await puppeteer.connect({
-          browserWSEndpoint: wsEndpoint,
-        })
-        this.browser = browser
-
-        this.app.container.singleton('Browser', () => browser)
-      } catch (error) {
-        const browser = await puppeteer.launch({
-          headless: 'new',
-          args: minimalArgs,
-          ...(Env.get('NODE_ENV') === 'production' && {
-            executablePath: '/usr/bin/google-chrome',
-          }),
-        })
-
-        await Redis.set('wsEndpoint', browser.wsEndpoint())
-        this.browser = browser
-
-        this.app.container.singleton('Browser', () => browser)
-      }
-    } else {
-      const browser = await puppeteer.launch({
-        headless: 'new',
-        args: minimalArgs,
-        ...(Env.get('NODE_ENV') === 'production' && {
-          executablePath: '/usr/bin/google-chrome',
-        }),
-      })
-
-      await Redis.set('wsEndpoint', browser.wsEndpoint())
-      this.browser = browser
-
-      this.app.container.singleton('Browser', () => browser)
-    }
+    this.browser = browser
   }
 
   public async ready() {
@@ -116,7 +83,7 @@ export default class BrowserProvider {
   }
 
   public async shutdown() {
-    await this.browser.close()
     // Cleanup, since app is going down
+    await this.browser.close()
   }
 }

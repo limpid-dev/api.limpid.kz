@@ -1,5 +1,5 @@
 declare module '@ioc:Browser' {
-  import { Browser as PuppeteerBrowser } from 'puppeteer'
-  const Browser: PuppeteerBrowser
+  import type * as Puppeteer from 'puppeteer'
+  const Browser: Puppeteer.Browser
   export default Browser
 }
