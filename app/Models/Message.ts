@@ -1,12 +1,10 @@
-import { compose } from '@ioc:Adonis/Core/Helpers'
 import { DateTime } from 'luxon'
 import { BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import ProjectMembership from './ProjectMembership'
 import Project from './Project'
-import { Searchable } from 'App/Mixins/Searchable'
 import AppBaseModel from './AppBaseModel'
 
-export default class Message extends compose(AppBaseModel, Searchable) {
+export default class Message extends AppBaseModel {
   public static search = ['content']
 
   @column({ isPrimary: true })
