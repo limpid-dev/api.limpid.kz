@@ -1,8 +1,7 @@
-import { HasMany, column, hasMany, BaseModel } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, column, HasMany, hasMany } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 import File from './File'
 import ProjectMembership from './ProjectMembership'
-import Message from './Message'
 
 export default class Project extends BaseModel {
   public static search = [
@@ -70,7 +69,4 @@ export default class Project extends BaseModel {
 
   @hasMany(() => File)
   public files: HasMany<typeof File>
-
-  @hasMany(() => Message)
-  public messages: HasMany<typeof Message>
 }

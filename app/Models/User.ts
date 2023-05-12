@@ -1,25 +1,24 @@
 import Hash from '@ioc:Adonis/Core/Hash'
 import {
-  HasMany,
-  HasManyThrough,
-  HasOne,
+  BaseModel,
   beforeSave,
   column,
+  HasMany,
   hasMany,
+  HasManyThrough,
   hasManyThrough,
+  HasOne,
   hasOne,
-  BaseModel,
 } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 import Auction from './Auction'
-import ProjectMembership from './ProjectMembership'
-import Message from './Message'
-import Profile from './Profile'
+import AuctionBid from './AuctionBid'
 import File from './File'
+import OrganizationMembership from './OrganizationMembership'
+import Profile from './Profile'
+import ProjectMembership from './ProjectMembership'
 import Tender from './Tender'
 import TenderBid from './TenderBid'
-import AuctionBid from './AuctionBid'
-import OrganizationMembership from './OrganizationMembership'
 import Token from './Token'
 
 export default class User extends BaseModel {
@@ -81,9 +80,6 @@ export default class User extends BaseModel {
 
   @hasMany(() => OrganizationMembership)
   public organizationMemberships: HasMany<typeof OrganizationMembership>
-
-  @hasManyThrough([() => Message, () => Profile])
-  public messages: HasManyThrough<typeof Message>
 
   @hasManyThrough([() => Tender, () => Profile])
   public tenders: HasManyThrough<typeof Tender>

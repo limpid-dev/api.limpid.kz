@@ -1,9 +1,8 @@
-import { BelongsTo, HasMany, belongsTo, column, hasMany, BaseModel } from '@ioc:Adonis/Lucid/Orm'
+import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
-import Message from './Message'
+import Organization from './Organization'
 import Profile from './Profile'
 import Project from './Project'
-import Organization from './Organization'
 
 export type Type = 'owner' | 'member'
 
@@ -43,7 +42,4 @@ export default class ProjectMembership extends BaseModel {
 
   @belongsTo(() => Project)
   public project: BelongsTo<typeof Project>
-
-  @hasMany(() => Message)
-  public messages: HasMany<typeof Message>
 }
