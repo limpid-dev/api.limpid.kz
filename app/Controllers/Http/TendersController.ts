@@ -5,6 +5,8 @@ import Tender from 'App/Models/Tender'
 import PaginationValidator from 'App/Validators/PaginationValidator'
 import ProfileOrganizationActionValidator from 'App/Validators/ProfileOrganizationActionValidator'
 import TenderStoreValidator from 'App/Validators/TenderStoreValidator'
+import User from 'App/Models/User'
+import { DateTime } from 'luxon'
 
 export default class TendersController {
   public async index({ request }: HttpContextContract) {
@@ -23,12 +25,33 @@ export default class TendersController {
     const { profileId } = await request.validate(ProfileOrganizationActionValidator)
 
     const profile = await Profile.findOrFail(profileId)
+    const newProfile = await Profile.query()
+    .where('id', profile.userId)
+    .preload('user')
+    .first()
+    const now = DateTime.now()
 
+    if (!newProfile) {
+      return { message: 'Профиль не найден' }
+    }
+    const user = await User.findOrFail(newProfile.id);
+
+    if (now >= user.payment_start && now <= user.payment_end || user.payment_end === null)
+    {
+      if (user.auction_atmpts > 0)
+    {
     await bouncer.with('TenderPolicy').authorize('create', profile)
-
     const tender = await profile.related('tenders').create(payload)
 
+    user.auction_atmpts = user.auction_atmpts - 1;
+    await user.save()
+
     return { data: tender }
+  }else {
+    throw new Error("У вас недостаточно попыток");
+  }}else {
+    throw new Error("Ваш тариф просрочен");
+  }
   }
 
   @bind()

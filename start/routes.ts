@@ -42,6 +42,7 @@ import './routes/organization-contact'
 import './routes/organization-membership'
 import './routes/organization-certificate'
 import './routes/organization-experience'
+import './routes/payment'
 
 Route.get('templates/:template', 'TemplatesController.show')
 

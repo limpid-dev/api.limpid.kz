@@ -20,6 +20,7 @@ import ProjectMembership from './ProjectMembership'
 import Tender from './Tender'
 import TenderBid from './TenderBid'
 import Token from './Token'
+import Invoice from './Invoice'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -61,6 +62,18 @@ export default class User extends BaseModel {
   @column()
   public patronymicName: string
 
+  @column()
+  public projects_atmpts: number
+
+  @column()
+  public auction_atmpts: number
+
+  @column.dateTime({ autoCreate: true })
+  public payment_start: DateTime
+
+  @column.dateTime()
+  public payment_end: DateTime
+
   @hasMany(() => Token)
   public tokens: HasMany<typeof Token>
 
@@ -84,6 +97,9 @@ export default class User extends BaseModel {
 
   @hasManyThrough([() => TenderBid, () => Profile])
   public tenderBids: HasManyThrough<typeof TenderBid>
+
+  @hasMany(() => Invoice)
+  public invoices: HasMany<typeof Invoice>
 
   @beforeSave()
   public static async beforeSave(user: User) {
