@@ -13,8 +13,6 @@ import Profile from './Profile'
 import TenderBid from './TenderBid'
 
 export default class Tender extends BaseModel {
-  public static search = ['title', 'description']
-
   @column({ isPrimary: true })
   public id: number
 

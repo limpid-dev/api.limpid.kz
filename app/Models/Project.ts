@@ -4,21 +4,6 @@ import File from './File'
 import ProjectMembership from './ProjectMembership'
 
 export default class Project extends BaseModel {
-  public static search = [
-    'title',
-    'description',
-    'location',
-    'industry',
-    'stage',
-    'requiredMoneyAmount',
-    'ownedMoneyAmount',
-    'requiredIntellectualResources',
-    'ownedIntellectualResources',
-    'requiredMaterialResources',
-    'ownedMaterialResources',
-    'profitability',
-  ]
-
   @column({ isPrimary: true })
   public id: number
 

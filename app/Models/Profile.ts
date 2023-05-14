@@ -21,8 +21,6 @@ import TenderBid from './TenderBid'
 import User from './User'
 
 export default class Profile extends BaseModel {
-  public static search = ['title', 'description', 'location', 'industry']
-
   @column({ isPrimary: true })
   public id: number
 

@@ -52,4 +52,4 @@ Route.get('health', async ({ response }) => {
   return data.healthy ? response.ok({ data }) : response.badRequest({ data })
 })
 
-Route.get('csrf', () => { })
+Route.get('csrf', () => {})

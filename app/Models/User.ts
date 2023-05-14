@@ -23,8 +23,6 @@ import Token from './Token'
 import Invoice from './Invoice'
 
 export default class User extends BaseModel {
-  public static search = ['firstName', 'lastName', 'patronymicName', 'email']
-
   @column({ isPrimary: true })
   public id: number
 

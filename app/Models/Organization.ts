@@ -8,16 +8,6 @@ import Experience from './Experience'
 import ProjectMembership from './ProjectMembership'
 
 export default class Organization extends BaseModel {
-  public static search = [
-    'name',
-    'bin',
-    'description',
-    'industry',
-    'ownedIntellectualResources',
-    'ownedMaterialResources',
-    'perfomance',
-  ]
-
   @column({ isPrimary: true })
   public id: number
 
