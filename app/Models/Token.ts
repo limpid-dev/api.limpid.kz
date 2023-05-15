@@ -9,6 +9,9 @@ export default class Token extends BaseModel {
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  public updatedAt: DateTime
+
   @column.dateTime()
   public expiresAt: DateTime | null
 
