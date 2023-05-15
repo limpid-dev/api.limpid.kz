@@ -3,7 +3,6 @@ import { DateTime } from 'luxon'
 import Invoice from './Invoice'
 
 export default class SubPlans extends BaseModel {
-
   @column({ isPrimary: true })
   public id: number
 
@@ -21,7 +20,7 @@ export default class SubPlans extends BaseModel {
 
   @column()
   public projects_atmpts: number
-  
+
   @column()
   public auction_atmpts: number
 
