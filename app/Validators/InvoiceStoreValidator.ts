@@ -10,7 +10,10 @@ export default class InvoiceStoreValidator {
     planId: schema.number.optional([rules.exists({ table: 'sub_plans', column: 'id' })]),
     userId: schema.number.optional([rules.exists({ table: 'users', column: 'id' })]),
     currency: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(1024)]),
-    description: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(102400)]),
+    description: schema.string.optional({ trim: true }, [
+      rules.minLength(1),
+      rules.maxLength(102400),
+    ]),
     postLink: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(10000)]),
     language: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(1024)]),
     terminal: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(1024)]),

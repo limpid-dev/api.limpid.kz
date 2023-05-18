@@ -26,38 +26,34 @@ export default class TenderBidsController {
 
     const payload = await request.validate(TenderBidStoreValidator)
 
-    const newProfile = await Profile.query()
-    .where('id', profile.userId)
-    .preload('user')
-    .first()
+    const newProfile = await Profile.query().where('id', profile.userId).preload('user').first()
     const now = DateTime.now()
 
     if (!newProfile) {
       return { message: 'Профиль не найден' }
     }
-    const user = await User.findOrFail(newProfile.id);
+    const user = await User.findOrFail(newProfile.id)
 
-    if (now >= user.payment_start && now <= user.payment_end || user.payment_end === null)
-    {
-      if (user.auction_atmpts > 0)
-    {
-    if (tender.startingPrice) {
-      await request.validate({
-        schema: schema.create({
-          price: schema.number([rules.range(1, Number.parseInt(`${tender.startingPrice}`))]),
-        }),
-      })
-    }
+    if ((now >= user.payment_start && now <= user.payment_end) || user.payment_end === null) {
+      if (user.auction_atmpts > 0) {
+        if (tender.startingPrice) {
+          await request.validate({
+            schema: schema.create({
+              price: schema.number([rules.range(1, Number.parseInt(`${tender.startingPrice}`))]),
+            }),
+          })
+        }
 
-    const bid = await tender.related('bids').create({ ...payload, profileId: profile.id })
-    await bid.load('profile')
-    user.auction_atmpts = user.auction_atmpts - 1;
-    await user.save()
-    return { data: bid }}
-    else {
-      throw new Error("У вас недостаточно попыток");
-    }} else {
-      throw new Error("Ваш тариф просрочен");
+        const bid = await tender.related('bids').create({ ...payload, profileId: profile.id })
+        await bid.load('profile')
+        user.auction_atmpts = user.auction_atmpts - 1
+        await user.save()
+        return { data: bid }
+      } else {
+        throw new Error('У вас недостаточно попыток')
+      }
+    } else {
+      throw new Error('Ваш тариф просрочен')
     }
   }
 
