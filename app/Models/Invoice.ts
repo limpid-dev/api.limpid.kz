@@ -45,4 +45,10 @@ export default class Invoice extends BaseModel {
 
   @column()
   public status: string
+
+  @column()
+  public payId: string
+
+  @column()
+  public cancelToken: string
 }
