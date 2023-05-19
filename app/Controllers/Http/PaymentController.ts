@@ -96,9 +96,9 @@ export default class PaymentController {
     let formData = new FormData()
     formData.append('grant_type', 'client_credentials')
     formData.append('scope', 'webapi usermanagement email_send verification statement statistics payment')
-    formData.append('client_id', 'test')
-    formData.append('client_secret', 'yF587AV9Ms94qN2QShFzVR3vFnWkhjbAK3sG')
-    const url = 'https://testoauth.homebank.kz/epay2/oauth2/token'
+    formData.append('client_id', Env.get('EPAY_CLIENT_ID'))
+    formData.append('client_secret', '8VPL0#e$by)ZLigx')
+    const url = 'https://epay-oauth.homebank.kz/oauth2/token'
 
     try {
       const response = await fetch(url, {
@@ -129,7 +129,7 @@ export default class PaymentController {
       'Authorization': `Bearer ${token}`,
     }
     if (users.auction_atmpts = plan.auction_atmpts) {
-      const url = `https://testepay.homebank.kz/api/operation/${payId}/refund`
+      const url = `https://epay-api.homebank.kz/operation/${payId}/refund`
       try {
         const response = await fetch(url, {
           method: 'POST',
