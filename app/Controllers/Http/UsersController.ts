@@ -1,21 +1,46 @@
+import { bind } from '@adonisjs/route-model-binding'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import User from 'App/Models/User'
-import PaginationValidator from 'App/Validators/PaginationValidator'
+import IndexValidator from 'App/Validators/Users/IndexValidator'
+import StoreValidator from 'App/Validators/Users/StoreValidator'
+import UpdateValidator from 'App/Validators/Users/UpdateValidator'
 
 export default class UsersController {
   public async index({ request }: HttpContextContract) {
-    const { page, per_page: perPage } = await request.validate(PaginationValidator)
+    const { page, per_page: perPage } = await request.validate(IndexValidator)
 
     const users = await User.query().paginate(page, perPage)
 
-    return users.queryString(request.qs())
+    return users
   }
 
-  public async store({}: HttpContextContract) {}
+  public async store({ request }: HttpContextContract) {
+    const { email, password } = await request.validate(StoreValidator)
 
-  public async show({}: HttpContextContract) {}
+    const user = await User.create({ email, password })
 
-  public async update({}: HttpContextContract) {}
+    return {
+      data: user,
+    }
+  }
 
-  public async destroy({}: HttpContextContract) {}
+  @bind()
+  public async show({}: HttpContextContract, user: User) {
+    return {
+      data: user,
+    }
+  }
+
+  @bind()
+  public async update({ request }: HttpContextContract, user: User) {
+    const { email, password } = await request.validate(UpdateValidator)
+
+    user.merge({ email, password })
+
+    await user.save()
+
+    return {
+      data: user,
+    }
+  }
 }

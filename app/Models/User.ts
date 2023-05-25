@@ -12,8 +12,8 @@ export default class User extends BaseModel {
   @column({ serializeAs: null })
   public password: string
 
-  @column()
-  public rememberMeToken: string | null
+  @column.dateTime()
+  public emailVerifiedAt: DateTime | null
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
@@ -25,6 +25,13 @@ export default class User extends BaseModel {
   public static async hashPassword(user: User) {
     if (user.$dirty.password) {
       user.password = await Hash.make(user.password)
+    }
+  }
+
+  @beforeSave()
+  public static async unverifyEmail(user: User) {
+    if (user.$dirty.email) {
+      user.emailVerifiedAt = null
     }
   }
 }

@@ -19,7 +19,8 @@
     "@adonisjs/core",
     "@adonisjs/lucid",
     "@adonisjs/view",
-    "@adonisjs/auth"
+    "@adonisjs/auth",
+    "@adonisjs/route-model-binding/build/providers/RmbProvider"
   ],
   "aceProviders": ["@adonisjs/repl"],
   "tests": {
