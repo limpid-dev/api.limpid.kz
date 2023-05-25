@@ -29,6 +29,9 @@ export default class StoreValidator {
       rules.unique({
         table: 'users',
         column: 'email',
+        whereNot: {
+          email_verified_at: null,
+        },
       }),
     ]),
     password: schema.string({}, [rules.minLength(8), rules.maxLength(180)]),
