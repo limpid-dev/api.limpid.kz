@@ -14,6 +14,7 @@ import {
 import ApiToken from './ApiToken'
 import Profile from './Profile'
 import Tender from './Tender'
+import TenderBid from './TenderBid'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -60,6 +61,9 @@ export default class User extends BaseModel {
 
   @hasManyThrough([() => Tender, () => Profile])
   public tenders: HasManyThrough<typeof Tender>
+
+  @hasManyThrough([() => TenderBid, () => Profile])
+  public tenderBids: HasManyThrough<typeof TenderBid>
 
   @beforeSave()
   public static async hashPassword(user: User) {

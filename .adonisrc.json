@@ -21,8 +21,11 @@
     "./start/bouncer",
     {
       "file": "./start/validator",
-      "environment": ["web"]
-    }
+      "environment": [
+        "web"
+      ]
+    },
+    "./start/events"
   ],
   "providers": [
     "./providers/AppProvider",
@@ -35,17 +38,23 @@
     "@adonisjs/mail",
     "@adonisjs/attachment-lite"
   ],
-  "aceProviders": ["@adonisjs/repl"],
+  "aceProviders": [
+    "@adonisjs/repl"
+  ],
   "tests": {
     "suites": [
       {
         "name": "functional",
-        "files": ["tests/functional/**/*.spec(.ts|.js)"],
+        "files": [
+          "tests/functional/**/*.spec(.ts|.js)"
+        ],
         "timeout": 60000
       }
     ]
   },
-  "testProviders": ["@japa/preset-adonis/TestsProvider"],
+  "testProviders": [
+    "@japa/preset-adonis/TestsProvider"
+  ],
   "metaFiles": [
     {
       "pattern": "resources/views/**/*.edge",
