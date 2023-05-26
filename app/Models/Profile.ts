@@ -46,7 +46,7 @@ export default class Profile extends BaseModel {
   public isPersonal: boolean
 
   @column.dateTime()
-  public verifiedAt: DateTime | null
+  public binVerifiedAt: DateTime | null
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

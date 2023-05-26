@@ -14,7 +14,7 @@ export default class UsersController {
     return users
   }
 
-  public async store({ request }: HttpContextContract) {
+  public async store({ request, response }: HttpContextContract) {
     const {
       email,
       password,
@@ -24,9 +24,13 @@ export default class UsersController {
 
     const user = await User.updateOrCreate({ email }, { email, password, firstName, lastName })
 
-    await user
-      .related('personalProfile')
-      .create({ displayName: `${user.firstName} ${user.lastName}`, isPersonal: true })
+    await user.related('profiles').create({
+      displayName: `${user.firstName} ${user.lastName}`,
+      isPersonal: true,
+      isVisible: true,
+    })
+
+    response.status(201)
 
     return {
       data: user,

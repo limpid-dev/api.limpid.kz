@@ -34,3 +34,8 @@ Route.patch('/email-verification', 'EmailVerificationController.update').middlew
 
 Route.post('/password-recovery', 'PasswordRecoveryController.store').middleware(['guest'])
 Route.patch('/password-recovery', 'PasswordRecoveryController.update').middleware(['guest'])
+
+Route.get('/profiles', 'ProfilesController.index')
+Route.post('/profiles', 'ProfilesController.store').middleware(['auth', 'emailVerified'])
+Route.get('/profiles/:profile', 'ProfilesController.show')
+Route.patch('/profiles/:profile', 'ProfilesController.update').middleware(['auth', 'emailVerified'])

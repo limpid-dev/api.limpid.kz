@@ -16,12 +16,12 @@ export default class extends BaseSchema {
       table.string('bin', 12).nullable()
       table.string('perfomance', 2048).nullable()
       table.string('type').nullable()
-      table.boolean('is_visible').notNullable().defaultTo(true)
+      table.boolean('is_visible').notNullable()
       table.boolean('is_personal').notNullable()
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */
-      table.timestamp('verified_at', { useTz: true }).nullable()
+      table.timestamp('bin_verified_at', { useTz: true }).nullable()
       table.timestamp('created_at', { useTz: true }).notNullable()
       table.timestamp('updated_at', { useTz: true }).notNullable()
     })
