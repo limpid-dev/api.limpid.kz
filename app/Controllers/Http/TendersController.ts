@@ -4,6 +4,7 @@ import Tender from 'App/Models/Tender'
 import IndexValidator from 'App/Validators/Tenders/IndexValidator'
 import StoreValidator from 'App/Validators/Tenders/StoreValidator'
 import UpdateValidator from 'App/Validators/Tenders/UpdateValidator'
+import UpdateWinnerValidator from 'App/Validators/Tenders/UpdateWinnerValidator'
 import { Duration } from 'luxon'
 
 export default class TendersController {
@@ -47,6 +48,22 @@ export default class TendersController {
 
   @bind()
   public async update({ request, bouncer }: HttpContextContract, tender: Tender) {
+    if (request.all().won_tender_bid_id) {
+      await bouncer.with('TenderPolicy').allows('updateWinner', tender)
+
+      const { won_tender_bid_id: wonTenderBidId } = await request.validate(UpdateWinnerValidator)
+
+      tender.merge({
+        wonTenderBidId,
+      })
+
+      await tender.save()
+
+      return {
+        data: tender,
+      }
+    }
+
     await bouncer.with('TenderPolicy').allows('update', tender)
 
     const {
