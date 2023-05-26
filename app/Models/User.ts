@@ -1,20 +1,16 @@
-import { DateTime } from 'luxon'
 import Hash from '@ioc:Adonis/Core/Hash'
 import {
-  column,
-  beforeSave,
   BaseModel,
-  hasMany,
   HasMany,
-  hasOne,
   HasOne,
-  hasManyThrough,
-  HasManyThrough,
+  beforeSave,
+  column,
+  hasMany,
+  hasOne,
 } from '@ioc:Adonis/Lucid/Orm'
+import { DateTime } from 'luxon'
 import ApiToken from './ApiToken'
 import Profile from './Profile'
-import Tender from './Tender'
-import TenderBid from './TenderBid'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -58,12 +54,6 @@ export default class User extends BaseModel {
 
   @hasMany(() => Profile)
   public profiles: HasMany<typeof Profile>
-
-  @hasManyThrough([() => Tender, () => Profile])
-  public tenders: HasManyThrough<typeof Tender>
-
-  @hasManyThrough([() => TenderBid, () => Profile])
-  public tenderBids: HasManyThrough<typeof TenderBid>
 
   @beforeSave()
   public static async hashPassword(user: User) {

@@ -1,7 +1,16 @@
 import { DateTime, Duration } from 'luxon'
-import { BaseModel, BelongsTo, belongsTo, column, computed } from '@ioc:Adonis/Lucid/Orm'
+import {
+  BaseModel,
+  BelongsTo,
+  HasOne,
+  belongsTo,
+  column,
+  computed,
+  hasOne,
+} from '@ioc:Adonis/Lucid/Orm'
 import { duration } from 'App/Utilities/Duration'
 import Profile from './Profile'
+import TenderBid from './TenderBid'
 
 export default class Tender extends BaseModel {
   @column({ isPrimary: true })
@@ -12,6 +21,12 @@ export default class Tender extends BaseModel {
 
   @belongsTo(() => Profile)
   public profile: BelongsTo<typeof Profile>
+
+  @column()
+  public wonTenderBidId: number | null
+
+  @hasOne(() => TenderBid)
+  public wonTenderBid: HasOne<typeof TenderBid>
 
   @column()
   public title: string

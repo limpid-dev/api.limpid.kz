@@ -5,8 +5,6 @@
  * file.
  */
 
-import TenderBid from 'App/Models/TenderBid'
-
 declare module '@ioc:Adonis/Core/Event' {
   /*
   |--------------------------------------------------------------------------

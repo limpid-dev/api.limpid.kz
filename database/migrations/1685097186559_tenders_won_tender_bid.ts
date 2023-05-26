@@ -1,15 +1,15 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
 
 export default class extends BaseSchema {
-  protected tableName = 'users'
+  protected tableName = 'tenders'
 
   public async up() {
     this.schema.alterTable(this.tableName, (table) => {
       table
-        .integer('selected_profile_id')
+        .integer('won_tender_bid_id')
         .unsigned()
         .references('id')
-        .inTable('profiles')
+        .inTable('tender_bids')
         .onDelete('SET NULL')
         .nullable()
     })
@@ -17,7 +17,7 @@ export default class extends BaseSchema {
 
   public async down() {
     this.schema.alterTable(this.tableName, (table) => {
-      table.dropForeign('selected_profile_id')
+      table.dropForeign('won_tender_bid_id')
     })
   }
 }

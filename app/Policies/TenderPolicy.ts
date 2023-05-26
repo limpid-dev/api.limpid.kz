@@ -4,21 +4,13 @@ import Tender from 'App/Models/Tender'
 
 export default class TenderPolicy extends BasePolicy {
   public async update(user: User, tender: Tender) {
-    const userRelatedTender = await user.related('tenders').query().where('id', tender.id).first()
+    await tender.load('profile')
 
-    if (userRelatedTender) {
-      return !tender.verifiedAt
-    }
-
-    return false
+    return user.id === tender.profile.userId && !tender.verifiedAt
   }
   public async delete(user: User, tender: Tender) {
-    const userRelatedTender = await user.related('tenders').query().where('id', tender.id).first()
+    await tender.load('profile')
 
-    if (userRelatedTender) {
-      return !tender.verifiedAt
-    }
-
-    return false
+    return user.id === tender.profile.userId && !tender.verifiedAt
   }
 }
