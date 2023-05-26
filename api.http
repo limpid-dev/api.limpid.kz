@@ -1,24 +1,30 @@
 @url = 127.0.0.1:3333
+@token = {{createSession.response.body.$.data.token}}
 
 # --- Users ---
 
-### Get all users
+###
+
 # @name getAllUsers
-@page = 1
-@per_page = 10
+# @prompt page
+# @prompt per_page
 
 GET /users?page={{page}}&{{per_page}} HTTP/1.1
 Host: {{url}}
+Authorization: Bearer {{token}}
 
-### Create a user
+###
+
 # @name createUser
-# @prompt email 
-# @prompt password 
-# @prompt first_name 
-# @prompt last_name 
+
+# @prompt email
+# @prompt password
+# @prompt first_name
+# @prompt last_name
 
 POST /users HTTP/1.1
 HOST: {{url}}
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
@@ -28,34 +34,260 @@ Content-Type: application/json
   "last_name": "{{last_name}}"
 }
 
-### Get a user
+###
+
 # @name getUser
-@id = {{createUser.response.body.$.data.id}}
+# @prompt id
 
 GET /users/{{id}} HTTP/1.1
 Host: {{url}}
 
-### Update a user
+###
+
 # @name updateUser
-@id = {{createUser.response.body.$.data.id}}
-# @prompt email
-# @prompt password
-# @prompt first_name
-# @prompt last_name
-# @prompt patronymic
-# @prompt born_at
-# @prompt selected_profile_id
+# @prompt id 
+# @prompt email?
+# @prompt password?
+# @prompt first_name?
+# @prompt last_name?
+# @prompt patronymic?
+# @prompt born_at?
+# @prompt selected_profile_id?
 
 PATCH /users/{{id}} HTTP/1.1
 HOST: {{url}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "email": "{{email?}}",
+  "password": "{{password?}}",
+  "first_name": "{{first_name?}}",
+  "last_name": "{{last_name?}}",
+  "patronymic": "{{patronymic?}}",
+  "born_at": "{{born_at?}}",
+  "selected_profile_id": "{{selected_profile_id?}}"
+}
+
+# --- Session ---
+
+###
+
+# @name createSession
+# @prompt email
+# @prompt password
+
+POST /session HTTP/1.1
+HOST: {{url}}
+Authorization: Bearer {{token}}
 Content-Type: application/json
 
 {
   "email": "{{email}}",
-  "password": "{{password}}",
-  "first_name": "{{first_name}}",
-  "last_name": "{{last_name}}",
-  "patronymic": "{{patronymic}}",
-  "born_at": "{{born_at}}",
-  "selected_profile_id": "{{selected_profile_id}}"
+  "password": "{{password}}"
 }
+
+###
+
+# @name getSession
+
+GET /session HTTP/1.1
+HOST: {{url}}
+Authorization: Bearer {{token}}
+
+###
+
+# @name deleteSession
+
+DELETE /session HTTP/1.1
+HOST: {{url}}
+Authorization: Bearer {{token}}
+
+# --- Email Verification ---
+
+###
+
+# @name startEmailVerification
+
+POST /email-verification HTTP/1.1
+HOST: {{url}}
+Authorization: Bearer {{token}}
+
+###
+
+# @name finishEmailVerification
+# @prompt code
+
+PATCH /email-verification HTTP/1.1
+HOST: {{url}}
+Authorization: Bearer {{token}}
+Content-Type: application/json
+
+{
+  "token": "{{code}}"
+}
+
+# --- Profiles ---
+
+###
+
+# @name getAllProfiles
+# @prompt page
+# @prompt per_page
+
+GET /profiles?page={{page}}&{{per_page}} HTTP/1.1
+Authorization: Bearer {{token}}
+Host: {{url}}
+
+###
+
+# @name createProfile
+# @prompt display_name
+# @prompt description
+# @prompt location
+# @prompt industry
+# @prompt owned_intellectual_resources
+# @prompt owned_material_resources
+# @prompt bin?
+# @prompt perfomance?
+# @prompt type?
+# @prompt is_visible
+# @prompt avatar
+
+POST /profiles HTTP/1.1
+HOST: {{url}}
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=Boundary
+
+--Boundary
+Content-Disposition: form-data; name="display_name"
+
+{{display_name}}
+--Boundary
+Content-Disposition: form-data; name="description"
+
+{{description}}
+--Boundary
+Content-Disposition: form-data; name="location"
+
+{{location}}
+--Boundary
+Content-Disposition: form-data; name="industry"
+
+{{industry}}
+--Boundary
+Content-Disposition: form-data; name="owned_intellectual_resources"
+
+{{owned_intellectual_resources}}
+--Boundary
+Content-Disposition: form-data; name="owned_material_resources"
+
+{{owned_material_resources}}
+--Boundary
+Content-Disposition: form-data; name="bin"
+
+{{bin?}}
+--Boundary
+Content-Disposition: form-data; name="perfomance"
+
+{{perfomance?}}
+--Boundary
+Content-Disposition: form-data; name="type"
+
+{{type?}}
+--Boundary
+Content-Disposition: form-data; name="is_visible"
+
+{{is_visible}}
+--Boundary
+Content-Disposition: form-data; name="avatar"; filename="avatar.jpg"
+Content-Type: image/jpeg
+
+< {{avatar}}
+--Boundary--
+
+###
+
+# @name getProfile
+# @prompt id
+
+GET /profiles/{{id}} HTTP/1.1
+Authorization: Bearer {{token}}
+Host: {{url}}
+
+###
+
+# @name updateProfile
+# @prompt id 
+# @prompt display_name?
+# @prompt description?
+# @prompt location?
+# @prompt industry?
+# @prompt owned_intellectual_resources?
+# @prompt owned_material_resources?
+# @prompt bin?
+# @prompt perfomance?
+# @prompt type?
+# @prompt is_visible?
+# @prompt avatar?
+
+PATCH /profiles/{{id}} HTTP/1.1
+HOST: {{url}}
+Authorization: Bearer {{token}}
+Content-Type: multipart/form-data; boundary=Boundary
+
+--Boundary
+Content-Disposition: form-data; name="display_name"
+
+{{display_name?}}
+--Boundary
+Content-Disposition: form-data; name="description"
+
+{{description?}}
+--Boundary
+Content-Disposition: form-data; name="location"
+
+{{location?}}
+--Boundary
+Content-Disposition: form-data; name="industry"
+
+{{industry?}}
+--Boundary
+Content-Disposition: form-data; name="owned_intellectual_resources"
+
+{{owned_intellectual_resources?}}
+--Boundary
+Content-Disposition: form-data; name="owned_material_resources"
+
+{{owned_material_resources?}}
+--Boundary
+Content-Disposition: form-data; name="bin"
+
+{{bin?}}
+--Boundary
+Content-Disposition: form-data; name="perfomance"
+
+{{perfomance?}}
+--Boundary
+Content-Disposition: form-data; name="type"
+
+{{type?}}
+--Boundary
+Content-Disposition: form-data; name="is_visible"
+
+{{is_visible?}}
+--Boundary
+Content-Disposition: form-data; name="avatar"; filename="avatar.jpg"
+Content-Type: image/jpeg
+
+< {{avatar?}}
+--Boundary--
+
+###
+
+# @name deleteProfile
+# @prompt id
+
+DELETE /profiles/{{id}} HTTP/1.1
+HOST: {{url}}
+Authorization: Bearer {{token}}

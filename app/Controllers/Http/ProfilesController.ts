@@ -4,7 +4,8 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Profile from 'App/Models/Profile'
 import IndexValidator from 'App/Validators/Profiles/IndexValidator'
 import StoreValidator from 'App/Validators/Profiles/StoreValidator'
-import UpdateValidator from 'App/Validators/Profiles/UpdateValidator'
+import UpdateOrganizationValidator from 'App/Validators/Profiles/UpdateOrganizationValidator'
+import UpdatePersonalValidator from 'App/Validators/Profiles/UpdatePersonalValidator'
 
 export default class ProfilesController {
   public async index({ request }: HttpContextContract) {
@@ -75,7 +76,36 @@ export default class ProfilesController {
   @bind()
   public async update({ request, bouncer }: HttpContextContract, profile: Profile) {
     await bouncer.with('ProfilePolicy').authorize('update', profile)
+    if(profile.isPersonal) {
+      const {
+        display_name: displayName,
+        description,
+        location,
+        industry,
+        owned_intellectual_resources: ownedIntellectualResources,
+        owned_material_resources: ownedMaterialResources,
+        is_visible: isVisible,
+        avatar,
+      } = await request.validate(UpdatePersonalValidator)
+  
+      profile.merge({
+        displayName,
+        description,
+        location,
+        industry,
+        ownedIntellectualResources,
+        ownedMaterialResources,
+        isVisible,
+      })
+  
+      if (avatar) {
+        profile.merge({
+          avatar: Attachment.fromFile(avatar),
+        })
+      }
+    }
 
+   else {
     const {
       display_name: displayName,
       description,
@@ -88,7 +118,7 @@ export default class ProfilesController {
       type,
       is_visible: isVisible,
       avatar,
-    } = await request.validate(UpdateValidator)
+    } = await request.validate(UpdateOrganizationValidator)
 
     profile.merge({
       displayName,
@@ -108,6 +138,7 @@ export default class ProfilesController {
         avatar: Attachment.fromFile(avatar),
       })
     }
+   }
 
     await profile.save()
 

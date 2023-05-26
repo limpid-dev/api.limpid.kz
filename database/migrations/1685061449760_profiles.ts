@@ -21,7 +21,7 @@ export default class extends BaseSchema {
       table.string('owned_material_resources', 2048).nullable()
       table.string('bin', 12).nullable()
       table.string('perfomance', 2048).nullable()
-      table.string('type').nullable()
+      table.string('type',255).nullable()
       table.boolean('is_visible').notNullable()
       table.boolean('is_personal').notNullable()
       table.json('avatar').nullable()

@@ -41,13 +41,34 @@ export default class Profile extends BaseModel {
   @column()
   public ownedMaterialResources: string | null
 
-  @column()
+  @column({
+    serialize(value:string|null, _attribute, model:Profile) {
+      if(model.isPersonal) {
+        return undefined
+      }
+      return value
+    },
+  })
   public bin: string | null
 
-  @column()
+  @column({
+    serialize(value:string|null, _attribute, model:Profile) {
+      if(model.isPersonal) {
+        return undefined
+      }
+      return value
+    },
+  })
   public perfomance: string | null
 
-  @column()
+  @column({
+    serialize(value:string|null, _attribute, model:Profile) {
+      if(model.isPersonal) {
+        return undefined
+      }
+      return value
+    },
+  })
   public type: string | null
 
   @column()
@@ -56,7 +77,16 @@ export default class Profile extends BaseModel {
   @column()
   public isPersonal: boolean
 
-  @column.dateTime()
+  @column.dateTime(
+    {
+      serialize(value:string|null, _attribute, model:Profile) {
+        if(model.isPersonal) {
+          return undefined
+        }
+        return value
+      },
+    }
+  )
   public binVerifiedAt: DateTime | null
 
   @attachment({ preComputeUrl: true })

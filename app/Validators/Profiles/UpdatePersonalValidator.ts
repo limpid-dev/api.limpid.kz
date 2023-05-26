@@ -1,7 +1,7 @@
-import { schema, rules, CustomMessages } from '@ioc:Adonis/Core/Validator'
+import { schema,rules, CustomMessages } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
-export default class StoreValidator {
+export default class UpdatePersonalValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*
@@ -24,25 +24,21 @@ export default class StoreValidator {
    *    ```
    */
   public schema = schema.create({
-    display_name: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
-    description: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
-    location: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
-    industry: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
-    owned_intellectual_resources: schema.string({ trim: true }, [
+    display_name: schema.string.optional({ trim: true }, [
+      rules.minLength(1),
+      rules.maxLength(255),
+    ]),
+    description: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
+    location: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
+    industry: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
+    owned_intellectual_resources: schema.string.optional({ trim: true }, [
       rules.minLength(1),
       rules.maxLength(2048),
     ]),
-    owned_material_resources: schema.string({ trim: true }, [
+    owned_material_resources: schema.string.optional({ trim: true }, [
       rules.minLength(1),
       rules.maxLength(2048),
     ]),
-    bin: schema.string.optional({ trim: true }, [
-      rules.minLength(12),
-      rules.maxLength(12),
-      rules.regex(/^\d+$/),
-    ]),
-    perfomance: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(2048)]),
-    type: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
     is_visible: schema.boolean(),
     avatar: schema.file.optional({
       size: '1mb',
