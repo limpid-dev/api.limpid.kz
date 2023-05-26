@@ -13,6 +13,13 @@ import Project from './Project'
 import User from './User'
 import Tender from './Tender'
 
+const serilizeForOrganizationProfile = (value: string | null, _attribute, model: Profile) => {
+  if (model.isPersonal) {
+    return undefined
+  }
+  return value
+}
+
 export default class Profile extends BaseModel {
   @column({ isPrimary: true })
   public id: number
@@ -41,33 +48,16 @@ export default class Profile extends BaseModel {
   @column()
   public ownedMaterialResources: string | null
 
-  @column({
-    serialize(value: string | null, _attribute, model: Profile) {
-      if (model.isPersonal) {
-        return undefined
-      }
-      return value
-    },
-  })
+  @column({})
   public bin: string | null
 
   @column({
-    serialize(value: string | null, _attribute, model: Profile) {
-      if (model.isPersonal) {
-        return undefined
-      }
-      return value
-    },
+    serialize: serilizeForOrganizationProfile,
   })
   public perfomance: string | null
 
   @column({
-    serialize(value: string | null, _attribute, model: Profile) {
-      if (model.isPersonal) {
-        return undefined
-      }
-      return value
-    },
+    serialize: serilizeForOrganizationProfile,
   })
   public type: string | null
 
@@ -78,12 +68,7 @@ export default class Profile extends BaseModel {
   public isPersonal: boolean
 
   @column.dateTime({
-    serialize(value: string | null, _attribute, model: Profile) {
-      if (model.isPersonal) {
-        return undefined
-      }
-      return value
-    },
+    serialize: serilizeForOrganizationProfile,
   })
   public binVerifiedAt: DateTime | null
 
