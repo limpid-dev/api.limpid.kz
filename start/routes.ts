@@ -29,8 +29,14 @@ Route.get('/session', 'SessionController.show').middleware(['auth'])
 Route.post('/session', 'SessionController.store').middleware(['guest'])
 Route.delete('/session', 'SessionController.destroy').middleware(['auth'])
 
-Route.post('/email-verification', 'EmailVerificationController.store').middleware(['auth'])
-Route.patch('/email-verification', 'EmailVerificationController.update').middleware(['auth'])
+Route.post('/email-verification', 'EmailVerificationController.store').middleware([
+  'auth',
+  'emailUnVerified',
+])
+Route.patch('/email-verification', 'EmailVerificationController.update').middleware([
+  'auth',
+  'emailUnVerified',
+])
 
 Route.post('/password-recovery', 'PasswordRecoveryController.store').middleware(['guest'])
 Route.patch('/password-recovery', 'PasswordRecoveryController.update').middleware(['guest'])

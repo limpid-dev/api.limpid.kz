@@ -5,6 +5,12 @@ import User from './User'
 
 type Type = 'API' | 'EMAIL_VERIFICATION' | 'PASSWORD_RECOVERY'
 
+export const typeToName: Record<Type, string> = {
+  EMAIL_VERIFICATION: 'Email Verification Token',
+  PASSWORD_RECOVERY: 'Password Recovery Token',
+  API: 'Opaque Access Token',
+}
+
 export default class ApiToken extends BaseModel {
   @column({ isPrimary: true })
   public id: number
@@ -46,7 +52,7 @@ export default class ApiToken extends BaseModel {
 
     const token = string.generateRandom(size)
 
-    const apiToken = await ApiToken.create({
+    const apiToken = await user.related('apiTokens').create({
       token,
       name: typeToName[type],
       type,

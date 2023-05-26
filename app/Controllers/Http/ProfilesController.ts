@@ -14,7 +14,7 @@ export default class ProfilesController {
     return profiles
   }
 
-  public async store({ request }: HttpContextContract) {
+  public async store({ auth, request }: HttpContextContract) {
     const {
       display_name: displayName,
       description,
@@ -28,7 +28,7 @@ export default class ProfilesController {
       is_visible: isVisible,
     } = await request.validate(StoreValidator)
 
-    const profile = await Profile.create({
+    const profile = await auth.user!.related('profiles').create({
       displayName,
       description,
       location,
@@ -39,6 +39,7 @@ export default class ProfilesController {
       perfomance,
       type,
       isVisible,
+      isPersonal: false,
     })
 
     return {
@@ -47,8 +48,10 @@ export default class ProfilesController {
   }
 
   @bind()
-  public async show({}: HttpContextContract, profile: Profile) {
-    if (profile.isVisible) {
+  public async show({ bouncer }: HttpContextContract, profile: Profile) {
+    const isAllowedToView = await bouncer.with('ProfilePolicy').allows('view', profile)
+
+    if (isAllowedToView) {
       return {
         data: profile,
       }

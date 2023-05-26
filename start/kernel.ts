@@ -46,4 +46,5 @@ Server.middleware.registerNamed({
   auth: () => import('App/Middleware/Auth'),
   guest: () => import('App/Middleware/Guest'),
   emailVerified: () => import('App/Middleware/EmailVerified'),
+  emailUnVerified: () => import('App/Middleware/EmailUnVerified'),
 })
