@@ -29,9 +29,11 @@ export default class StoreValidator {
       rules.exists({
         table: 'users',
         column: 'email',
+        whereNot: {
+          email_verified_at: null,
+        },
       }),
     ]),
-    password: schema.string(),
   })
 
   /**
