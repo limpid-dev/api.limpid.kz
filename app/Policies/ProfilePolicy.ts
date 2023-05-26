@@ -4,12 +4,12 @@ import Profile from 'App/Models/Profile'
 import { action } from '@ioc:Adonis/Addons/Bouncer'
 
 export default class ProfilePolicy extends BasePolicy {
-  @action({allowGuest:true})
-  public async view(user: User|null, profile: Profile) {
+  @action({ allowGuest: true })
+  public async view(user: User | null, profile: Profile) {
     if (profile.isVisible) {
       return true
-    } 
-        return !!user && user.id === profile.userId
+    }
+    return !!user && user.id === profile.userId
   }
   public async update(user: User, profile: Profile) {
     return user.id === profile.userId

@@ -76,7 +76,7 @@ export default class ProfilesController {
   @bind()
   public async update({ request, bouncer }: HttpContextContract, profile: Profile) {
     await bouncer.with('ProfilePolicy').authorize('update', profile)
-    if(profile.isPersonal) {
+    if (profile.isPersonal) {
       const {
         display_name: displayName,
         description,
@@ -87,7 +87,7 @@ export default class ProfilesController {
         is_visible: isVisible,
         avatar,
       } = await request.validate(UpdatePersonalValidator)
-  
+
       profile.merge({
         displayName,
         description,
@@ -97,48 +97,46 @@ export default class ProfilesController {
         ownedMaterialResources,
         isVisible,
       })
-  
+
+      if (avatar) {
+        profile.merge({
+          avatar: Attachment.fromFile(avatar),
+        })
+      }
+    } else {
+      const {
+        display_name: displayName,
+        description,
+        location,
+        industry,
+        owned_intellectual_resources: ownedIntellectualResources,
+        owned_material_resources: ownedMaterialResources,
+        bin,
+        perfomance,
+        type,
+        is_visible: isVisible,
+        avatar,
+      } = await request.validate(UpdateOrganizationValidator)
+
+      profile.merge({
+        displayName,
+        description,
+        location,
+        industry,
+        ownedIntellectualResources,
+        ownedMaterialResources,
+        bin,
+        perfomance,
+        type,
+        isVisible,
+      })
+
       if (avatar) {
         profile.merge({
           avatar: Attachment.fromFile(avatar),
         })
       }
     }
-
-   else {
-    const {
-      display_name: displayName,
-      description,
-      location,
-      industry,
-      owned_intellectual_resources: ownedIntellectualResources,
-      owned_material_resources: ownedMaterialResources,
-      bin,
-      perfomance,
-      type,
-      is_visible: isVisible,
-      avatar,
-    } = await request.validate(UpdateOrganizationValidator)
-
-    profile.merge({
-      displayName,
-      description,
-      location,
-      industry,
-      ownedIntellectualResources,
-      ownedMaterialResources,
-      bin,
-      perfomance,
-      type,
-      isVisible,
-    })
-
-    if (avatar) {
-      profile.merge({
-        avatar: Attachment.fromFile(avatar),
-      })
-    }
-   }
 
     await profile.save()
 

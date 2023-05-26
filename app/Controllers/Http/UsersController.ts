@@ -38,7 +38,7 @@ export default class UsersController {
   }
 
   @bind()
-  public async show({ }: HttpContextContract, user: User) {
+  public async show({}: HttpContextContract, user: User) {
     return {
       data: user,
     }
@@ -62,12 +62,13 @@ export default class UsersController {
       : (await user.related('profiles').query().where('isPersonal', true).firstOrFail()).id
 
     user.merge({
-      email, password,
+      email,
+      password,
       firstName,
       lastName,
       bornAt,
       patronymic,
-      selectedProfileId: profileIdToSelect
+      selectedProfileId: profileIdToSelect,
     })
 
     await user.save()
