@@ -1,7 +1,7 @@
 import { schema, rules, CustomMessages } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
-export default class UpdateValidator {
+export default class StoreValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*
@@ -24,26 +24,30 @@ export default class UpdateValidator {
    *    ```
    */
   public schema = schema.create({
-    email: schema.string.optional({ trim: true }, [
-      rules.email(),
-      rules.unique({
-        table: 'users',
-        column: 'email',
-        whereNot: {
-          email_verified_at: null,
-        },
-      }),
+    title: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
+    description: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(2048)]),
+    location: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
+    industry: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
+    stage: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
+    required_money_amount: schema.number([rules.range(0, Number.MAX_SAFE_INTEGER)]),
+    owned_money_amount: schema.number([rules.range(0, Number.MAX_SAFE_INTEGER)]),
+    required_intellectual_resources: schema.string({ trim: true }, [
+      rules.minLength(1),
+      rules.maxLength(2048),
     ]),
-    password: schema.string.optional({}, [rules.minLength(8), rules.maxLength(180)]),
-    selected_profile_id: schema.number.optional([
-      rules.exists({
-        table: 'profiles',
-        column: 'id',
-        where: {
-          user_id: this.ctx.auth.user?.id,
-        },
-      }),
+    owned_intellectual_resources: schema.string({ trim: true }, [
+      rules.minLength(1),
+      rules.maxLength(2048),
     ]),
+    required_material_resources: schema.string({ trim: true }, [
+      rules.minLength(1),
+      rules.maxLength(2048),
+    ]),
+    owned_material_resources: schema.string({ trim: true }, [
+      rules.minLength(1),
+      rules.maxLength(2048),
+    ]),
+    profitability: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(2048)]),
   })
 
   /**

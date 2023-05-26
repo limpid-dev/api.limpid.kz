@@ -1,7 +1,7 @@
 import { schema, rules, CustomMessages } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
-export default class UpdateValidator {
+export default class IndexValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*
@@ -24,26 +24,8 @@ export default class UpdateValidator {
    *    ```
    */
   public schema = schema.create({
-    email: schema.string.optional({ trim: true }, [
-      rules.email(),
-      rules.unique({
-        table: 'users',
-        column: 'email',
-        whereNot: {
-          email_verified_at: null,
-        },
-      }),
-    ]),
-    password: schema.string.optional({}, [rules.minLength(8), rules.maxLength(180)]),
-    selected_profile_id: schema.number.optional([
-      rules.exists({
-        table: 'profiles',
-        column: 'id',
-        where: {
-          user_id: this.ctx.auth.user?.id,
-        },
-      }),
-    ]),
+    page: schema.number([rules.unsigned()]),
+    per_page: schema.number.optional([rules.unsigned()]),
   })
 
   /**

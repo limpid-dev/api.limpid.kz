@@ -45,3 +45,16 @@ Route.get('/profiles', 'ProfilesController.index')
 Route.post('/profiles', 'ProfilesController.store').middleware(['auth', 'emailVerified'])
 Route.get('/profiles/:profile', 'ProfilesController.show')
 Route.patch('/profiles/:profile', 'ProfilesController.update').middleware(['auth', 'emailVerified'])
+Route.delete('/profiles/:profile', 'ProfilesController.destroy').middleware([
+  'auth',
+  'emailVerified',
+])
+
+Route.get('/project', 'ProjectsController.index')
+Route.post('/project', 'ProjectsController.store').middleware(['auth', 'emailVerified'])
+Route.get('/project/:project', 'ProjectsController.show')
+Route.patch('/project/:project', 'ProjectsController.update').middleware(['auth', 'emailVerified'])
+Route.delete('/project/:project', 'ProjectsController.destroy').middleware([
+  'auth',
+  'emailVerified',
+])

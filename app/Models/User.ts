@@ -17,6 +17,12 @@ export default class User extends BaseModel {
   public id: number
 
   @column()
+  public selectedProfileId: number
+
+  @hasOne(() => Profile)
+  public selectedProfile: HasOne<typeof Profile>
+
+  @column()
   public email: string
 
   @column({ serializeAs: null })

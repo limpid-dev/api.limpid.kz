@@ -1,7 +1,16 @@
+import { AttachmentContract, attachment } from '@ioc:Adonis/Addons/AttachmentLite'
+import {
+  BaseModel,
+  BelongsTo,
+  HasMany,
+  beforeSave,
+  belongsTo,
+  column,
+  hasMany,
+} from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
-import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import Project from './Project'
 import User from './User'
-import { attachment, AttachmentContract } from '@ioc:Adonis/Addons/AttachmentLite'
 
 export default class Profile extends BaseModel {
   @column({ isPrimary: true })
@@ -57,4 +66,14 @@ export default class Profile extends BaseModel {
 
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
+
+  @hasMany(() => Project)
+  public projects: HasMany<typeof Project>
+
+  @beforeSave()
+  public static async unverifyBin(profile: Profile) {
+    if (profile.$dirty.bin) {
+      profile.binVerifiedAt = null
+    }
+  }
 }

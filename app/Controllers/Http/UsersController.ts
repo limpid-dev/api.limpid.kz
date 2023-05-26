@@ -47,9 +47,17 @@ export default class UsersController {
   @bind()
   public async update({ request, bouncer }: HttpContextContract, user: User) {
     await bouncer.with('UserPolicy').authorize('update', user)
-    const { email, password } = await request.validate(UpdateValidator)
+    const {
+      email,
+      password,
+      selected_profile_id: selectedProfileId,
+    } = await request.validate(UpdateValidator)
 
-    user.merge({ email, password })
+    const profileIdToSelect = selectedProfileId
+      ? selectedProfileId
+      : (await user.related('profiles').query().where('isPersonal', true).firstOrFail()).id
+
+    user.merge({ email, password, selectedProfileId: profileIdToSelect })
 
     await user.save()
 
