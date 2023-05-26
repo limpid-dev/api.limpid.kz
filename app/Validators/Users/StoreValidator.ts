@@ -35,6 +35,8 @@ export default class StoreValidator {
       }),
     ]),
     password: schema.string({}, [rules.minLength(8), rules.maxLength(180)]),
+    first_name: schema.string({ trim: true }),
+    last_name: schema.string({ trim: true }),
   })
 
   /**
