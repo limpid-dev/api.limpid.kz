@@ -22,9 +22,6 @@ export default class TenderBid extends BaseModel {
   @column()
   public price: number
 
-  @column.dateTime()
-  public wonAt: DateTime | null
-
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 

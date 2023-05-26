@@ -19,7 +19,6 @@
 */
 
 import Route from '@ioc:Adonis/Core/Route'
-import { Duration } from 'luxon'
 
 Route.get('/users', 'UsersController.index')
 Route.post('/users', 'UsersController.store').middleware(['guest'])

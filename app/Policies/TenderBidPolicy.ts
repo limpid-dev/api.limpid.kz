@@ -5,38 +5,47 @@ import Tender from 'App/Models/Tender'
 import { DateTime } from 'luxon'
 
 export default class TenderBidPolicy extends BasePolicy {
-  public async viewList(user: User, tender: Tender) {
-    const userRelatedTender = await user.related('tenders').query().where('id', tender.id).first()
+  public static stripRestrictedViewFieldsFromTenderBid = (tenderBid: TenderBid) => ({
+    id: tenderBid.id,
+    tenderId: tenderBid.tenderId,
+    price: tenderBid.price,
+    createdAt: tenderBid.createdAt,
+    updatedAt: tenderBid.updatedAt,
+  })
 
-    if (userRelatedTender) {
+  public async view(user: User, tenderBid: TenderBid) {
+    await tenderBid.load('profile')
+
+    if (user.id === tenderBid.profile.userId) {
       return true
+    }
+
+    await tenderBid.load('tender')
+
+    if (tenderBid.tender.finishedAt) {
+      if (DateTime.now() > tenderBid.tender.finishedAt) {
+        return true
+      }
     }
 
     return false
   }
 
   public async create(user: User, tender: Tender) {
-    const userRelatedTender = await user.related('tenders').query().where('id', tender.id).first()
+    await tender.load('profile')
 
-    if (userRelatedTender) {
-      return false
-    }
-
-    return !!tender.verifiedAt
+    return !!tender.verifiedAt && user.id !== tender.profile.userId
   }
-  public async update(user: User, tender: Tender, tenderBid: TenderBid) {
-    if (!tender.verifiedAt) {
-      return false
-    }
 
-    if (DateTime.now() < tender.finishedAt!) {
-      const userRelatedTenderBid = await user
-        .related('tenderBids')
-        .query()
-        .where('id', tenderBid.id)
-        .first()
+  public async update(user: User, tenderBid: TenderBid) {
+    await tenderBid.load('tender')
 
-      return !!userRelatedTenderBid
+    if (tenderBid.tender.finishedAt) {
+      if (DateTime.now() < tenderBid.tender.finishedAt) {
+        await tenderBid.load('profile')
+
+        return user.id === tenderBid.profile.userId
+      }
     }
 
     return false

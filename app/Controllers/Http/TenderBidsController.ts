@@ -5,9 +5,12 @@ import IndexValidator from 'App/Validators/TenderBids/IndexValidator'
 import StoreValidator from 'App/Validators/TenderBids/StoreValidator'
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
 import { bind } from '@adonisjs/route-model-binding'
+import TenderBidPolicy from 'App/Policies/TenderBidPolicy'
+
+const PRICE_MODIFIER = 0.99
 
 export default class TenderBidsController {
-  public async index({ request }: HttpContextContract) {
+  public async index({ request, bouncer }: HttpContextContract) {
     const {
       page,
       per_page: perPage,
@@ -27,7 +30,24 @@ export default class TenderBidsController {
 
     const tenderBids = await tenderBidQuery.paginate(page, perPage)
 
-    return tenderBids
+    tenderBids.queryString(request.qs())
+
+    const allowedToViewTenderBids = await Promise.all(
+      tenderBids.map(async (tenderBid) => {
+        const isAllowedToView = await bouncer.with('TenderBidPolicy').allows('view', tenderBid)
+
+        if (isAllowedToView) {
+          return tenderBid
+        }
+
+        return TenderBidPolicy.stripRestrictedViewFieldsFromTenderBid(tenderBid)
+      })
+    )
+
+    return {
+      meta: tenderBids.getMeta(),
+      data: allowedToViewTenderBids,
+    }
   }
 
   public async store({ request, auth, bouncer, response }: HttpContextContract) {
@@ -40,7 +60,7 @@ export default class TenderBidsController {
     if (tender.startingPrice) {
       await request.validate({
         schema: schema.create({
-          price: schema.number([rules.range(1, tender.startingPrice)]),
+          price: schema.number([rules.range(1, tender.startingPrice * PRICE_MODIFIER)]),
         }),
       })
     }
@@ -59,21 +79,25 @@ export default class TenderBidsController {
   }
 
   @bind()
-  public async show({}: HttpContextContract, tenderBid: TenderBid) {
+  public async show({ bouncer }: HttpContextContract, tenderBid: TenderBid) {
+    const isAllowedToView = await bouncer.with('TenderBidPolicy').allows('view', tenderBid)
+
+    if (isAllowedToView) {
+      return { data: tenderBid }
+    }
+
     return {
-      data: tenderBid,
+      data: TenderBidPolicy.stripRestrictedViewFieldsFromTenderBid(tenderBid),
     }
   }
 
   @bind()
   public async update({ bouncer, request }: HttpContextContract, tenderBid: TenderBid) {
-    await tenderBid.load('tender')
-
-    await bouncer.with('TenderBidPolicy').allows('update', tenderBid.tender, tenderBid)
+    await bouncer.with('TenderBidPolicy').allows('update', tenderBid)
 
     const { price } = await request.validate({
       schema: schema.create({
-        price: schema.number([rules.range(1, tenderBid.price)]),
+        price: schema.number([rules.range(1, tenderBid.price * 0.99)]),
       }),
     })
 
