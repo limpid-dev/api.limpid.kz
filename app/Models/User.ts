@@ -35,7 +35,7 @@ export default class User extends BaseModel {
   public lastName: string
 
   @column()
-  public patronymicName: string | null
+  public patronymic: string | null
 
   @column.dateTime()
   public emailVerifiedAt: DateTime | null

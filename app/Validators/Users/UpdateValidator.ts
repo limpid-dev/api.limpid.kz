@@ -35,6 +35,10 @@ export default class UpdateValidator {
       }),
     ]),
     password: schema.string.optional({}, [rules.minLength(8), rules.maxLength(180)]),
+    first_name: schema.string.optional({ trim: true }, [rules.maxLength(255)]),
+    last_name: schema.string.optional({ trim: true }, [rules.maxLength(255)]),
+    patronymic: schema.string.optional({ trim: true }, [rules.maxLength(255)]),
+    born_at: schema.date.optional({ format: 'yyyy-mm-dd'}),
     selected_profile_id: schema.number.optional([
       rules.exists({
         table: 'profiles',

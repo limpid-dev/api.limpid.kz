@@ -38,7 +38,7 @@ export default class UsersController {
   }
 
   @bind()
-  public async show({}: HttpContextContract, user: User) {
+  public async show({ }: HttpContextContract, user: User) {
     return {
       data: user,
     }
@@ -50,6 +50,10 @@ export default class UsersController {
     const {
       email,
       password,
+      first_name: firstName,
+      last_name: lastName,
+      patronymic,
+      born_at: bornAt,
       selected_profile_id: selectedProfileId,
     } = await request.validate(UpdateValidator)
 
@@ -57,7 +61,14 @@ export default class UsersController {
       ? selectedProfileId
       : (await user.related('profiles').query().where('isPersonal', true).firstOrFail()).id
 
-    user.merge({ email, password, selectedProfileId: profileIdToSelect })
+    user.merge({
+      email, password,
+      firstName,
+      lastName,
+      bornAt,
+      patronymic,
+      selectedProfileId: profileIdToSelect
+    })
 
     await user.save()
 
