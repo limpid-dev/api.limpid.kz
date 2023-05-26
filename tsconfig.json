@@ -34,7 +34,8 @@
       "@adonisjs/auth",
       "@adonisjs/route-model-binding/build/adonis-typings",
       "@adonisjs/bouncer",
-      "@adonisjs/mail"
+      "@adonisjs/mail",
+      "@adonisjs/attachment-lite"
     ]
   }
 }

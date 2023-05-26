@@ -28,7 +28,8 @@
     "@adonisjs/auth",
     "@adonisjs/route-model-binding/build/providers/RmbProvider",
     "@adonisjs/bouncer",
-    "@adonisjs/mail"
+    "@adonisjs/mail",
+    "@adonisjs/attachment-lite"
   ],
   "aceProviders": [
     "@adonisjs/repl"

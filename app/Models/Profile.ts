@@ -1,6 +1,7 @@
 import { DateTime } from 'luxon'
 import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
 import User from './User'
+import { attachment, AttachmentContract } from '@ioc:Adonis/Addons/AttachmentLite'
 
 export default class Profile extends BaseModel {
   @column({ isPrimary: true })
@@ -47,6 +48,9 @@ export default class Profile extends BaseModel {
 
   @column.dateTime()
   public binVerifiedAt: DateTime | null
+
+  @attachment({ preComputeUrl: true })
+  public avatar: AttachmentContract | null
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

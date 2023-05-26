@@ -24,6 +24,8 @@ export default class extends BaseSchema {
       table.string('type').nullable()
       table.boolean('is_visible').notNullable()
       table.boolean('is_personal').notNullable()
+      table.json('avatar').nullable()
+
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */

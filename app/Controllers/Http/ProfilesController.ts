@@ -1,4 +1,5 @@
 import { bind } from '@adonisjs/route-model-binding'
+import { Attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Profile from 'App/Models/Profile'
 import IndexValidator from 'App/Validators/Profiles/IndexValidator'
@@ -26,7 +27,10 @@ export default class ProfilesController {
       perfomance,
       type,
       is_visible: isVisible,
+      avatar,
     } = await request.validate(StoreValidator)
+
+    const avatarAttachment = avatar ? Attachment.fromFile(avatar) : null
 
     const profile = await auth.user!.related('profiles').create({
       displayName,
@@ -40,6 +44,7 @@ export default class ProfilesController {
       type,
       isVisible,
       isPersonal: false,
+      avatar: avatarAttachment,
     })
 
     return {
@@ -80,7 +85,10 @@ export default class ProfilesController {
       perfomance,
       type,
       is_visible: isVisible,
+      avatar,
     } = await request.validate(UpdateValidator)
+
+    const avatarAttachment = avatar ? Attachment.fromFile(avatar) : null
 
     profile.merge({
       displayName,
@@ -93,6 +101,7 @@ export default class ProfilesController {
       perfomance,
       type,
       isVisible,
+      avatar: avatarAttachment,
     })
 
     await profile.save()
