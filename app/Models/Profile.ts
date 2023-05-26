@@ -11,6 +11,7 @@ import {
 import { DateTime } from 'luxon'
 import Project from './Project'
 import User from './User'
+import Tender from './Tender'
 
 export default class Profile extends BaseModel {
   @column({ isPrimary: true })
@@ -60,6 +61,9 @@ export default class Profile extends BaseModel {
 
   @attachment({ preComputeUrl: true })
   public avatar: AttachmentContract | null
+
+  @hasMany(() => Tender)
+  public tenders: HasMany<typeof Tender>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

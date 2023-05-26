@@ -8,9 +8,12 @@ import {
   HasMany,
   hasOne,
   HasOne,
+  hasManyThrough,
+  HasManyThrough,
 } from '@ioc:Adonis/Lucid/Orm'
 import ApiToken from './ApiToken'
 import Profile from './Profile'
+import Tender from './Tender'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -54,6 +57,9 @@ export default class User extends BaseModel {
 
   @hasMany(() => Profile)
   public profiles: HasMany<typeof Profile>
+
+  @hasManyThrough([() => Tender, () => Profile])
+  public tenders: HasManyThrough<typeof Tender>
 
   @beforeSave()
   public static async hashPassword(user: User) {

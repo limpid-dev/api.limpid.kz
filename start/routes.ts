@@ -19,6 +19,7 @@
 */
 
 import Route from '@ioc:Adonis/Core/Route'
+import { Duration } from 'luxon'
 
 Route.get('/users', 'UsersController.index')
 Route.post('/users', 'UsersController.store').middleware(['guest'])
@@ -50,11 +51,17 @@ Route.delete('/profiles/:profile', 'ProfilesController.destroy').middleware([
   'emailVerified',
 ])
 
-Route.get('/project', 'ProjectsController.index')
-Route.post('/project', 'ProjectsController.store').middleware(['auth', 'emailVerified'])
-Route.get('/project/:project', 'ProjectsController.show')
-Route.patch('/project/:project', 'ProjectsController.update').middleware(['auth', 'emailVerified'])
-Route.delete('/project/:project', 'ProjectsController.destroy').middleware([
+Route.get('/projects', 'ProjectsController.index')
+Route.post('/projects', 'ProjectsController.store').middleware(['auth', 'emailVerified'])
+Route.get('/projects/:project', 'ProjectsController.show')
+Route.patch('/projects/:project', 'ProjectsController.update').middleware(['auth', 'emailVerified'])
+Route.delete('/projects/:project', 'ProjectsController.destroy').middleware([
   'auth',
   'emailVerified',
 ])
+
+Route.get('/tenders', 'TendersController.index')
+Route.post('/tenders', 'TendersController.store').middleware(['auth', 'emailVerified'])
+Route.get('/tenders/:tender', 'TendersController.show')
+Route.patch('/tenders/:tender', 'TendersController.update').middleware(['auth', 'emailVerified'])
+Route.delete('/tenders/:tender', 'TendersController.destroy').middleware(['auth', 'emailVerified'])

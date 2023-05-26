@@ -13,8 +13,8 @@ export default class extends BaseSchema {
         .inTable('users')
         .onDelete('CASCADE')
         .notNullable()
-      table.string('name').notNullable()
-      table.string('type').notNullable()
+      table.string('name', 255).notNullable()
+      table.string('type', 255).notNullable()
       table.string('token', 64).notNullable().unique().index()
 
       /**

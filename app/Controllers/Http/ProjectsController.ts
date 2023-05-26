@@ -14,7 +14,7 @@ export default class ProjectsController {
     return projects
   }
 
-  public async store({ request, auth }: HttpContextContract) {
+  public async store({ request, auth, response }: HttpContextContract) {
     const {
       title: title,
       description: description,
@@ -45,6 +45,8 @@ export default class ProjectsController {
       profitability,
       profileId: auth.user?.selectedProfileId,
     })
+
+    response.status(201)
 
     return {
       data: project,

@@ -15,7 +15,7 @@ export default class ProfilesController {
     return profiles
   }
 
-  public async store({ auth, request }: HttpContextContract) {
+  public async store({ auth, request, response }: HttpContextContract) {
     const {
       display_name: displayName,
       description,
@@ -46,6 +46,8 @@ export default class ProfilesController {
       isPersonal: false,
       avatar: avatarAttachment,
     })
+
+    response.status(201)
 
     return {
       data: profile,
@@ -88,8 +90,6 @@ export default class ProfilesController {
       avatar,
     } = await request.validate(UpdateValidator)
 
-    const avatarAttachment = avatar ? Attachment.fromFile(avatar) : null
-
     profile.merge({
       displayName,
       description,
@@ -101,8 +101,13 @@ export default class ProfilesController {
       perfomance,
       type,
       isVisible,
-      avatar: avatarAttachment,
     })
+
+    if (avatar) {
+      profile.merge({
+        avatar: Attachment.fromFile(avatar),
+      })
+    }
 
     await profile.save()
 

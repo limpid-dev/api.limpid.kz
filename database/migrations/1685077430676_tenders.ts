@@ -1,7 +1,7 @@
 import BaseSchema from '@ioc:Adonis/Lucid/Schema'
 
 export default class extends BaseSchema {
-  protected tableName = 'projects'
+  protected tableName = 'tenders'
 
   public async up() {
     this.schema.createTable(this.tableName, (table) => {
@@ -15,20 +15,13 @@ export default class extends BaseSchema {
         .notNullable()
       table.string('title', 255).notNullable()
       table.string('description', 2048).notNullable()
-      table.string('location', 255).notNullable()
-      table.string('industry', 255).notNullable()
-      table.string('stage', 255).notNullable()
-      table.decimal('required_money_amount', 20, 4).notNullable()
-      table.decimal('owned_money_amount', 20, 4).notNullable()
-      table.string('required_intellectual_resources', 2048).notNullable()
-      table.string('owned_intellectual_resources', 2048).notNullable()
-      table.string('required_material_resources', 2048).notNullable()
-      table.string('owned_material_resources', 2048).notNullable()
-      table.string('profitability', 2048).notNullable()
+      table.decimal('starting_price', 20, 4).nullable()
+      table.string('duration', 255).notNullable()
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */
+      table.timestamp('verified_at', { useTz: true }).nullable()
       table.timestamp('created_at', { useTz: true }).notNullable()
       table.timestamp('updated_at', { useTz: true }).notNullable()
     })
