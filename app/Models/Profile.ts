@@ -67,10 +67,8 @@ export default class Profile extends BaseModel {
   @column()
   public isPersonal: boolean
 
-  @column.dateTime({
-    serialize: serilizeForOrganizationProfile,
-  })
-  public binVerifiedAt: DateTime | null
+  @column.dateTime()
+  public tinVerifiedAt: DateTime | null
 
   @attachment({ preComputeUrl: true })
   public avatar: AttachmentContract | null
@@ -90,7 +88,7 @@ export default class Profile extends BaseModel {
   @beforeSave()
   public static async unverifyBin(profile: Profile) {
     if (profile.$dirty.tin) {
-      profile.binVerifiedAt = null
+      profile.tinVerifiedAt = null
     }
   }
 }
