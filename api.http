@@ -134,8 +134,14 @@ Content-Type: application/json
 # @name getAllProfiles
 # @prompt page
 # @prompt per_page
+# @prompt user_id
+# @prompt industry
+# @prompt is_personal
+# @prompt is_visible
+# @prompt search
 
-GET /profiles?page={{page}}&{{per_page}} HTTP/1.1
+GET /profiles?page={{page}}&{{per_page}}&{{user_id}}&{{industry}}&{{is_personal}}&{{is_visible}}&{{search}}
+ HTTP/1.1
 Authorization: Bearer {{token}}
 Host: {{url}}
 
