@@ -154,7 +154,7 @@ Host: {{url}}
 # @prompt industry
 # @prompt owned_intellectual_resources
 # @prompt owned_material_resources
-# @prompt bin?
+# @prompt tin?
 # @prompt perfomance?
 # @prompt type?
 # @prompt is_visible
@@ -190,9 +190,9 @@ Content-Disposition: form-data; name="owned_material_resources"
 
 {{owned_material_resources}}
 --Boundary
-Content-Disposition: form-data; name="bin"
+Content-Disposition: form-data; name="tin"
 
-{{bin?}}
+{{tin?}}
 --Boundary
 Content-Disposition: form-data; name="perfomance"
 
@@ -231,7 +231,7 @@ Host: {{url}}
 # @prompt industry?
 # @prompt owned_intellectual_resources?
 # @prompt owned_material_resources?
-# @prompt bin?
+# @prompt tin?
 # @prompt perfomance?
 # @prompt type?
 # @prompt is_visible?
@@ -267,9 +267,9 @@ Content-Disposition: form-data; name="owned_material_resources"
 
 {{owned_material_resources?}}
 --Boundary
-Content-Disposition: form-data; name="bin"
+Content-Disposition: form-data; name="tin"
 
-{{bin?}}
+{{tin?}}
 --Boundary
 Content-Disposition: form-data; name="perfomance"
 

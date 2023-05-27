@@ -13,17 +13,19 @@ export default class TenderBidPolicy extends BasePolicy {
     updatedAt: tenderBid.updatedAt,
   })
 
-  public async view(user: User, tenderBid: TenderBid) {
+  public async view(user: User, tender: Tender, tenderBid: TenderBid) {
     await tenderBid.load('profile')
 
     if (user.id === tenderBid.profile.userId) {
       return true
     }
 
-    await tenderBid.load('tender')
+    if (tender.id !== tenderBid.tenderId) {
+      return false
+    }
 
-    if (tenderBid.tender.finishedAt) {
-      if (DateTime.now() > tenderBid.tender.finishedAt) {
+    if (tender.finishedAt) {
+      if (DateTime.now() > tender.finishedAt) {
         return true
       }
     }
@@ -37,11 +39,13 @@ export default class TenderBidPolicy extends BasePolicy {
     return !!tender.verifiedAt && user.id !== tender.profile.userId
   }
 
-  public async update(user: User, tenderBid: TenderBid) {
-    await tenderBid.load('tender')
+  public async update(user: User, tender: Tender, tenderBid: TenderBid) {
+    if (tender.id !== tenderBid.tenderId) {
+      return false
+    }
 
-    if (tenderBid.tender.finishedAt) {
-      if (DateTime.now() < tenderBid.tender.finishedAt) {
+    if (tender.finishedAt) {
+      if (DateTime.now() < tender.finishedAt) {
         await tenderBid.load('profile')
 
         return user.id === tenderBid.profile.userId

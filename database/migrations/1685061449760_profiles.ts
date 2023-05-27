@@ -19,7 +19,7 @@ export default class extends BaseSchema {
       table.string('industry', 255).nullable()
       table.string('owned_intellectual_resources', 2048).nullable()
       table.string('owned_material_resources', 2048).nullable()
-      table.string('bin', 12).nullable()
+      table.string('tin', 12).nullable()
       table.string('perfomance', 2048).nullable()
       table.string('type', 255).nullable()
       table.boolean('is_visible').notNullable()

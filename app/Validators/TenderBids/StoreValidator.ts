@@ -24,15 +24,6 @@ export default class StoreValidator {
    *    ```
    */
   public schema = schema.create({
-    tender_id: schema.number([
-      rules.exists({
-        table: 'tender',
-        column: 'id',
-        whereNot: {
-          verified_at: null,
-        },
-      }),
-    ]),
     price: schema.number([rules.range(1, Number.MAX_SAFE_INTEGER)]),
   })
 

@@ -65,10 +65,12 @@ Route.get('/tenders/:tender', 'TendersController.show')
 Route.patch('/tenders/:tender', 'TendersController.update').middleware(['auth', 'emailVerified'])
 Route.delete('/tenders/:tender', 'TendersController.destroy').middleware(['auth', 'emailVerified'])
 
-Route.get('/tender-bids', 'TenderBidsController.index')
-Route.post('/tender-bids', 'TenderBidsController.store').middleware(['auth', 'emailVerified'])
-Route.get('/tender-bids/:tenderBid', 'TenderBidsController.show')
-Route.patch('/tender-bids/:tenderBid', 'TenderBidsController.update').middleware([
-  'auth',
-  'emailVerified',
-])
+Route.group(() => {
+  Route.get('/bids', 'TenderBidsController.index')
+  Route.post('/bids', 'TenderBidsController.store').middleware(['auth', 'emailVerified'])
+  Route.get('/bids/:tenderBid', 'TenderBidsController.show')
+  Route.patch('/bids/:tenderBid', 'TenderBidsController.update').middleware([
+    'auth',
+    'emailVerified',
+  ])
+}).prefix('/tenders/:tender')

@@ -39,6 +39,7 @@ export default class UpdatePersonalValidator {
       rules.minLength(1),
       rules.maxLength(2048),
     ]),
+    tin: schema.string.optional({ trim: true }, [rules.minLength(1), rules.regex(/^\d+$/)]),
     is_visible: schema.boolean(),
     avatar: schema.file.optional({
       size: '1mb',

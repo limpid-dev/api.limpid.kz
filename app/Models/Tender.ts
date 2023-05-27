@@ -2,10 +2,12 @@ import { DateTime, Duration } from 'luxon'
 import {
   BaseModel,
   BelongsTo,
+  HasMany,
   HasOne,
   belongsTo,
   column,
   computed,
+  hasMany,
   hasOne,
 } from '@ioc:Adonis/Lucid/Orm'
 import { duration } from 'App/Utilities/Duration'
@@ -52,6 +54,9 @@ export default class Tender extends BaseModel {
   public get finishedAt() {
     return this.verifiedAt ? this.verifiedAt.plus(this.duration) : null
   }
+
+  @hasMany(() => TenderBid)
+  public bids: HasMany<typeof TenderBid>
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

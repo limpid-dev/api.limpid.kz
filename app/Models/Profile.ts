@@ -48,8 +48,8 @@ export default class Profile extends BaseModel {
   @column()
   public ownedMaterialResources: string | null
 
-  @column({})
-  public bin: string | null
+  @column()
+  public tin: string | null
 
   @column({
     serialize: serilizeForOrganizationProfile,
@@ -89,7 +89,7 @@ export default class Profile extends BaseModel {
 
   @beforeSave()
   public static async unverifyBin(profile: Profile) {
-    if (profile.$dirty.bin) {
+    if (profile.$dirty.tin) {
       profile.binVerifiedAt = null
     }
   }

@@ -36,11 +36,7 @@ export default class StoreValidator {
       rules.minLength(1),
       rules.maxLength(2048),
     ]),
-    bin: schema.string.optional({ trim: true }, [
-      rules.minLength(12),
-      rules.maxLength(12),
-      rules.regex(/^\d+$/),
-    ]),
+    tin: schema.string.optional({ trim: true }, [rules.minLength(1), rules.regex(/^\d+$/)]),
     perfomance: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(2048)]),
     type: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
     is_visible: schema.boolean(),
