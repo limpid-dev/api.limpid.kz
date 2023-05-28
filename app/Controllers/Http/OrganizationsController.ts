@@ -1,10 +1,13 @@
+import { Attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Profile from 'App/Models/Profile'
 import OrganizationPolicy from 'App/Policies/OrganizationPolicy'
 import IndexValidator from 'App/Validators/Organizations/IndexValidator'
+import StoreValidator from 'App/Validators/Organizations/StoreValidator'
+import UpdateValidator from 'App/Validators/Organizations/UpdateValidator'
 
 export default class OrganizationsController {
-  public async index({request,bouncer}: HttpContextContract) {
+  public async index({ request, bouncer }: HttpContextContract) {
     const {
       page,
       per_page: perPage,
@@ -44,7 +47,7 @@ export default class OrganizationsController {
             profile,
           }
         } else {
-          return OrganizationPolicy.stripRestrictedViewFieldsFromProfile(profile)
+          return OrganizationPolicy.stripRestrictedViewFieldsFromOrganization(profile)
         }
       })
     )
@@ -55,11 +58,105 @@ export default class OrganizationsController {
     }
   }
 
-  public async store({}: HttpContextContract) {}
+  public async store({ request, auth, response }: HttpContextContract) {
+    const {
+      display_name: displayName,
+      description,
+      location,
+      industry,
+      owned_intellectual_resources: ownedIntellectualResources,
+      owned_material_resources: ownedMaterialResources,
+      tin,
+      performance,
+      legal_structure: legalStructure,
+      is_visible: isVisible,
+      avatar,
+    } = await request.validate(StoreValidator)
 
-  public async show({}: HttpContextContract) {}
+    const avatarToSave = avatar ? Attachment.fromFile(avatar) : undefined
 
-  public async update({}: HttpContextContract) {}
+    const organization = await auth.user!.related('organizations').create({
+      displayName,
+      description,
+      location,
+      industry,
+      ownedIntellectualResources,
+      ownedMaterialResources,
+      tin,
+      performance,
+      legalStructure,
+      isVisible,
+      avatar: avatarToSave,
+      isPersonal: false,
+    })
 
-  public async destroy({}: HttpContextContract) {}
+    response.status(201)
+
+    return {
+      data: organization,
+    }
+  }
+
+  public async show({ bouncer }: HttpContextContract, organization: Profile) {
+    const isAllowedToView = await bouncer.with('OrganizationPolicy').allows('view', organization)
+
+    if (isAllowedToView) {
+      return {
+        data: organization,
+      }
+    } else {
+      return { data: OrganizationPolicy.stripRestrictedViewFieldsFromOrganization(organization) }
+    }
+  }
+
+  public async update({ request, bouncer }: HttpContextContract, organization: Profile) {
+    await bouncer.with('OrganizationPolicy').authorize('update', organization)
+
+    const {
+      display_name: displayName,
+      description,
+      location,
+      industry,
+      owned_intellectual_resources: ownedIntellectualResources,
+      owned_material_resources: ownedMaterialResources,
+      tin,
+      legal_structure: legalStructure,
+      performance,
+      is_visible: isVisible,
+      avatar,
+    } = await request.validate(UpdateValidator)
+
+    organization.merge({
+      displayName,
+      description,
+      location,
+      industry,
+      ownedIntellectualResources,
+      ownedMaterialResources,
+      tin,
+      legalStructure,
+      performance,
+      isVisible,
+    })
+
+    if (avatar) {
+      organization.merge({
+        avatar: Attachment.fromFile(avatar),
+      })
+    }
+
+    await organization.save()
+
+    return {
+      data: organization,
+    }
+  }
+
+  public async destroy({ bouncer, response }: HttpContextContract, organization: Profile) {
+    await bouncer.with('OrganizationPolicy').authorize('delete', organization)
+
+    await organization.delete()
+
+    response.status(204)
+  }
 }

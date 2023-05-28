@@ -1,16 +1,26 @@
 import { BasePolicy } from '@ioc:Adonis/Addons/Bouncer'
 import User from 'App/Models/User'
 import Profile from 'App/Models/Profile'
+import { action } from '@ioc:Adonis/Addons/Bouncer'
 
 export default class OrganizationPolicy extends BasePolicy {
-	public static stripRestrictedViewFieldsFromOrganization = (profile: Profile) => ({
-		id: profile.id,
-				is_visible: profile.isVisible,
-				display_name: profile.displayName,
-	  })
+  public static stripRestrictedViewFieldsFromOrganization = (organization: Profile) => ({
+    id: organization.id,
+    is_visible: organization.isVisible,
+    display_name: organization.displayName,
+  })
 
-	public async view(user: User, profile: Profile) {}
-	public async create(user: User) {}
-	public async update(user: User, profile: Profile) {}
-	public async delete(user: User, profile: Profile) {}
+  @action({ allowGuest: true })
+  public async view(user: User | null, organization: Profile) {
+    if (organization.isVisible) {
+      return true
+    }
+    return !!user && user.id === organization.userId
+  }
+  public async update(user: User, organization: Profile) {
+    return user.id === organization.userId
+  }
+  public async delete(user: User, organization: Profile) {
+    return user.id === organization.userId
+  }
 }

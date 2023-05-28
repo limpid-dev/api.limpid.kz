@@ -6,10 +6,10 @@ import { action } from '@ioc:Adonis/Addons/Bouncer'
 export default class ProfilePolicy extends BasePolicy {
   public static stripRestrictedViewFieldsFromProfile = (profile: Profile) => ({
     id: profile.id,
-            is_visible: profile.isVisible,
-            display_name: profile.displayName,
+    is_visible: profile.isVisible,
+    display_name: profile.displayName,
   })
-  
+
   @action({ allowGuest: true })
   public async view(user: User | null, profile: Profile) {
     if (profile.isVisible) {

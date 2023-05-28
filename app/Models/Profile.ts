@@ -54,17 +54,19 @@ export default class Profile extends BaseModel {
   @column({
     serialize: serilizeForOrganizationProfile,
   })
-  public perfomance: string | null
+  public performance: string | null
 
   @column({
     serialize: serilizeForOrganizationProfile,
   })
-  public type: string | null
+  public legalStructure: string | null
 
   @column()
   public isVisible: boolean
 
-  @column()
+  @column({
+    serializeAs: null,
+  })
   public isPersonal: boolean
 
   @column.dateTime()
@@ -90,5 +92,19 @@ export default class Profile extends BaseModel {
     if (profile.$dirty.tin) {
       profile.tinVerifiedAt = null
     }
+  }
+
+  public static findForRequest(_ctx, param, value) {
+    const lookupKey = param.lookupKey === '$primaryKey' ? 'id' : param.lookupKey
+
+    return this.query()
+      .where(lookupKey, value)
+      .if(param.name === 'profile', (query) => {
+        query.where('isPersonal', true)
+      })
+      .if(param.name === 'organization', (query) => {
+        query.where('isPersonal', false)
+      })
+      .firstOrFail()
   }
 }

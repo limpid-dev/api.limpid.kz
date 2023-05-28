@@ -52,8 +52,19 @@ export default class User extends BaseModel {
   @hasMany(() => ApiToken)
   public apiTokens: HasMany<typeof ApiToken>
 
-  @hasMany(() => Profile)
+  @hasMany(() => Profile, {
+    onQuery(query) {
+      query.where('isPersonal', true)
+    },
+  })
   public profiles: HasMany<typeof Profile>
+
+  @hasMany(() => Profile, {
+    onQuery(query) {
+      query.where('isPersonal', false)
+    },
+  })
+  public organizations: HasMany<typeof Profile>
 
   @beforeSave()
   public static async hashPassword(user: User) {

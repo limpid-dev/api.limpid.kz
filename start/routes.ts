@@ -48,8 +48,14 @@ Route.patch('/profiles/:profile', 'ProfilesController.update').middleware(['auth
 Route.get('/organizations', 'OrganizationsController.index')
 Route.post('/organizations', 'OrganizationsController.store').middleware(['auth', 'emailVerified'])
 Route.get('/organizations/:organization', 'OrganizationsController.show')
-Route.patch('/organizations/:organization', 'OrganizationsController.update').middleware(['auth', 'emailVerified'])
-Route.delete('/organizations/:organization', 'OrganizationsController.destroy').middleware(['auth', 'emailVerified'])
+Route.patch('/organizations/:organization', 'OrganizationsController.update').middleware([
+  'auth',
+  'emailVerified',
+])
+Route.delete('/organizations/:organization', 'OrganizationsController.destroy').middleware([
+  'auth',
+  'emailVerified',
+])
 
 Route.get('/projects', 'ProjectsController.index')
 Route.post('/projects', 'ProjectsController.store').middleware(['auth', 'emailVerified'])

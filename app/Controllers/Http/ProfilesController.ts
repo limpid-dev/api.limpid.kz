@@ -67,7 +67,7 @@ export default class ProfilesController {
         data: profile,
       }
     } else {
-      return { data: ProfilePolicy.stripRestrictedViewFieldsFromProfile(profile)}
+      return { data: ProfilePolicy.stripRestrictedViewFieldsFromProfile(profile) }
     }
   }
 
@@ -75,34 +75,34 @@ export default class ProfilesController {
   public async update({ request, bouncer }: HttpContextContract, profile: Profile) {
     await bouncer.with('ProfilePolicy').authorize('update', profile)
 
-      const {
-        display_name: displayName,
-        description,
-        location,
-        industry,
-        owned_intellectual_resources: ownedIntellectualResources,
-        owned_material_resources: ownedMaterialResources,
-        tin,
-        is_visible: isVisible,
-        avatar,
-      } = await request.validate(UpdateValidator)
+    const {
+      display_name: displayName,
+      description,
+      location,
+      industry,
+      owned_intellectual_resources: ownedIntellectualResources,
+      owned_material_resources: ownedMaterialResources,
+      tin,
+      is_visible: isVisible,
+      avatar,
+    } = await request.validate(UpdateValidator)
 
+    profile.merge({
+      displayName,
+      description,
+      location,
+      industry,
+      ownedIntellectualResources,
+      ownedMaterialResources,
+      tin,
+      isVisible,
+    })
+
+    if (avatar) {
       profile.merge({
-        displayName,
-        description,
-        location,
-        industry,
-        ownedIntellectualResources,
-        ownedMaterialResources,
-        tin,
-        isVisible,
+        avatar: Attachment.fromFile(avatar),
       })
-
-      if (avatar) {
-        profile.merge({
-          avatar: Attachment.fromFile(avatar),
-        })
-      }
+    }
 
     await profile.save()
 
