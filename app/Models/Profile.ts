@@ -1,58 +1,28 @@
+import { AttachmentContract, attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 import {
+  BaseModel,
   BelongsTo,
   HasMany,
   beforeSave,
   belongsTo,
   column,
   hasMany,
-  BaseModel,
 } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
-import Auction from './Auction'
-import AuctionBid from './AuctionBid'
-import Certificate from './Certificate'
-import Contact from './Contact'
-import Education from './Education'
-import Experience from './Experience'
-import ProjectMembership from './ProjectMembership'
-import Skill from './Skill'
-import Tender from './Tender'
-import TenderBid from './TenderBid'
+import Project from './Project'
 import User from './User'
+import Tender from './Tender'
+
+const serilizeForOrganizationProfile = (value: string | null, _attribute, model: Profile) => {
+  if (model.isPersonal) {
+    return undefined
+  }
+  return value
+}
 
 export default class Profile extends BaseModel {
   @column({ isPrimary: true })
   public id: number
-
-  @column.dateTime({ autoCreate: true })
-  public createdAt: DateTime
-
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public updatedAt: DateTime
-
-  @column.dateTime()
-  public verifiedAt: DateTime | null
-
-  @column()
-  public title: string
-
-  @column()
-  public description: string
-
-  @column()
-  public location: string | null
-
-  @column()
-  public industry: string
-
-  @column()
-  public ownedIntellectualResources: string
-
-  @column()
-  public ownedMaterialResources: string
-
-  @column()
-  public isVisible: boolean
 
   @column()
   public userId: number
@@ -60,40 +30,81 @@ export default class Profile extends BaseModel {
   @belongsTo(() => User)
   public user: BelongsTo<typeof User>
 
-  @hasMany(() => Contact)
-  public contacts: HasMany<typeof Contact>
+  @column()
+  public displayName: string
 
-  @hasMany(() => Skill)
-  public skills: HasMany<typeof Skill>
+  @column()
+  public description: string | null
 
-  @hasMany(() => ProjectMembership)
-  public projectMemberships: HasMany<typeof ProjectMembership>
+  @column()
+  public location: string | null
 
-  @hasMany(() => Education)
-  public educations: HasMany<typeof Education>
+  @column()
+  public industry: string | null
 
-  @hasMany(() => Certificate)
-  public certificates: HasMany<typeof Certificate>
+  @column()
+  public ownedIntellectualResources: string | null
 
-  @hasMany(() => Experience)
-  public experiences: HasMany<typeof Experience>
+  @column()
+  public ownedMaterialResources: string | null
 
-  @hasMany(() => Auction)
-  public auctions: HasMany<typeof Auction>
+  @column()
+  public tin: string | null
 
-  @hasMany(() => AuctionBid)
-  public auctionBids: HasMany<typeof AuctionBid>
+  @column({
+    serialize: serilizeForOrganizationProfile,
+  })
+  public performance: string | null
+
+  @column({
+    serialize: serilizeForOrganizationProfile,
+  })
+  public legalStructure: string | null
+
+  @column()
+  public isVisible: boolean
+
+  @column({
+    serializeAs: null,
+  })
+  public isPersonal: boolean
+
+  @column.dateTime()
+  public tinVerifiedAt: DateTime | null
+
+  @attachment({ preComputeUrl: true })
+  public avatar: AttachmentContract | null
 
   @hasMany(() => Tender)
   public tenders: HasMany<typeof Tender>
 
-  @hasMany(() => TenderBid)
-  public tenderBids: HasMany<typeof TenderBid>
+  @column.dateTime({ autoCreate: true })
+  public createdAt: DateTime
+
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  public updatedAt: DateTime
+
+  @hasMany(() => Project)
+  public projects: HasMany<typeof Project>
 
   @beforeSave()
-  public static async beforeSave(profile: Profile) {
-    if (profile.$isDirty) {
-      profile.verifiedAt = null
+  public static async unverifyBin(profile: Profile) {
+    if (profile.$dirty.tin) {
+      profile.tinVerifiedAt = null
     }
+  }
+
+  public static findForRequest(_ctx, param, value) {
+    const lookupKey = param.lookupKey === '$primaryKey' ? 'id' : param.lookupKey
+
+    return this.query()
+      .where(lookupKey, value)
+      .if(param.name === 'profile', (query) => {
+        query.where('isPersonal', true)
+      })
+      .if(param.name === 'organization', (query) => {
+        query.where('isPersonal', false)
+      })
+      .firstOrFail()
   }
 }

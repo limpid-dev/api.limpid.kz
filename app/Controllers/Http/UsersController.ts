@@ -1,63 +1,80 @@
 import { bind } from '@adonisjs/route-model-binding'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import File from 'App/Models/File'
 import User from 'App/Models/User'
-import PaginationValidator from 'App/Validators/PaginationValidator'
-import UsersStoreValidator from 'App/Validators/UsersStoreValidator'
-import UsersUpdateValidator from 'App/Validators/UsersUpdateValidator'
+import IndexValidator from 'App/Validators/Users/IndexValidator'
+import StoreValidator from 'App/Validators/Users/StoreValidator'
+import UpdateValidator from 'App/Validators/Users/UpdateValidator'
 
 export default class UsersController {
   public async index({ request }: HttpContextContract) {
-    const payload = await request.validate(PaginationValidator)
+    const { page, per_page: perPage } = await request.validate(IndexValidator)
 
-    return await User.query().paginate(payload.page, payload.perPage)
+    const users = await User.query().paginate(page, perPage)
+
+    return users
   }
 
-  public async store({ request }: HttpContextContract) {
-    const payload = await request.validate(UsersStoreValidator)
+  public async store({ request, response }: HttpContextContract) {
+    const {
+      email,
+      password,
+      first_name: firstName,
+      last_name: lastName,
+    } = await request.validate(StoreValidator)
 
-    const user = await User.updateOrCreate({ email: payload.email }, payload)
+    const user = await User.updateOrCreate({ email }, { email, password, firstName, lastName })
 
-    await user.load('file')
+    await user.related('profiles').create({
+      displayName: `${user.firstName} ${user.lastName}`,
+      isPersonal: true,
+      isVisible: true,
+    })
 
-    return { data: user }
+    response.status(201)
+
+    return {
+      data: user,
+    }
   }
 
   @bind()
   public async show({}: HttpContextContract, user: User) {
-    await user.load('file')
-    return { data: user }
+    return {
+      data: user,
+    }
   }
 
   @bind()
   public async update({ request, bouncer }: HttpContextContract, user: User) {
     await bouncer.with('UserPolicy').authorize('update', user)
-    const { file, ...payload } = await request.validate(UsersUpdateValidator)
+    const {
+      email,
+      password,
+      first_name: firstName,
+      last_name: lastName,
+      patronymic,
+      born_at: bornAt,
+      selected_profile_id: selectedProfileId,
+    } = await request.validate(UpdateValidator)
 
-    if (file) {
-      const old = await File.find(user.fileId)
+    const profileIdToSelect = selectedProfileId
+      ? selectedProfileId
+      : (await user.related('profiles').query().where('isPersonal', true).firstOrFail()).id
 
-      if (old) {
-        await old.delete()
-      }
-
-      const avatar = File.from(file)
-
-      const saved = await avatar
-        .merge({
-          userId: user.id,
-        })
-        .save()
-
-      user.merge({ fileId: saved.id })
-    }
-
-    user.merge(payload)
+    user.merge({
+      email,
+      password,
+      firstName,
+      lastName,
+      bornAt,
+      patronymic,
+      selectedProfileId: profileIdToSelect,
+    })
 
     await user.save()
 
-    await user.load('file')
-
-    return { data: user }
+    return {
+      data: user,
+    }
   }
 }

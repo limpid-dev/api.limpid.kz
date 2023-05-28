@@ -1,47 +1,149 @@
-import { bind } from '@adonisjs/route-model-binding'
+import { Attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Organization from 'App/Models/Organization'
-import OrganizationStoreValidator from 'App/Validators/OrganizationStoreValidator'
-import OrganizationUpdateValidator from 'App/Validators/OrganizationUpdateValidator'
-import PaginationValidator from 'App/Validators/PaginationValidator'
+import Profile from 'App/Models/Profile'
+import OrganizationPolicy from 'App/Policies/OrganizationPolicy'
+import IndexValidator from 'App/Validators/Organizations/IndexValidator'
+import StoreValidator from 'App/Validators/Organizations/StoreValidator'
+import UpdateValidator from 'App/Validators/Organizations/UpdateValidator'
 
 export default class OrganizationsController {
-  public async index({ request }: HttpContextContract) {
-    const payload = await request.validate(PaginationValidator)
+  public async index({ request, bouncer }: HttpContextContract) {
+    const {
+      page,
+      per_page: perPage,
+      user_id: userId,
+      industry,
+      search,
+    } = await request.validate(IndexValidator)
 
-    return Organization.query().paginate(payload.page, payload.perPage)
-  }
+    const profilesQuery = Profile.query()
 
-  public async store({ auth, request }: HttpContextContract) {
-    const user = auth.user!
-    const payload = await request.validate(OrganizationStoreValidator)
+    profilesQuery.where('isVisible', true)
+    profilesQuery.where('isPersonal', false)
 
-    const organization = await Organization.create(payload)
-
-    await organization.related('memberships').create({
-      userId: user.id,
-      type: 'owner',
+    profilesQuery.if(userId, (query) => {
+      query.andWhere('userId', userId!)
     })
 
+    profilesQuery.if(industry, (query) => {
+      query.andWhereIn('industry', industry!)
+    })
+
+    profilesQuery.if(search, (query) => {
+      query.andWhere((query) => {
+        query.whereLike('displayName', `%${search}%`)
+        query.orWhereILike('location', `%${search}%`)
+      })
+    })
+
+    const profiles = await profilesQuery.paginate(page, perPage)
+
+    const allowedToViewProfiles = await Promise.all(
+      profiles.map(async (profile) => {
+        const isAllowedToView = await bouncer.with('ProfilePolicy').allows('view', profile)
+
+        if (isAllowedToView) {
+          return {
+            profile,
+          }
+        } else {
+          return OrganizationPolicy.stripRestrictedViewFieldsFromOrganization(profile)
+        }
+      })
+    )
+
+    return {
+      meta: profiles.getMeta(),
+      data: allowedToViewProfiles,
+    }
+  }
+
+  public async store({ request, auth, response }: HttpContextContract) {
+    const {
+      display_name: displayName,
+      description,
+      location,
+      industry,
+      owned_intellectual_resources: ownedIntellectualResources,
+      owned_material_resources: ownedMaterialResources,
+      tin,
+      performance,
+      legal_structure: legalStructure,
+      is_visible: isVisible,
+      avatar,
+    } = await request.validate(StoreValidator)
+
+    const avatarToSave = avatar ? Attachment.fromFile(avatar) : undefined
+
+    const organization = await auth.user!.related('organizations').create({
+      displayName,
+      description,
+      location,
+      industry,
+      ownedIntellectualResources,
+      ownedMaterialResources,
+      tin,
+      performance,
+      legalStructure,
+      isVisible,
+      avatar: avatarToSave,
+      isPersonal: false,
+    })
+
+    response.status(201)
+
     return {
       data: organization,
     }
   }
 
-  @bind()
-  public async show({}: HttpContextContract, organization: Organization) {
-    return {
-      data: organization,
+  public async show({ bouncer }: HttpContextContract, organization: Profile) {
+    const isAllowedToView = await bouncer.with('OrganizationPolicy').allows('view', organization)
+
+    if (isAllowedToView) {
+      return {
+        data: organization,
+      }
+    } else {
+      return { data: OrganizationPolicy.stripRestrictedViewFieldsFromOrganization(organization) }
     }
   }
 
-  @bind()
-  public async update({ request, bouncer }: HttpContextContract, organization: Organization) {
+  public async update({ request, bouncer }: HttpContextContract, organization: Profile) {
     await bouncer.with('OrganizationPolicy').authorize('update', organization)
 
-    const payload = await request.validate(OrganizationUpdateValidator)
+    const {
+      display_name: displayName,
+      description,
+      location,
+      industry,
+      owned_intellectual_resources: ownedIntellectualResources,
+      owned_material_resources: ownedMaterialResources,
+      tin,
+      legal_structure: legalStructure,
+      performance,
+      is_visible: isVisible,
+      avatar,
+    } = await request.validate(UpdateValidator)
 
-    organization.merge(payload)
+    organization.merge({
+      displayName,
+      description,
+      location,
+      industry,
+      ownedIntellectualResources,
+      ownedMaterialResources,
+      tin,
+      legalStructure,
+      performance,
+      isVisible,
+    })
+
+    if (avatar) {
+      organization.merge({
+        avatar: Attachment.fromFile(avatar),
+      })
+    }
 
     await organization.save()
 
@@ -50,10 +152,11 @@ export default class OrganizationsController {
     }
   }
 
-  @bind()
-  public async delete({ bouncer }: HttpContextContract, organization: Organization) {
+  public async destroy({ bouncer, response }: HttpContextContract, organization: Profile) {
     await bouncer.with('OrganizationPolicy').authorize('delete', organization)
 
     await organization.delete()
+
+    response.status(204)
   }
 }

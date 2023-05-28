@@ -6,7 +6,8 @@
  */
 
 import Env from '@ioc:Adonis/Core/Env'
-import { DatabaseConfig } from '@ioc:Adonis/Lucid/Database'
+import Application from '@ioc:Adonis/Core/Application'
+import type { DatabaseConfig } from '@ioc:Adonis/Lucid/Database'
 
 const databaseConfig: DatabaseConfig = {
   /*
@@ -24,6 +25,35 @@ const databaseConfig: DatabaseConfig = {
   connections: {
     /*
     |--------------------------------------------------------------------------
+    | SQLite
+    |--------------------------------------------------------------------------
+    |
+    | Configuration for the SQLite database.  Make sure to install the driver
+    | from npm when using this connection
+    |
+    | npm i sqlite3
+    |
+    */
+    sqlite: {
+      client: 'sqlite',
+      connection: {
+        filename: Application.tmpPath('db.sqlite3'),
+      },
+      pool: {
+        afterCreate: (conn, cb) => {
+          conn.run('PRAGMA foreign_keys=true', cb)
+        },
+      },
+      migrations: {
+        naturalSort: true,
+      },
+      useNullAsDefault: true,
+      healthCheck: false,
+      debug: true,
+    },
+
+    /*
+    |--------------------------------------------------------------------------
     | MySQL config
     |--------------------------------------------------------------------------
     |
@@ -39,13 +69,13 @@ const databaseConfig: DatabaseConfig = {
         host: Env.get('MYSQL_HOST'),
         port: Env.get('MYSQL_PORT'),
         user: Env.get('MYSQL_USER'),
-        password: Env.get('MYSQL_PASSWORD'),
-        database: Env.get('MYSQL_DATABASE'),
+        password: Env.get('MYSQL_PASSWORD', ''),
+        database: Env.get('MYSQL_DB_NAME'),
       },
       migrations: {
         naturalSort: true,
       },
-      healthCheck: true,
+      healthCheck: false,
       debug: false,
     },
   },

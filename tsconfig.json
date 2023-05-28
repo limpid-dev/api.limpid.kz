@@ -3,8 +3,6 @@
   "include": ["**/*"],
   "exclude": ["node_modules", "build"],
   "compilerOptions": {
-    "jsx": "react-jsx",
-    "esModuleInterop": true,
     "outDir": "build",
     "rootDir": "./",
     "sourceMap": true,
@@ -16,16 +14,15 @@
     },
     "types": [
       "@adonisjs/core",
+      "@adonisjs/repl",
       "@japa/preset-adonis/build/adonis-typings",
       "@adonisjs/lucid",
+      "@adonisjs/view",
       "@adonisjs/auth",
-      "@adonisjs/mail",
-      "@adonisjs/session",
-      "@adonisjs/bouncer",
       "@adonisjs/route-model-binding/build/adonis-typings",
-      "@adonisjs/drive-s3",
-      "@adonisjs/shield",
-      "@adonisjs/view"
+      "@adonisjs/bouncer",
+      "@adonisjs/mail",
+      "@adonisjs/attachment-lite"
     ]
   }
 }

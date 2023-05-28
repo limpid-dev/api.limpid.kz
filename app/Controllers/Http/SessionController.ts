@@ -1,38 +1,27 @@
-import { AuthenticationException } from '@adonisjs/auth/build/standalone'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import SessionStoreValidator from 'App/Validators/SessionStoreValidator'
+import StoreValidator from 'App/Validators/Session/StoreValidator'
 
 export default class SessionController {
-  public async store({ request, auth }: HttpContextContract) {
-    const payload = await request.validate(SessionStoreValidator)
+  public async store({ auth, request, response }: HttpContextContract) {
+    const { email, password } = await request.validate(StoreValidator)
 
-    if (payload.mode === 'web') {
-      const attempt = await auth.use('web').attempt(payload.email, payload.password)
+    const attempt = await auth.attempt(email, password)
 
-      if (!attempt.verifiedAt) {
-        throw new AuthenticationException('Unverified access', 'E_UNVERIFIED_ACCESS', payload.mode)
-      }
-    }
+    response.status(201)
 
-    if (payload.mode === 'api') {
-      const attempt = await auth.use('api').attempt(payload.email, payload.password)
-
-      if (!attempt.user.verifiedAt) {
-        throw new AuthenticationException('Unverified access', 'E_UNVERIFIED_ACCESS', payload.mode)
-      }
-
-      return {
-        data: attempt,
-      }
+    return {
+      data: attempt,
     }
   }
 
   public async show({ auth }: HttpContextContract) {
-    await auth.user?.load('file')
-    return { data: auth.user }
+    return {
+      data: auth.user,
+    }
   }
 
-  public async destroy({ auth }: HttpContextContract) {
+  public async destroy({ auth, response }: HttpContextContract) {
     await auth.logout()
+    response.status(204)
   }
 }

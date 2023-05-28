@@ -1,58 +1,104 @@
 import { bind } from '@adonisjs/route-model-binding'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Profile from 'App/Models/Profile'
 import Tender from 'App/Models/Tender'
-import PaginationValidator from 'App/Validators/PaginationValidator'
-import ProfileOrganizationActionValidator from 'App/Validators/ProfileOrganizationActionValidator'
-import TenderStoreValidator from 'App/Validators/TenderStoreValidator'
-import User from 'App/Models/User'
-import { DateTime } from 'luxon'
+import IndexValidator from 'App/Validators/Tenders/IndexValidator'
+import StoreValidator from 'App/Validators/Tenders/StoreValidator'
+import UpdateValidator from 'App/Validators/Tenders/UpdateValidator'
+import UpdateWinnerValidator from 'App/Validators/Tenders/UpdateWinnerValidator'
+import { Duration } from 'luxon'
 
 export default class TendersController {
   public async index({ request }: HttpContextContract) {
-    const payload = await request.validate(PaginationValidator)
+    const { page, per_page: perPage } = await request.validate(IndexValidator)
 
-    return Tender.query().paginate(payload.page, payload.perPage)
+    const tenders = await Tender.query().preload('wonTenderBid').paginate(page, perPage)
+
+    return tenders
+  }
+
+  public async store({ request, auth, response }: HttpContextContract) {
+    const {
+      title: title,
+      description: description,
+      starting_price: startingPrice,
+      duration: duration,
+    } = await request.validate(StoreValidator)
+
+    const tender = await auth.user!.selectedProfile.related('tenders').create({
+      title,
+      description,
+      startingPrice,
+      duration: Duration.fromISO(duration),
+    })
+
+    response.status(201)
+
+    return {
+      data: tender,
+    }
   }
 
   @bind()
   public async show({}: HttpContextContract, tender: Tender) {
-    return { data: tender }
-  }
+    await tender.load('wonTenderBid')
 
-  public async store({ request, bouncer }: HttpContextContract) {
-    const payload = await request.validate(TenderStoreValidator)
-    const { profileId } = await request.validate(ProfileOrganizationActionValidator)
-
-    const profile = await Profile.findOrFail(profileId)
-    const newProfile = await Profile.query().where('id', profile.userId).preload('user').first()
-    const now = DateTime.now()
-
-    if (!newProfile) {
-      return { message: 'Профиль не найден' }
-    }
-    const user = await User.findOrFail(newProfile.id)
-
-    if ((now >= user.payment_start && now <= user.payment_end) || user.payment_end === null) {
-      if (user.auction_atmpts > 0) {
-        await bouncer.with('TenderPolicy').authorize('create', profile)
-        const tender = await profile.related('tenders').create(payload)
-
-        user.auction_atmpts = user.auction_atmpts - 1
-        await user.save()
-
-        return { data: tender }
-      } else {
-        throw new Error('У вас недостаточно попыток')
-      }
-    } else {
-      throw new Error('Ваш тариф просрочен')
+    return {
+      data: tender,
     }
   }
 
   @bind()
-  public async destroy({ bouncer }: HttpContextContract, tender: Tender) {
-    await bouncer.with('TenderPolicy').authorize('delete', tender)
+  public async update({ request, bouncer }: HttpContextContract, tender: Tender) {
+    if (request.all().won_tender_bid_id) {
+      await bouncer.with('TenderPolicy').allows('updateWinner', tender)
+
+      const { won_tender_bid_id: wonTenderBidId } = await request.validate(UpdateWinnerValidator)
+
+      tender.merge({
+        wonTenderBidId,
+      })
+
+      await tender.save()
+
+      return {
+        data: tender,
+      }
+    }
+
+    await bouncer.with('TenderPolicy').allows('update', tender)
+
+    const {
+      title: title,
+      description: description,
+      starting_price: startingPrice,
+      duration: duration,
+    } = await request.validate(UpdateValidator)
+
+    tender.merge({
+      title,
+      description,
+      startingPrice,
+    })
+
+    if (duration) {
+      tender.merge({
+        duration: Duration.fromISO(duration),
+      })
+    }
+
+    await tender.save()
+
+    return {
+      data: tender,
+    }
+  }
+
+  @bind()
+  public async destroy({ response, bouncer }: HttpContextContract, tender: Tender) {
+    await bouncer.with('TenderPolicy').allows('delete', tender)
+
     await tender.delete()
+
+    response.status(204)
   }
 }

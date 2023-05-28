@@ -1,17 +1,16 @@
-import { BaseModel, column, HasMany, hasMany } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
-import File from './File'
-import ProjectMembership from './ProjectMembership'
+import { BaseModel, BelongsTo, belongsTo, column } from '@ioc:Adonis/Lucid/Orm'
+import Profile from './Profile'
 
 export default class Project extends BaseModel {
   @column({ isPrimary: true })
   public id: number
 
-  @column.dateTime({ autoCreate: true })
-  public createdAt: DateTime
+  @column()
+  public profileId: number
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public updatedAt: DateTime
+  @belongsTo(() => Profile)
+  public profile: BelongsTo<typeof Profile>
 
   @column()
   public title: string
@@ -49,9 +48,9 @@ export default class Project extends BaseModel {
   @column()
   public profitability: string
 
-  @hasMany(() => ProjectMembership)
-  public projectMemberships: HasMany<typeof ProjectMembership>
+  @column.dateTime({ autoCreate: true })
+  public createdAt: DateTime
 
-  @hasMany(() => File)
-  public files: HasMany<typeof File>
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  public updatedAt: DateTime
 }

@@ -7,15 +7,6 @@ export default class TenderBid extends BaseModel {
   @column({ isPrimary: true })
   public id: number
 
-  @column.dateTime({ autoCreate: true })
-  public createdAt: DateTime
-
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public updatedAt: DateTime
-
-  @column.dateTime()
-  public wonAt: DateTime | null
-
   @column()
   public tenderId: number
 
@@ -30,4 +21,10 @@ export default class TenderBid extends BaseModel {
 
   @column()
   public price: number
+
+  @column.dateTime({ autoCreate: true })
+  public createdAt: DateTime
+
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  public updatedAt: DateTime
 }

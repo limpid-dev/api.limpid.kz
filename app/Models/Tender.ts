@@ -1,14 +1,16 @@
+import { DateTime, Duration } from 'luxon'
 import {
+  BaseModel,
   BelongsTo,
   HasMany,
+  HasOne,
   belongsTo,
   column,
   computed,
   hasMany,
-  BaseModel,
+  hasOne,
 } from '@ioc:Adonis/Lucid/Orm'
-import { DateTime } from 'luxon'
-import File from './File'
+import { duration } from 'App/Utilities/Duration'
 import Profile from './Profile'
 import TenderBid from './TenderBid'
 
@@ -22,14 +24,11 @@ export default class Tender extends BaseModel {
   @belongsTo(() => Profile)
   public profile: BelongsTo<typeof Profile>
 
-  @column.dateTime({ autoCreate: true })
-  public createdAt: DateTime
+  @column()
+  public wonTenderBidId: number | null
 
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public updatedAt: DateTime
-
-  @hasMany(() => File)
-  public files: HasMany<typeof File>
+  @hasOne(() => TenderBid)
+  public wonTenderBid: HasOne<typeof TenderBid>
 
   @column()
   public title: string
@@ -37,30 +36,31 @@ export default class Tender extends BaseModel {
   @column()
   public description: string
 
-  @column.dateTime()
-  public verifiedAt: DateTime | null
-
-  // Duration in hours
-  @column()
-  public duration: number
-
-  @computed()
-  public get finishedAt() {
-    if (this.verifiedAt) {
-      return this.verifiedAt.plus({ hours: this.duration })
-    }
-
-    return null
-  }
-
-  @computed()
-  public get isVerified() {
-    return !!this.verifiedAt
-  }
-
   @column()
   public startingPrice: number | null
 
+  @duration()
+  public duration: Duration
+
+  @column.dateTime()
+  public verifiedAt: DateTime | null
+
+  @computed()
+  public get startedAt() {
+    return this.verifiedAt
+  }
+
+  @computed()
+  public get finishedAt() {
+    return this.verifiedAt ? this.verifiedAt.plus(this.duration) : null
+  }
+
   @hasMany(() => TenderBid)
   public bids: HasMany<typeof TenderBid>
+
+  @column.dateTime({ autoCreate: true })
+  public createdAt: DateTime
+
+  @column.dateTime({ autoCreate: true, autoUpdate: true })
+  public updatedAt: DateTime
 }

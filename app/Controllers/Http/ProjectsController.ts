@@ -1,75 +1,110 @@
 import { bind } from '@adonisjs/route-model-binding'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Organization from 'App/Models/Organization'
-import Profile from 'App/Models/Profile'
 import Project from 'App/Models/Project'
-import PaginationValidator from 'App/Validators/PaginationValidator'
-import ProfileOrganizationActionValidator from 'App/Validators/ProfileOrganizationActionValidator'
-import ProjectsStoreValidator from 'App/Validators/ProjectsStoreValidator'
-import ProjectsUpdateValidator from 'App/Validators/ProjectsUpdateValidator'
-import { DateTime } from 'luxon'
+import IndexValidator from 'App/Validators/Projects/IndexValidator'
+import StoreValidator from 'App/Validators/Projects/StoreValidator'
+import UpdateValidator from 'App/Validators/Projects/UpdateValidator'
 
 export default class ProjectsController {
   public async index({ request }: HttpContextContract) {
-    const payload = await request.validate(PaginationValidator)
+    const { page, per_page: perPage } = await request.validate(IndexValidator)
 
-    return await Project.query().paginate(payload.page, payload.perPage)
+    const projects = await Project.query().paginate(page, perPage)
+
+    return projects
   }
 
-  public async store({ bouncer, request }: HttpContextContract) {
-    const payload = await request.validate(ProjectsStoreValidator)
-    const { profileId, organizationId } = await request.validate(ProfileOrganizationActionValidator)
+  public async store({ request, auth, response }: HttpContextContract) {
+    const {
+      title: title,
+      description: description,
+      location: location,
+      industry: industry,
+      stage: stage,
+      required_money_amount: requiredMoneyAmount,
+      owned_money_amount: ownedMoneyAmount,
+      required_intellectual_resources: requiredIntellectualResources,
+      owned_intellectual_resources: ownedIntellectualResources,
+      required_material_resources: requiredMaterialResources,
+      owned_material_resources: ownedMaterialResources,
+      profitability: profitability,
+    } = await request.validate(StoreValidator)
 
-    if (profileId) {
-      const profile = await Profile.findOrFail(profileId)
+    const project = await auth.user!.selectedProfile.related('projects').create({
+      title,
+      description,
+      location,
+      industry,
+      stage,
+      requiredMoneyAmount,
+      ownedMoneyAmount,
+      requiredIntellectualResources,
+      ownedIntellectualResources,
+      requiredMaterialResources,
+      ownedMaterialResources,
+      profitability,
+      profileId: auth.user?.selectedProfileId,
+    })
 
-      await bouncer.with('ProjectPolicy').authorize('create', profile)
-      const project = await Project.create(payload)
+    response.status(201)
 
-      await project.related('projectMemberships').create({
-        profileId: profile.id,
-        type: 'owner',
-        acceptedAt: DateTime.now(),
-      })
-
-      return { data: project }
-    }
-    if (organizationId) {
-      const organization = await Organization.findOrFail(organizationId)
-
-      await bouncer.with('ProjectPolicy').authorize('create', organization)
-      const project = await Project.create(payload)
-
-      await project.related('projectMemberships').create({
-        organizationId: organization.id,
-        type: 'owner',
-        acceptedAt: DateTime.now(),
-      })
-
-      return { data: project }
+    return {
+      data: project,
     }
   }
 
   @bind()
   public async show({}: HttpContextContract, project: Project) {
-    return { data: project }
+    return {
+      data: project,
+    }
   }
 
   @bind()
-  public async update({ request, bouncer }: HttpContextContract, project: Project) {
-    const payload = await request.validate(ProjectsUpdateValidator)
+  public async update({ request }: HttpContextContract, project: Project) {
+    const {
+      title: title,
+      description: description,
+      location: location,
+      industry: industry,
+      stage: stage,
+      required_money_amount: requiredMoneyAmount,
+      owned_money_amount: ownedMoneyAmount,
+      required_intellectual_resources: requiredIntellectualResources,
+      owned_intellectual_resources: ownedIntellectualResources,
+      required_material_resources: requiredMaterialResources,
+      owned_material_resources: ownedMaterialResources,
+      profitability: profitability,
+    } = await request.validate(UpdateValidator)
 
-    await bouncer.with('ProjectPolicy').authorize('update', project)
+    project.merge({
+      title,
+      description,
+      location,
+      industry,
+      stage,
+      requiredMoneyAmount,
+      ownedMoneyAmount,
+      requiredIntellectualResources,
+      ownedIntellectualResources,
+      requiredMaterialResources,
+      ownedMaterialResources,
+      profitability,
+    })
 
-    await project.merge(payload).save()
+    await project.save()
 
-    return { data: project }
+    return {
+      data: project,
+    }
   }
 
   @bind()
-  public async destroy({ bouncer }: HttpContextContract, project: Project) {
+  public async destroy({ bouncer, response }: HttpContextContract, project: Project) {
     await bouncer.with('ProjectPolicy').authorize('delete', project)
 
     await project.delete()
+
+    response.status(204)
   }
 }

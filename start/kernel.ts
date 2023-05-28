@@ -24,7 +24,6 @@ Server.middleware.register([
   () => import('@ioc:Adonis/Core/BodyParser'),
   () => import('@ioc:Adonis/Addons/RmbMiddleware'),
   () => import('App/Middleware/SilentAuth'),
-  () => import('@ioc:Adonis/Addons/Shield'),
 ])
 
 /*
@@ -45,4 +44,7 @@ Server.middleware.register([
 */
 Server.middleware.registerNamed({
   auth: () => import('App/Middleware/Auth'),
+  guest: () => import('App/Middleware/Guest'),
+  emailVerified: () => import('App/Middleware/EmailVerified'),
+  emailUnVerified: () => import('App/Middleware/EmailUnVerified'),
 })

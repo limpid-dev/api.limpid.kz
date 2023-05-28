@@ -1,55 +1,113 @@
 import { bind } from '@adonisjs/route-model-binding'
+import { Attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Profile from 'App/Models/Profile'
-import PaginationValidator from 'App/Validators/PaginationValidator'
-import ProfilesStoreValidator from 'App/Validators/ProfilesStoreValidator'
-import ProfilesUpdateValidator from 'App/Validators/ProfilesUpdateValidator'
+import ProfilePolicy from 'App/Policies/ProfilePolicy'
+import IndexValidator from 'App/Validators/Profiles/IndexValidator'
+import UpdateValidator from 'App/Validators/Profiles/UpdateValidator'
 
 export default class ProfilesController {
-  public async index({ request }: HttpContextContract) {
-    const payload = await request.validate(PaginationValidator)
+  public async index({ request, bouncer }: HttpContextContract) {
+    const {
+      page,
+      per_page: perPage,
+      user_id: userId,
+      industry,
+      search,
+    } = await request.validate(IndexValidator)
 
-    return await Profile.query().paginate(payload.page, payload.perPage)
-  }
+    const profilesQuery = Profile.query()
 
-  public async store({ request, auth }: HttpContextContract) {
-    const user = auth.user!
-    const payload = await request.validate(ProfilesStoreValidator)
+    profilesQuery.where('isVisible', true)
+    profilesQuery.where('isPersonal', true)
 
-    const profile = await Profile.create({
-      userId: user.id,
-      ...payload,
+    profilesQuery.if(userId, (query) => {
+      query.andWhere('userId', userId!)
     })
 
+    profilesQuery.if(industry, (query) => {
+      query.andWhereIn('industry', industry!)
+    })
+
+    profilesQuery.if(search, (query) => {
+      query.andWhere((query) => {
+        query.whereLike('displayName', `%${search}%`)
+        query.orWhereILike('location', `%${search}%`)
+      })
+    })
+
+    const profiles = await profilesQuery.paginate(page, perPage)
+
+    const allowedToViewProfiles = await Promise.all(
+      profiles.map(async (profile) => {
+        const isAllowedToView = await bouncer.with('ProfilePolicy').allows('view', profile)
+
+        if (isAllowedToView) {
+          return {
+            profile,
+          }
+        } else {
+          return ProfilePolicy.stripRestrictedViewFieldsFromProfile(profile)
+        }
+      })
+    )
+
     return {
-      data: profile,
+      meta: profiles.getMeta(),
+      data: allowedToViewProfiles,
     }
   }
 
   @bind()
-  public async show({}: HttpContextContract, profile: Profile) {
-    return { data: profile }
+  public async show({ bouncer }: HttpContextContract, profile: Profile) {
+    const isAllowedToView = await bouncer.with('ProfilePolicy').allows('view', profile)
+
+    if (isAllowedToView) {
+      return {
+        data: profile,
+      }
+    } else {
+      return { data: ProfilePolicy.stripRestrictedViewFieldsFromProfile(profile) }
+    }
   }
 
   @bind()
-  public async update({ bouncer, request }: HttpContextContract, profile: Profile) {
+  public async update({ request, bouncer }: HttpContextContract, profile: Profile) {
     await bouncer.with('ProfilePolicy').authorize('update', profile)
 
-    const payload = await request.validate(ProfilesUpdateValidator)
+    const {
+      display_name: displayName,
+      description,
+      location,
+      industry,
+      owned_intellectual_resources: ownedIntellectualResources,
+      owned_material_resources: ownedMaterialResources,
+      tin,
+      is_visible: isVisible,
+      avatar,
+    } = await request.validate(UpdateValidator)
 
-    profile.merge(payload)
+    profile.merge({
+      displayName,
+      description,
+      location,
+      industry,
+      ownedIntellectualResources,
+      ownedMaterialResources,
+      tin,
+      isVisible,
+    })
+
+    if (avatar) {
+      profile.merge({
+        avatar: Attachment.fromFile(avatar),
+      })
+    }
 
     await profile.save()
 
     return {
       data: profile,
     }
-  }
-
-  @bind()
-  public async destroy({ bouncer }: HttpContextContract, profile: Profile) {
-    await bouncer.with('ProfilePolicy').authorize('delete', profile)
-
-    await profile.delete()
   }
 }

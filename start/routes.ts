@@ -19,37 +19,65 @@
 */
 
 import Route from '@ioc:Adonis/Core/Route'
-import HealthCheck from '@ioc:Adonis/Core/HealthCheck'
-import './routes/session'
-import './routes/verification'
-import './routes/recovery'
-import './routes/user'
-import './routes/profile'
-import './routes/project'
-import './routes/project-membership'
-import './routes/project-file'
-import './routes/profile-contact'
-import './routes/certificate'
-import './routes/education'
-import './routes/experience'
-import './routes/skill'
-import './routes/tender'
-import './routes/tender-file'
-import './routes/tender-bid'
-import './routes/organization'
-import './routes/organization-file'
-import './routes/organization-contact'
-import './routes/organization-membership'
-import './routes/organization-certificate'
-import './routes/organization-experience'
-import './routes/payment'
 
-Route.get('templates/:template', 'TemplatesController.show')
+Route.get('/users', 'UsersController.index')
+Route.post('/users', 'UsersController.store').middleware(['guest'])
+Route.get('/users/:user', 'UsersController.show')
+Route.patch('/users/:user', 'UsersController.update').middleware(['auth'])
 
-Route.get('health', async ({ response }) => {
-  const data = await HealthCheck.getReport()
+Route.get('/session', 'SessionController.show').middleware(['auth'])
+Route.post('/session', 'SessionController.store').middleware(['guest'])
+Route.delete('/session', 'SessionController.destroy').middleware(['auth'])
 
-  return data.healthy ? response.ok({ data }) : response.badRequest({ data })
-})
+Route.post('/email-verification', 'EmailVerificationController.store').middleware([
+  'auth',
+  'emailUnVerified',
+])
+Route.patch('/email-verification', 'EmailVerificationController.update').middleware([
+  'auth',
+  'emailUnVerified',
+])
 
-Route.get('csrf', () => {})
+Route.post('/password-recovery', 'PasswordRecoveryController.store').middleware(['guest'])
+Route.patch('/password-recovery', 'PasswordRecoveryController.update').middleware(['guest'])
+
+Route.get('/profiles', 'ProfilesController.index')
+Route.get('/profiles/:profile', 'ProfilesController.show')
+Route.patch('/profiles/:profile', 'ProfilesController.update').middleware(['auth', 'emailVerified'])
+
+Route.get('/organizations', 'OrganizationsController.index')
+Route.post('/organizations', 'OrganizationsController.store').middleware(['auth', 'emailVerified'])
+Route.get('/organizations/:organization', 'OrganizationsController.show')
+Route.patch('/organizations/:organization', 'OrganizationsController.update').middleware([
+  'auth',
+  'emailVerified',
+])
+Route.delete('/organizations/:organization', 'OrganizationsController.destroy').middleware([
+  'auth',
+  'emailVerified',
+])
+
+Route.get('/projects', 'ProjectsController.index')
+Route.post('/projects', 'ProjectsController.store').middleware(['auth', 'emailVerified'])
+Route.get('/projects/:project', 'ProjectsController.show')
+Route.patch('/projects/:project', 'ProjectsController.update').middleware(['auth', 'emailVerified'])
+Route.delete('/projects/:project', 'ProjectsController.destroy').middleware([
+  'auth',
+  'emailVerified',
+])
+
+Route.get('/tenders', 'TendersController.index')
+Route.post('/tenders', 'TendersController.store').middleware(['auth', 'emailVerified'])
+Route.get('/tenders/:tender', 'TendersController.show')
+Route.patch('/tenders/:tender', 'TendersController.update').middleware(['auth', 'emailVerified'])
+Route.delete('/tenders/:tender', 'TendersController.destroy').middleware(['auth', 'emailVerified'])
+
+Route.group(() => {
+  Route.get('/bids', 'TenderBidsController.index')
+  Route.post('/bids', 'TenderBidsController.store').middleware(['auth', 'emailVerified'])
+  Route.get('/bids/:tenderBid', 'TenderBidsController.show')
+  Route.patch('/bids/:tenderBid', 'TenderBidsController.update').middleware([
+    'auth',
+    'emailVerified',
+  ])
+}).prefix('/tenders/:tender')

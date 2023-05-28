@@ -1,84 +1,104 @@
+import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import Tender from 'App/Models/Tender'
+import TenderBid from 'App/Models/TenderBid'
+import IndexValidator from 'App/Validators/TenderBids/IndexValidator'
+import StoreValidator from 'App/Validators/TenderBids/StoreValidator'
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
 import { bind } from '@adonisjs/route-model-binding'
-import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Profile from 'App/Models/Profile'
-import Tender from 'App/Models/Tender'
-import TenderBidStoreValidator from 'App/Validators/TenderBidStoreValidator'
-import PaginationValidator from 'App/Validators/PaginationValidator'
-import ProfileOrganizationActionValidator from 'App/Validators/ProfileOrganizationActionValidator'
-import TenderBid from 'App/Models/TenderBid'
-import TenderBidUpdateValidator from 'App/Validators/TenderBidUpdateValidator'
-import User from 'App/Models/User'
-import { DateTime } from 'luxon'
+import TenderBidPolicy from 'App/Policies/TenderBidPolicy'
+
+const PRICE_MODIFIER = 0.99
+
 export default class TenderBidsController {
   @bind()
-  public async index({ request }: HttpContextContract, tender: Tender) {
-    const payload = await request.validate(PaginationValidator)
+  public async index({ request, bouncer }: HttpContextContract, tender: Tender) {
+    const { page, per_page: perPage } = await request.validate(IndexValidator)
 
-    return tender.related('bids').query().preload('profile').paginate(payload.page, payload.perPage)
-  }
+    const tenderBidQuery = TenderBid.query().where('tenderId', tender.id)
 
-  @bind()
-  public async store({ request }: HttpContextContract, tender: Tender) {
-    const { profileId } = await request.validate(ProfileOrganizationActionValidator)
+    const tenderBids = await tenderBidQuery.paginate(page, perPage)
 
-    const profile = await Profile.findOrFail(profileId)
+    tenderBids.queryString(request.qs())
 
-    const payload = await request.validate(TenderBidStoreValidator)
+    const allowedToViewTenderBids = await Promise.all(
+      tenderBids.map(async (tenderBid) => {
+        const isAllowedToView = await bouncer
+          .with('TenderBidPolicy')
+          .allows('view', tender, tenderBid)
 
-    const newProfile = await Profile.query().where('id', profile.userId).preload('user').first()
-    const now = DateTime.now()
-
-    if (!newProfile) {
-      return { message: 'Профиль не найден' }
-    }
-    const user = await User.findOrFail(newProfile.id)
-
-    if ((now >= user.payment_start && now <= user.payment_end) || user.payment_end === null) {
-      if (user.auction_atmpts > 0) {
-        if (tender.startingPrice) {
-          await request.validate({
-            schema: schema.create({
-              price: schema.number([rules.range(1, Number.parseInt(`${tender.startingPrice}`))]),
-            }),
-          })
+        if (isAllowedToView) {
+          return tenderBid
         }
 
-        const bid = await tender.related('bids').create({ ...payload, profileId: profile.id })
-        await bid.load('profile')
-        user.auction_atmpts = user.auction_atmpts - 1
-        await user.save()
-        return { data: bid }
-      } else {
-        throw new Error('У вас недостаточно попыток')
-      }
-    } else {
-      throw new Error('Ваш тариф просрочен')
+        return TenderBidPolicy.stripRestrictedViewFieldsFromTenderBid(tenderBid)
+      })
+    )
+
+    return {
+      meta: tenderBids.getMeta(),
+      data: allowedToViewTenderBids,
     }
   }
 
   @bind()
-  public async update({ request }: HttpContextContract, tender: Tender, bid: TenderBid) {
-    const payload = await request.validate(TenderBidUpdateValidator)
+  public async store({ request, auth, bouncer, response }: HttpContextContract, tender: Tender) {
+    const { price } = await request.validate(StoreValidator)
+
+    await bouncer.with('TenderBidPolicy').allows('create', tender)
 
     if (tender.startingPrice) {
       await request.validate({
         schema: schema.create({
-          price: schema.number([rules.range(1, tender.startingPrice)]),
+          price: schema.number([rules.range(1, tender.startingPrice * PRICE_MODIFIER)]),
         }),
       })
     }
 
-    await request.validate({
+    const tenderBid = tender.related('bids').create({
+      price,
+      profileId: auth.user!.selectedProfileId,
+    })
+
+    response.status(201)
+
+    return {
+      data: tenderBid,
+    }
+  }
+
+  @bind()
+  public async show({ bouncer }: HttpContextContract, tender: Tender, tenderBid: TenderBid) {
+    const isAllowedToView = await bouncer.with('TenderBidPolicy').allows('view', tender, tenderBid)
+
+    if (isAllowedToView) {
+      return { data: tenderBid }
+    }
+
+    return {
+      data: TenderBidPolicy.stripRestrictedViewFieldsFromTenderBid(tenderBid),
+    }
+  }
+
+  @bind()
+  public async update(
+    { bouncer, request }: HttpContextContract,
+    tender: Tender,
+    tenderBid: TenderBid
+  ) {
+    await bouncer.with('TenderBidPolicy').allows('update', tender, tenderBid)
+
+    const { price } = await request.validate({
       schema: schema.create({
-        price: schema.number([rules.range(1, bid.price * 0.99)]),
+        price: schema.number([rules.range(1, tenderBid.price * 0.99)]),
       }),
     })
 
-    await bid.merge(payload).save()
+    tenderBid.merge({ price })
 
-    await bid.load('profile')
+    await tenderBid.save()
 
-    return { data: bid }
+    return {
+      data: tenderBid,
+    }
   }
 }
