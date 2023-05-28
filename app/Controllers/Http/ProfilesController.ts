@@ -2,10 +2,9 @@ import { bind } from '@adonisjs/route-model-binding'
 import { Attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Profile from 'App/Models/Profile'
+import ProfilePolicy from 'App/Policies/ProfilePolicy'
 import IndexValidator from 'App/Validators/Profiles/IndexValidator'
-import StoreValidator from 'App/Validators/Profiles/StoreValidator'
-import UpdateOrganizationValidator from 'App/Validators/Profiles/UpdateOrganizationValidator'
-import UpdatePersonalValidator from 'App/Validators/Profiles/UpdatePersonalValidator'
+import UpdateValidator from 'App/Validators/Profiles/UpdateValidator'
 
 export default class ProfilesController {
   public async index({ request, bouncer }: HttpContextContract) {
@@ -14,13 +13,13 @@ export default class ProfilesController {
       per_page: perPage,
       user_id: userId,
       industry,
-      is_personal: isPersonal,
       search,
     } = await request.validate(IndexValidator)
 
     const profilesQuery = Profile.query()
 
     profilesQuery.where('isVisible', true)
+    profilesQuery.where('isPersonal', true)
 
     profilesQuery.if(userId, (query) => {
       query.andWhere('userId', userId!)
@@ -30,14 +29,10 @@ export default class ProfilesController {
       query.andWhereIn('industry', industry!)
     })
 
-    profilesQuery.if(isPersonal, (query) => {
-      query.andWhere('isPersonal', isPersonal!)
-    })
-
     profilesQuery.if(search, (query) => {
       query.andWhere((query) => {
-        query.where('displayName', 'ilike', `%${search}%`)
-        query.orWhere('location', 'ilike', `%${search}%`)
+        query.whereLike('displayName', `%${search}%`)
+        query.orWhereILike('location', `%${search}%`)
       })
     })
 
@@ -52,11 +47,7 @@ export default class ProfilesController {
             profile,
           }
         } else {
-          return {
-            id: profile.id,
-            is_visible: profile.isVisible,
-            display_name: profile.displayName,
-          }
+          return ProfilePolicy.stripRestrictedViewFieldsFromProfile(profile)
         }
       })
     )
@@ -64,45 +55,6 @@ export default class ProfilesController {
     return {
       meta: profiles.getMeta(),
       data: allowedToViewProfiles,
-    }
-  }
-
-  public async store({ auth, request, response }: HttpContextContract) {
-    const {
-      display_name: displayName,
-      description,
-      location,
-      industry,
-      owned_intellectual_resources: ownedIntellectualResources,
-      owned_material_resources: ownedMaterialResources,
-      tin,
-      perfomance,
-      type,
-      is_visible: isVisible,
-      avatar,
-    } = await request.validate(StoreValidator)
-
-    const avatarAttachment = avatar ? Attachment.fromFile(avatar) : null
-
-    const profile = await auth.user!.related('profiles').create({
-      displayName,
-      description,
-      location,
-      industry,
-      ownedIntellectualResources,
-      ownedMaterialResources,
-      tin,
-      perfomance,
-      type,
-      isVisible,
-      isPersonal: false,
-      avatar: avatarAttachment,
-    })
-
-    response.status(201)
-
-    return {
-      data: profile,
     }
   }
 
@@ -115,20 +67,14 @@ export default class ProfilesController {
         data: profile,
       }
     } else {
-      return {
-        data: {
-          id: profile.id,
-          is_visible: profile.isVisible,
-          display_name: profile.displayName,
-        },
-      }
+      return { data: ProfilePolicy.stripRestrictedViewFieldsFromProfile(profile)}
     }
   }
 
   @bind()
   public async update({ request, bouncer }: HttpContextContract, profile: Profile) {
     await bouncer.with('ProfilePolicy').authorize('update', profile)
-    if (profile.isPersonal) {
+
       const {
         display_name: displayName,
         description,
@@ -139,7 +85,7 @@ export default class ProfilesController {
         tin,
         is_visible: isVisible,
         avatar,
-      } = await request.validate(UpdatePersonalValidator)
+      } = await request.validate(UpdateValidator)
 
       profile.merge({
         displayName,
@@ -157,54 +103,11 @@ export default class ProfilesController {
           avatar: Attachment.fromFile(avatar),
         })
       }
-    } else {
-      const {
-        display_name: displayName,
-        description,
-        location,
-        industry,
-        owned_intellectual_resources: ownedIntellectualResources,
-        owned_material_resources: ownedMaterialResources,
-        tin,
-        perfomance,
-        type,
-        is_visible: isVisible,
-        avatar,
-      } = await request.validate(UpdateOrganizationValidator)
-
-      profile.merge({
-        displayName,
-        description,
-        location,
-        industry,
-        ownedIntellectualResources,
-        ownedMaterialResources,
-        tin,
-        perfomance,
-        type,
-        isVisible,
-      })
-
-      if (avatar) {
-        profile.merge({
-          avatar: Attachment.fromFile(avatar),
-        })
-      }
-    }
 
     await profile.save()
 
     return {
       data: profile,
     }
-  }
-
-  @bind()
-  public async destroy({ bouncer, response }: HttpContextContract, profile: Profile) {
-    await bouncer.with('ProfilePolicy').authorize('delete', profile)
-
-    await profile.delete()
-
-    response.status(204)
   }
 }

@@ -33,8 +33,6 @@ export default class IndexValidator {
       }),
     ]),
     industry: schema.array.optional().members(schema.string()),
-    is_personal: schema.boolean.optional(),
-    is_visible: schema.boolean.optional(),
     search: schema.string.optional(),
   })
 

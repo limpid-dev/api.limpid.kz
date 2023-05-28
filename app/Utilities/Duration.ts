@@ -11,7 +11,7 @@ export const duration: DurationDecorator = (options) => {
     Model.boot()
 
     /**
-     * Separate attachment options from the column options
+     * Separate decorator options from the column options
      */
     const { locale, numberingSystem, conversionAccuracy, ...columnOptions } = options || {}
 

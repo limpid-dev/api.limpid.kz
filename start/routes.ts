@@ -42,13 +42,14 @@ Route.post('/password-recovery', 'PasswordRecoveryController.store').middleware(
 Route.patch('/password-recovery', 'PasswordRecoveryController.update').middleware(['guest'])
 
 Route.get('/profiles', 'ProfilesController.index')
-Route.post('/profiles', 'ProfilesController.store').middleware(['auth', 'emailVerified'])
 Route.get('/profiles/:profile', 'ProfilesController.show')
 Route.patch('/profiles/:profile', 'ProfilesController.update').middleware(['auth', 'emailVerified'])
-Route.delete('/profiles/:profile', 'ProfilesController.destroy').middleware([
-  'auth',
-  'emailVerified',
-])
+
+Route.get('/organizations', 'OrganizationsController.index')
+Route.post('/organizations', 'OrganizationsController.store').middleware(['auth', 'emailVerified'])
+Route.get('/organizations/:organization', 'OrganizationsController.show')
+Route.patch('/organizations/:organization', 'OrganizationsController.update').middleware(['auth', 'emailVerified'])
+Route.delete('/organizations/:organization', 'OrganizationsController.destroy').middleware(['auth', 'emailVerified'])
 
 Route.get('/projects', 'ProjectsController.index')
 Route.post('/projects', 'ProjectsController.store').middleware(['auth', 'emailVerified'])

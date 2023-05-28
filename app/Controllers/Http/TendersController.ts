@@ -11,7 +11,7 @@ export default class TendersController {
   public async index({ request }: HttpContextContract) {
     const { page, per_page: perPage } = await request.validate(IndexValidator)
 
-    const tenders = await Tender.query().paginate(page, perPage)
+    const tenders = await Tender.query().preload('wonTenderBid').paginate(page, perPage)
 
     return tenders
   }
@@ -24,8 +24,7 @@ export default class TendersController {
       duration: duration,
     } = await request.validate(StoreValidator)
 
-    const tender = await Tender.create({
-      profileId: auth.user!.selectedProfileId,
+    const tender = await auth.user!.selectedProfile.related('tenders').create({
       title,
       description,
       startingPrice,
@@ -41,6 +40,8 @@ export default class TendersController {
 
   @bind()
   public async show({}: HttpContextContract, tender: Tender) {
+    await tender.load('wonTenderBid')
+
     return {
       data: tender,
     }
