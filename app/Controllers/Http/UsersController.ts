@@ -24,7 +24,7 @@ export default class UsersController {
 
     const user = await User.updateOrCreate({ email }, { email, password, firstName, lastName })
 
-    await user.related('profiles').create({
+    await user.related('profile').create({
       displayName: `${user.firstName} ${user.lastName}`,
       isPersonal: true,
       isVisible: true,
@@ -54,12 +54,8 @@ export default class UsersController {
       last_name: lastName,
       patronymic,
       born_at: bornAt,
-      selected_profile_id: selectedProfileId,
+      selected_organization_id: selectedOrganizationId,
     } = await request.validate(UpdateValidator)
-
-    const profileIdToSelect = selectedProfileId
-      ? selectedProfileId
-      : (await user.related('profiles').query().where('isPersonal', true).firstOrFail()).id
 
     user.merge({
       email,
@@ -68,7 +64,7 @@ export default class UsersController {
       lastName,
       bornAt,
       patronymic,
-      selectedProfileId: profileIdToSelect,
+      selectedOrganizationId,
     })
 
     await user.save()

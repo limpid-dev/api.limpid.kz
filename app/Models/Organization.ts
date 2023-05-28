@@ -1,15 +1,20 @@
-import { DateTime } from 'luxon'
-import { BaseModel, column } from '@ioc:Adonis/Lucid/Orm'
+import { ManyToMany, column, manyToMany } from '@ioc:Adonis/Lucid/Orm'
+import Profile from './Profile'
+import User from './User'
 
-export default class Organization extends BaseModel {
-  public static table = 'profiles'
+export default class Organization extends Profile {
+  @column()
+  public performance: string
 
-  @column({ isPrimary: true })
-  public id: number
+  @column()
+  public legalStructure: string
 
-  @column.dateTime({ autoCreate: true })
-  public createdAt: DateTime
-
-  @column.dateTime({ autoCreate: true, autoUpdate: true })
-  public updatedAt: DateTime
+  @manyToMany(() => User, {
+    pivotTable: 'profile_user',
+    pivotTimestamps: {
+      createdAt: 'created_at',
+      updatedAt: false,
+    },
+  })
+  public members: ManyToMany<typeof User>
 }

@@ -3,22 +3,17 @@ import {
   BaseModel,
   BelongsTo,
   HasMany,
+  ManyToMany,
   beforeSave,
   belongsTo,
   column,
   hasMany,
+  manyToMany,
 } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 import Project from './Project'
 import User from './User'
 import Tender from './Tender'
-
-const serilizeForOrganizationProfile = (value: string | null, _attribute, model: Profile) => {
-  if (model.isPersonal) {
-    return undefined
-  }
-  return value
-}
 
 export default class Profile extends BaseModel {
   @column({ isPrimary: true })
@@ -50,16 +45,6 @@ export default class Profile extends BaseModel {
 
   @column()
   public tin: string | null
-
-  @column({
-    serialize: serilizeForOrganizationProfile,
-  })
-  public performance: string | null
-
-  @column({
-    serialize: serilizeForOrganizationProfile,
-  })
-  public legalStructure: string | null
 
   @column()
   public isVisible: boolean

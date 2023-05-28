@@ -57,6 +57,19 @@ Route.delete('/organizations/:organization', 'OrganizationsController.destroy').
   'emailVerified',
 ])
 
+Route.group(() => {
+  Route.get('/members', 'OrganizationMembersController.index')
+  Route.post('/members', 'OrganizationMembersController.store').middleware([
+    'auth',
+    'emailVerified',
+  ])
+  Route.get('/members/:>member', 'OrganizationMembersController.show')
+  Route.delete('/members/:>member', 'OrganizationMembersController.destroy').middleware([
+    'auth',
+    'emailVerified',
+  ])
+}).prefix('/organizations/:organization')
+
 Route.get('/projects', 'ProjectsController.index')
 Route.post('/projects', 'ProjectsController.store').middleware(['auth', 'emailVerified'])
 Route.get('/projects/:project', 'ProjectsController.show')

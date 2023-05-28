@@ -1,6 +1,6 @@
 import { Attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Profile from 'App/Models/Profile'
+import Organization from 'App/Models/Organization'
 import OrganizationPolicy from 'App/Policies/OrganizationPolicy'
 import IndexValidator from 'App/Validators/Organizations/IndexValidator'
 import StoreValidator from 'App/Validators/Organizations/StoreValidator'
@@ -16,31 +16,31 @@ export default class OrganizationsController {
       search,
     } = await request.validate(IndexValidator)
 
-    const profilesQuery = Profile.query()
+    const organizationsQuery = Organization.query()
 
-    profilesQuery.where('isVisible', true)
-    profilesQuery.where('isPersonal', false)
+    organizationsQuery.where('isVisible', true)
+    organizationsQuery.where('isPersonal', false)
 
-    profilesQuery.if(userId, (query) => {
+    organizationsQuery.if(userId, (query) => {
       query.andWhere('userId', userId!)
     })
 
-    profilesQuery.if(industry, (query) => {
+    organizationsQuery.if(industry, (query) => {
       query.andWhereIn('industry', industry!)
     })
 
-    profilesQuery.if(search, (query) => {
+    organizationsQuery.if(search, (query) => {
       query.andWhere((query) => {
         query.whereLike('displayName', `%${search}%`)
         query.orWhereILike('location', `%${search}%`)
       })
     })
 
-    const profiles = await profilesQuery.paginate(page, perPage)
+    const profiles = await organizationsQuery.paginate(page, perPage)
 
-    const allowedToViewProfiles = await Promise.all(
+    const allowedToViewOrganizations = await Promise.all(
       profiles.map(async (profile) => {
-        const isAllowedToView = await bouncer.with('ProfilePolicy').allows('view', profile)
+        const isAllowedToView = await bouncer.with('OrganizationPolicy').allows('view', profile)
 
         if (isAllowedToView) {
           return {
@@ -54,7 +54,7 @@ export default class OrganizationsController {
 
     return {
       meta: profiles.getMeta(),
-      data: allowedToViewProfiles,
+      data: allowedToViewOrganizations,
     }
   }
 
@@ -97,7 +97,7 @@ export default class OrganizationsController {
     }
   }
 
-  public async show({ bouncer }: HttpContextContract, organization: Profile) {
+  public async show({ bouncer }: HttpContextContract, organization: Organization) {
     const isAllowedToView = await bouncer.with('OrganizationPolicy').allows('view', organization)
 
     if (isAllowedToView) {
@@ -109,7 +109,7 @@ export default class OrganizationsController {
     }
   }
 
-  public async update({ request, bouncer }: HttpContextContract, organization: Profile) {
+  public async update({ request, bouncer }: HttpContextContract, organization: Organization) {
     await bouncer.with('OrganizationPolicy').authorize('update', organization)
 
     const {
@@ -152,7 +152,7 @@ export default class OrganizationsController {
     }
   }
 
-  public async destroy({ bouncer, response }: HttpContextContract, organization: Profile) {
+  public async destroy({ bouncer, response }: HttpContextContract, organization: Organization) {
     await bouncer.with('OrganizationPolicy').authorize('delete', organization)
 
     await organization.delete()
