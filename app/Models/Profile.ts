@@ -3,17 +3,15 @@ import {
   BaseModel,
   BelongsTo,
   HasMany,
-  ManyToMany,
   beforeSave,
   belongsTo,
   column,
-  hasMany,
-  manyToMany,
+  hasMany
 } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 import Project from './Project'
-import User from './User'
 import Tender from './Tender'
+import User from './User'
 
 export default class Profile extends BaseModel {
   @column({ isPrimary: true })
