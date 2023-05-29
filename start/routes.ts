@@ -94,3 +94,5 @@ Route.group(() => {
     'emailVerified',
   ])
 }).prefix('/tenders/:tender')
+
+Route.post('templates/:template', 'TemplatesController.create')
