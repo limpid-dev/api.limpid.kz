@@ -95,4 +95,4 @@ Route.group(() => {
   ])
 }).prefix('/tenders/:tender')
 
-Route.post('templates/:template', 'TemplatesController.create')
+Route.post('templates/:template', 'TemplatesController.store')

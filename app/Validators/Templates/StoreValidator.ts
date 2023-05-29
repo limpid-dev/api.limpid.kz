@@ -24,21 +24,21 @@ export default class StoreValidator {
    *    ```
    */
   public schema = schema.create({
-    nameOfOrganisation: schema.string({ trim: true }, [rules.minLength(1)]),
-    customerIdNumber: schema.string({ trim: true }, [rules.minLength(1)]),
-    nameOfServiceToBePurchased: schema.string({ trim: true }, [rules.minLength(1)]),
-    serviceDeliveryTime: schema.string({ trim: true }, [rules.minLength(1)]),
-    placeOfServiceRendering: schema.string({ trim: true }, [rules.minLength(1)]),
-    amountOfAdvancePayment: schema.string({ trim: true }, [rules.minLength(1)]),
-    paymentTerms: schema.string({ trim: true }, [rules.minLength(1)]),
-    guaranteePeriod: schema.string({ trim: true }, [rules.minLength(1)]),
-    detailedDescriptionOfServiceRequirements: schema.string({ trim: true }, [rules.minLength(1)]),
-    inputData: schema.string({ trim: true }, [rules.minLength(1)]),
-    qualificationRequirementsForProspectiveVendors: schema.string.optional({ trim: true }, [
+    name_of_organisation: schema.string({ trim: true }, [rules.minLength(1)]),
+    customer_id_number: schema.string({ trim: true }, [rules.minLength(1)]),
+    name_of_service_to_be_purchased: schema.string({ trim: true }, [rules.minLength(1)]),
+    service_delivery_time: schema.string({ trim: true }, [rules.minLength(1)]),
+    place_of_service_rendering: schema.string({ trim: true }, [rules.minLength(1)]),
+    amount_of_advance_payment: schema.string({ trim: true }, [rules.minLength(1)]),
+    payment_terms: schema.string({ trim: true }, [rules.minLength(1)]),
+    guarantee_period: schema.string({ trim: true }, [rules.minLength(1)]),
+    detailed_description_of_service_requirements: schema.string({ trim: true }, [rules.minLength(1)]),
+    input_data: schema.string({ trim: true }, [rules.minLength(1)]),
+    qualification_requirements_for_prospective_vendors: schema.string.optional({ trim: true }, [
       rules.minLength(1),
     ]),
-    performanceSecurity: schema.string.optional({ trim: true }, [rules.minLength(1)]),
-    specialContractConditions: schema.string.optional({ trim: true }, [rules.minLength(1)]),
+    performance_security: schema.string.optional({ trim: true }, [rules.minLength(1)]),
+    special_contract_conditions: schema.string.optional({ trim: true }, [rules.minLength(1)]),
   })
 
   /**

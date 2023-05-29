@@ -1,0 +1,46 @@
+<h1>Техзадание</h1>
+
+<em>Наименование организации:</em>
+<p>{{ name_of_organisation }}</p>
+
+<em>БИН/ИНН Заказчика:</em>
+<p>{{ customer_id_number }}</p>
+
+<em>Наименование закупаемой услуги:</em>
+<p>{{ name_of_service_to_be_purchased }}</p>
+
+<em>Срок оказания услуги:</em>
+<p>{{ service_delivery_time }}</p>
+
+<em>Место оказания услуги:</em>
+<p>{{ place_of_service_rendering }}</p>
+
+<em>Размер авансового платежа:</em>
+<p>{{ amount_of_advance_payment }}</p>
+
+<em>Условия оплаты: </em>
+<p>{{ payment_terms }}</p>
+
+<em>Гарантийный срок (в месяцах): </em>
+<p>{{ guarantee_period }}</p>
+
+<em>Подробное описание услуг и требований:</em>
+<p>{{ detailed_description_of_service_requirements }}</p>
+
+<em>Исходные данные:</em>
+<p>{{ input_data }}</p>
+
+@if(qualification_requirements_for_prospective_vendors)
+    <em>Квалификационные требования к Потенциальным поставщикам:</em>
+    <p>{{ qualification_requirements_for_prospective_vendors }}</p>
+@end
+
+@if(performance_security)
+    <em>Обеспечение исполнения договора:</em>
+    <p>{{ performance_security }}</p>
+@end
+
+@if(special_contract_conditions)
+    <em>Специальные условия договора:</em>
+    <p>{{ special_contract_conditions }}</p>
+@end
