@@ -58,6 +58,28 @@ export default class Profile extends BaseModel {
   @attachment({ preComputeUrl: true })
   public avatar: AttachmentContract | null
 
+  @column({
+    serialize(value, _attribute, model: Profile) {
+      if (model.isPersonal) {
+        return undefined
+      }
+
+      return value
+    },
+  })
+  public performance: string | null
+
+  @column({
+    serialize(value, _attribute, model: Profile) {
+      if (model.isPersonal) {
+        return undefined
+      }
+
+      return value
+    },
+  })
+  public legalStructure: string | null
+
   @hasMany(() => Tender)
   public tenders: HasMany<typeof Tender>
 

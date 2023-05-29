@@ -54,22 +54,9 @@ export default class TenderBidsController {
       })
     }
 
-    if (auth.user?.selectedOrganizationId === null) {
-      auth.user.load('profile')
-      const tenderBid = tender.related('bids').create({
-        price,
-        profileId: auth.user!.profile.id,
-      })
-      response.status(201)
-
-      return {
-        data: tenderBid,
-      }
-    }
-
     const tenderBid = tender.related('bids').create({
       price,
-      profileId: auth.user!.selectedOrganizationId,
+      profileId: auth.user!.selectedProfileId,
     })
     response.status(201)
 

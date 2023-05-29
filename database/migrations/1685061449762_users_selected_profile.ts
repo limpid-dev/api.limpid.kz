@@ -6,7 +6,7 @@ export default class extends BaseSchema {
   public async up() {
     this.schema.alterTable(this.tableName, (table) => {
       table
-        .integer('selected_organization_id')
+        .integer('selected_profile_id')
         .unsigned()
         .references('id')
         .inTable('profiles')
@@ -17,7 +17,7 @@ export default class extends BaseSchema {
 
   public async down() {
     this.schema.alterTable(this.tableName, (table) => {
-      table.dropForeign('selected_organization_id')
+      table.dropForeign('selected_profile_id')
     })
   }
 }

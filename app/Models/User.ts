@@ -3,27 +3,24 @@ import {
   BaseModel,
   HasMany,
   HasOne,
-  ManyToMany,
   beforeSave,
   column,
   hasMany,
   hasOne,
-  manyToMany,
 } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 import ApiToken from './ApiToken'
 import Profile from './Profile'
-import Organization from './Organization'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
   public id: number
 
   @column()
-  public selectedOrganizationId: number | null
+  public selectedProfileId: number
 
-  @hasOne(() => Organization)
-  public selectedOrganization: HasOne<typeof Organization>
+  @hasOne(() => Profile)
+  public selectedProfile: HasOne<typeof Profile>
 
   @column()
   public email: string
@@ -55,31 +52,8 @@ export default class User extends BaseModel {
   @hasMany(() => ApiToken)
   public apiTokens: HasMany<typeof ApiToken>
 
-  @hasOne(() => Profile, {
-    onQuery(query) {
-      query.where('isPersonal', true)
-    },
-  })
-  public profile: HasOne<typeof Profile>
-
-  @hasMany(() => Profile, {
-    onQuery(query) {
-      query.where('isPersonal', false)
-    },
-  })
-  public organizations: HasMany<typeof Organization>
-
-  @manyToMany(() => Profile, {
-    pivotTable: 'profile_user',
-    onQuery(query) {
-      query.where('isPersonal', false)
-    },
-    pivotTimestamps: {
-      createdAt: 'created_at',
-      updatedAt: false,
-    },
-  })
-  public organizationMemberships: ManyToMany<typeof Profile>
+  @hasMany(() => Profile)
+  public profiles: HasMany<typeof Profile>
 
   @beforeSave()
   public static async hashPassword(user: User) {

@@ -24,7 +24,7 @@ export default class TendersController {
       duration: duration,
     } = await request.validate(StoreValidator)
 
-    const tender = await auth.user!.selectedOrganization.related('tenders').create({
+    const tender = await auth.user!.selectedProfile.related('tenders').create({
       title,
       description,
       startingPrice,

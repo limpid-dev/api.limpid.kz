@@ -1,6 +1,6 @@
 import { Attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Organization from 'App/Models/Organization'
+import Profile from 'App/Models/Profile'
 import OrganizationPolicy from 'App/Policies/OrganizationPolicy'
 import IndexValidator from 'App/Validators/Organizations/IndexValidator'
 import StoreValidator from 'App/Validators/Organizations/StoreValidator'
@@ -16,7 +16,7 @@ export default class OrganizationsController {
       search,
     } = await request.validate(IndexValidator)
 
-    const organizationsQuery = Organization.query()
+    const organizationsQuery = Profile.query()
 
     organizationsQuery.where('isVisible', true)
     organizationsQuery.where('isPersonal', false)
@@ -75,7 +75,7 @@ export default class OrganizationsController {
 
     const avatarToSave = avatar ? Attachment.fromFile(avatar) : undefined
 
-    const organization = await auth.user!.related('organizations').create({
+    const organization = await auth.user!.related('profiles').create({
       displayName,
       description,
       location,
@@ -97,7 +97,7 @@ export default class OrganizationsController {
     }
   }
 
-  public async show({ bouncer }: HttpContextContract, organization: Organization) {
+  public async show({ bouncer }: HttpContextContract, organization: Profile) {
     const isAllowedToView = await bouncer.with('OrganizationPolicy').allows('view', organization)
 
     if (isAllowedToView) {
@@ -109,7 +109,7 @@ export default class OrganizationsController {
     }
   }
 
-  public async update({ request, bouncer }: HttpContextContract, organization: Organization) {
+  public async update({ request, bouncer }: HttpContextContract, organization: Profile) {
     await bouncer.with('OrganizationPolicy').authorize('update', organization)
 
     const {
@@ -152,7 +152,7 @@ export default class OrganizationsController {
     }
   }
 
-  public async destroy({ bouncer, response }: HttpContextContract, organization: Organization) {
+  public async destroy({ bouncer, response }: HttpContextContract, organization: Profile) {
     await bouncer.with('OrganizationPolicy').authorize('delete', organization)
 
     await organization.delete()
