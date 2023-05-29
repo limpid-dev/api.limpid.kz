@@ -6,7 +6,7 @@ import {
   beforeSave,
   belongsTo,
   column,
-  hasMany
+  hasMany,
 } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 import Project from './Project'

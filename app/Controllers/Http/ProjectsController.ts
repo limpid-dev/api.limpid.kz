@@ -30,11 +30,34 @@ export default class ProjectsController {
       profitability: profitability,
     } = await request.validate(StoreValidator)
 
-    if(auth.user?.selectedOrganizationId === null) {
-
+    if (auth.user?.selectedOrganizationId === null) {
       await auth.user.load('selectedOrganization')
 
-    const project = await auth.user!.selectedOrganization.related('projects').create({
+      const project = await auth.user!.selectedOrganization.related('projects').create({
+        title,
+        description,
+        location,
+        industry,
+        stage,
+        requiredMoneyAmount,
+        ownedMoneyAmount,
+        requiredIntellectualResources,
+        ownedIntellectualResources,
+        requiredMaterialResources,
+        ownedMaterialResources,
+        profitability,
+      })
+
+      response.status(201)
+
+      return {
+        data: project,
+      }
+    }
+
+    await auth.user!.load('profile')
+
+    const project = await auth.user!.profile.related('projects').create({
       title,
       description,
       location,
@@ -54,33 +77,6 @@ export default class ProjectsController {
     return {
       data: project,
     }
-
-  }
-
-  await auth.user!.load('profile')
-
-
-  const project = await auth.user!.profile.related('projects').create({
-    title,
-    description,
-    location,
-    industry,
-    stage,
-    requiredMoneyAmount,
-    ownedMoneyAmount,
-    requiredIntellectualResources,
-    ownedIntellectualResources,
-    requiredMaterialResources,
-    ownedMaterialResources,
-    profitability,
-  })
-
-  response.status(201)
-
-  return {
-    data: project,
-  }
-
   }
 
   @bind()
