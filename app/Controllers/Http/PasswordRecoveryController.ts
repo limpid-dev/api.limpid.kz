@@ -8,7 +8,7 @@ import StoreValidator from 'App/Validators/PasswordRecovery/StoreValidator'
 import { DateTime } from 'luxon'
 
 export default class PasswordRecoveryController {
-  public async store({ request, auth, response }: HttpContextContract) {
+  public async store({ request, response }: HttpContextContract) {
     const { email } = await request.validate(StoreValidator)
 
     const user = await User.findByOrFail('email', email)
@@ -19,22 +19,26 @@ export default class PasswordRecoveryController {
       expiresAt: DateTime.now().plus({ minutes: 15 }),
     })
 
-    await new RecoverPassword(auth.user!, token).sendLater()
+    await new RecoverPassword(user, token).sendLater()
 
     response.status(201)
   }
 
-  public async update({ request, auth }: HttpContextContract) {
+  public async update({ request }: HttpContextContract) {
     const { token, password } = await request.validate(UpdateValidator)
 
-    const isTokenValid = await ApiToken.isValid(token, 'PASSWORD_RECOVERY')
+    const apiToken = await ApiToken.isValid(token, 'PASSWORD_RECOVERY')
 
-    if (isTokenValid) {
-      auth.user?.merge({
+    if (apiToken) {
+      await apiToken.load('user')
+
+      apiToken.user.merge({
         password,
       })
 
-      await auth.user?.save()
+      await apiToken.user.save()
+
+      await apiToken.delete()
     } else {
       throw new InvalidTokenException('Password Recovery Token')
     }

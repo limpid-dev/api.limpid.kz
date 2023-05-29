@@ -69,8 +69,6 @@ export default class ApiToken extends BaseModel {
       .andWhere('expiresAt', '>', DateTime.now().toSQL()!)
       .first()
 
-    await apiToken?.delete()
-
-    return !!apiToken
+    return apiToken ?? null
   }
 }
