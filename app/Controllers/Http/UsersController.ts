@@ -39,6 +39,7 @@ export default class UsersController {
 
   @bind()
   public async show({}: HttpContextContract, user: User) {
+    await user.load('selectedProfile')
     return {
       data: user,
     }
