@@ -30,6 +30,8 @@ export default class ProjectsController {
       profitability: profitability,
     } = await request.validate(StoreValidator)
 
+    await auth.user!.load('selectedProfile')
+
     const project = await auth.user!.selectedProfile.related('projects').create({
       title,
       description,
