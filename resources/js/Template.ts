@@ -1,5 +1,5 @@
 export default function createTemplate(payload: any) {
-        let htmlContent: string = `
+  let htmlContent: string = `
     
         <html>
         <head>
@@ -39,31 +39,31 @@ export default function createTemplate(payload: any) {
         <p>${payload.inputData}</p>
     
         `
-        if (payload.qualificationRequirementsForProspectiveVendors) {
-          htmlContent += `
+  if (payload.qualificationRequirementsForProspectiveVendors) {
+    htmlContent += `
             <em>Квалификационные требования к Потенциальным поставщикам:</em>
             <p>${payload.qualificationRequirementsForProspectiveVendors}</p>
           `
-        }
-    
-        if (payload.performanceSecurity) {
-          htmlContent += `
+  }
+
+  if (payload.performanceSecurity) {
+    htmlContent += `
             <em>Обеспечение исполнения договора:</em>
             <p>${payload.performanceSecurity}</p>
           `
-        }
-    
-        if(payload.specialContractConditions) {
-          htmlContent += `
+  }
+
+  if (payload.specialContractConditions) {
+    htmlContent += `
             <em>Специальные условия договора:</em>
             <p>${payload.specialContractConditions}</p>
           `
-        }
-    
-        htmlContent += `
+  }
+
+  htmlContent += `
         </body>
     </html>
     `
-    
-        return htmlContent
+
+  return htmlContent
 }
