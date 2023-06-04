@@ -12,5 +12,5 @@ RUN node ace build --production
 FROM base AS production
 COPY package.json package-lock.json ./
 RUN npm ci --omit=dev
-COPY --from=build /api/build .
+COPY --from=build /api/build openapi.yaml .
 CMD [ "node", "server.js" ]
