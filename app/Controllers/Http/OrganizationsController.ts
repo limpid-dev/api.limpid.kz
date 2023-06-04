@@ -61,6 +61,8 @@ export default class OrganizationsController {
       })
     )
 
+    organizations.queryString(request.qs())
+
     return {
       meta: organizations.getMeta(),
       data: formattedOrganizations,

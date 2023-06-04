@@ -11,6 +11,7 @@ tags:
   - name: Session
   - name: Email verification
   - name: Password recovery
+  - name: Profiles
 security:
   - bearerAuth: []
 paths:
@@ -26,11 +27,23 @@ paths:
               required:
                 - email
                 - password
+                - first_name
+                - last_name
+                - patronymic
+                - born_at
               type: object
               properties:
                 email:
                   type: string
                 password:
+                  type: string
+                first_name:
+                  type: string
+                last_name:
+                  type: string
+                patronymic:
+                  type: string
+                born_at:
                   type: string
       responses:
         '201':
@@ -210,6 +223,115 @@ paths:
                 properties:
                   data:
                     $ref: '#/components/schemas/User'
+  /profiles:
+    get:
+      tags:
+        - Profiles
+      parameters:
+        - in: query
+          name: page
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: per_page
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: user_id
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: industry
+          required: false
+          schema:
+            type: string
+        - in: query
+          name: search
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: User's profiles
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    type: object
+                    properties:
+                      total:
+                        type: integer
+                      per_page:
+                        type: integer
+                      current_page:
+                        type: integer
+                      last_page:
+                        type: integer
+                      first_page:
+                        type: integer
+                      first_page_url:
+                        type: string
+                      last_page_url:
+                        type: string
+                      next_page_url:
+                        type: string
+                      previous_page_url:
+                        type: string
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Profile'
+    post:
+      tags:
+        - Profiles
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - display_name
+                - description
+                - location
+                - industry
+                - tin
+                - is_visible
+              properties:
+                display_name:
+                  type: string
+                description:
+                  type: string
+                location:
+                  type: string
+                industry:
+                  type: string
+                owned_intellectual_resources:
+                  type: string
+                owned_material_resources:
+                  type: string
+                tin:
+                  type: string
+                is_visible:
+                  type: boolean
+                avatar:
+                  type: string
+                  format: binary
+      responses:
+        '201':
+          description: Profile is created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Profile'
 components:
   securitySchemes:
     bearerAuth:
@@ -232,6 +354,41 @@ components:
         born_at:
           type: string
         email_verified_at:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+        updated_at:
+          type: string
+    Profile:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        display_name:
+          type: string
+        description:
+          type: string
+        location:
+          type: string
+        industry:
+          type: string
+        owned_intellectual_resources:
+          type: string
+          nullable: true
+        owned_material_resources:
+          type: string
+          nullable: true
+        tin:
+          type: string
+        is_visible:
+          type: boolean
+        avatar:
+          type: string
+          nullable: true
+        tin_verified_at:
           type: string
           nullable: true
         created_at:

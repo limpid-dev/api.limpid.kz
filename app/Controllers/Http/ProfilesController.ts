@@ -59,6 +59,8 @@ export default class ProfilesController {
       })
     )
 
+    profiles.queryString(request.qs())
+
     return {
       meta: profiles.getMeta(),
       data: formattedOrganizations,

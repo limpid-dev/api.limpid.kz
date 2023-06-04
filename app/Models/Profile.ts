@@ -32,7 +32,7 @@ export default class Profile extends BaseModel {
   public ownedMaterialResources: string | null
 
   @column()
-  public tin: string | null
+  public tin: string
 
   @column()
   public performance: string | null
