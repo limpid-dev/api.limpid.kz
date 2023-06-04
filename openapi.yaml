@@ -332,6 +332,83 @@ paths:
                 properties:
                   data:
                     $ref: '#/components/schemas/Profile'
+  /profiles/{profile_id}:
+    get:
+      tags:
+        - Profiles
+      parameters:
+        - in: path
+          name: profile_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Profile data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Profile'
+    patch:
+      tags:
+        - Profiles
+      parameters:
+        - in: path
+          name: profile_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                display_name:
+                  type: string
+                description:
+                  type: string
+                location:
+                  type: string
+                industry:
+                  type: string
+                owned_intellectual_resources:
+                  type: string
+                owned_material_resources:
+                  type: string
+                tin:
+                  type: string
+                is_visible:
+                  type: boolean
+                avatar:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Updated profile's data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Profile'
+    delete:
+      tags:
+        - Profiles
+      parameters:
+        - in: path
+          name: profile_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '204':
+          description: Profile is deleted
 components:
   securitySchemes:
     bearerAuth:
