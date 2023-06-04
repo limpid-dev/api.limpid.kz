@@ -39,7 +39,7 @@ export default class UpdateValidator {
       rules.minLength(1),
       rules.maxLength(2048),
     ]),
-    tin: schema.string.optional({ trim: true }, [rules.minLength(1), rules.regex(/^\d+$/)]),
+    tin: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
     performance: schema.string.optional({ trim: true }, [
       rules.minLength(1),
       rules.maxLength(2048),
@@ -51,7 +51,7 @@ export default class UpdateValidator {
     is_visible: schema.boolean.optional(),
     avatar: schema.file.optional({
       size: '1mb',
-      extnames: ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'],
+      extnames: ['jpg', 'jpeg', 'png', 'webp'],
     }),
   })
 

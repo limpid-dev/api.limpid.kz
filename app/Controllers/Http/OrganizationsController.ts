@@ -1,10 +1,11 @@
-import { Attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import { Attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 import Profile from 'App/Models/Profile'
-import OrganizationPolicy from 'App/Policies/OrganizationPolicy'
 import IndexValidator from 'App/Validators/Organizations/IndexValidator'
-import StoreValidator from 'App/Validators/Organizations/StoreValidator'
+import { bind } from '@adonisjs/route-model-binding'
+import OrganizationsPolicy from 'App/Policies/OrganizationsPolicy'
 import UpdateValidator from 'App/Validators/Organizations/UpdateValidator'
+import StoreValidator from 'App/Validators/Organizations/StoreValidator'
 
 export default class OrganizationsController {
   public async index({ request, bouncer }: HttpContextContract) {
@@ -18,43 +19,51 @@ export default class OrganizationsController {
 
     const organizationsQuery = Profile.query()
 
-    organizationsQuery.where('isVisible', true)
     organizationsQuery.where('isPersonal', false)
+    organizationsQuery.where('isVisible', true)
 
-    organizationsQuery.if(userId, (query) => {
-      query.andWhere('userId', userId!)
-    })
+    if (userId) {
+      organizationsQuery.where('userId', userId)
+    }
 
-    organizationsQuery.if(industry, (query) => {
-      query.andWhereIn('industry', industry!)
-    })
+    if (industry) {
+      organizationsQuery.whereIn('industry', industry)
+    }
 
-    organizationsQuery.if(search, (query) => {
-      query.andWhere((query) => {
+    if (search) {
+      organizationsQuery.andWhere((query) => {
         query.whereLike('displayName', `%${search}%`)
         query.orWhereILike('location', `%${search}%`)
+        query.orWhereILike('displayName', `%${search}%`)
+        query.orWhereILike('description', `%${search}%`)
+        query.orWhereILike('location', `%${search}%`)
+        query.orWhereILike('ownedIntellectualResources', `%${search}%`)
+        query.orWhereILike('ownedMaterialResources', `%${search}%`)
+        query.orWhereILike('performance', `%${search}%`)
       })
-    })
+    }
 
-    const profiles = await organizationsQuery.paginate(page, perPage)
+    const organizations = await organizationsQuery.paginate(page, perPage)
 
-    const allowedToViewOrganizations = await Promise.all(
-      profiles.map(async (profile) => {
-        const isAllowedToView = await bouncer.with('OrganizationPolicy').allows('view', profile)
+    const formattedOrganizations = await Promise.all(
+      organizations.map(async (organization) => {
+        const isAllowedToView = await bouncer
+          .with('OrganizationsPolicy')
+          .allows('view', organization)
 
         if (isAllowedToView) {
           return {
-            profile,
+            organization,
           }
         } else {
-          return OrganizationPolicy.stripRestrictedViewFieldsFromOrganization(profile)
+          return OrganizationsPolicy.stripRestrictedViewFieldsFromOrganization(organization)
         }
       })
     )
 
     return {
-      meta: profiles.getMeta(),
-      data: allowedToViewOrganizations,
+      meta: organizations.getMeta(),
+      data: formattedOrganizations,
     }
   }
 
@@ -73,9 +82,9 @@ export default class OrganizationsController {
       avatar,
     } = await request.validate(StoreValidator)
 
-    const avatarToSave = avatar ? Attachment.fromFile(avatar) : undefined
+    const organization = new Profile()
 
-    const organization = await auth.user!.related('profiles').create({
+    organization.merge({
       displayName,
       description,
       location,
@@ -86,9 +95,17 @@ export default class OrganizationsController {
       performance,
       legalStructure,
       isVisible,
-      avatar: avatarToSave,
       isPersonal: false,
+      userId: auth.user!.id,
     })
+
+    if (avatar) {
+      organization.merge({
+        avatar: Attachment.fromFile(avatar),
+      })
+    }
+
+    await organization.save()
 
     response.status(201)
 
@@ -97,20 +114,22 @@ export default class OrganizationsController {
     }
   }
 
+  @bind()
   public async show({ bouncer }: HttpContextContract, organization: Profile) {
-    const isAllowedToView = await bouncer.with('OrganizationPolicy').allows('view', organization)
+    const isAllowedToView = await bouncer.with('OrganizationsPolicy').allows('view', organization)
 
     if (isAllowedToView) {
       return {
         data: organization,
       }
     } else {
-      return { data: OrganizationPolicy.stripRestrictedViewFieldsFromOrganization(organization) }
+      return { data: OrganizationsPolicy.stripRestrictedViewFieldsFromOrganization(organization) }
     }
   }
 
+  @bind()
   public async update({ request, bouncer }: HttpContextContract, organization: Profile) {
-    await bouncer.with('OrganizationPolicy').authorize('update', organization)
+    await bouncer.with('OrganizationsPolicy').authorize('update', organization)
 
     const {
       display_name: displayName,
@@ -152,8 +171,9 @@ export default class OrganizationsController {
     }
   }
 
+  @bind()
   public async destroy({ bouncer, response }: HttpContextContract, organization: Profile) {
-    await bouncer.with('OrganizationPolicy').authorize('delete', organization)
+    await bouncer.with('OrganizationsPolicy').authorize('delete', organization)
 
     await organization.delete()
 

@@ -49,7 +49,7 @@ const databaseConfig: DatabaseConfig = {
       },
       useNullAsDefault: true,
       healthCheck: false,
-      debug: true,
+      debug: false,
     },
 
     /*

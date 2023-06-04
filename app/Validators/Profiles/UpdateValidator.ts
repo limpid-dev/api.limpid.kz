@@ -1,7 +1,7 @@
 import { schema, rules, CustomMessages } from '@ioc:Adonis/Core/Validator'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 
-export default class UpdatePersonalValidator {
+export default class UpdateValidator {
   constructor(protected ctx: HttpContextContract) {}
 
   /*
@@ -39,11 +39,11 @@ export default class UpdatePersonalValidator {
       rules.minLength(1),
       rules.maxLength(2048),
     ]),
-    tin: schema.string.optional({ trim: true }, [rules.minLength(1), rules.regex(/^\d+$/)]),
+    tin: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
     is_visible: schema.boolean.optional(),
     avatar: schema.file.optional({
       size: '1mb',
-      extnames: ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'],
+      extnames: ['jpg', 'jpeg', 'png', 'webp'],
     }),
   })
 

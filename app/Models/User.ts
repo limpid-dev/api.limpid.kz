@@ -1,15 +1,6 @@
-import Hash from '@ioc:Adonis/Core/Hash'
-import {
-  BaseModel,
-  HasMany,
-  HasOne,
-  beforeSave,
-  column,
-  hasMany,
-  hasOne,
-} from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
-import ApiToken from './ApiToken'
+import Hash from '@ioc:Adonis/Core/Hash'
+import { column, beforeSave, BaseModel, HasOne, hasOne } from '@ioc:Adonis/Lucid/Orm'
 import Profile from './Profile'
 
 export default class User extends BaseModel {
@@ -17,16 +8,19 @@ export default class User extends BaseModel {
   public id: number
 
   @column()
-  public selectedProfileId: number
+  public email: string
+
+  @column()
+  public selectedProfileId: number | null
 
   @hasOne(() => Profile)
   public selectedProfile: HasOne<typeof Profile>
 
-  @column()
-  public email: string
-
   @column({ serializeAs: null })
   public password: string
+
+  @column({ serializeAs: null })
+  public secret: string
 
   @column()
   public firstName: string
@@ -35,13 +29,13 @@ export default class User extends BaseModel {
   public lastName: string
 
   @column()
-  public patronymic: string | null
+  public patronymic: string
 
   @column.dateTime()
   public emailVerifiedAt: DateTime | null
 
   @column.date()
-  public bornAt: DateTime | null
+  public bornAt: DateTime
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
@@ -49,23 +43,10 @@ export default class User extends BaseModel {
   @column.dateTime({ autoCreate: true, autoUpdate: true })
   public updatedAt: DateTime
 
-  @hasMany(() => ApiToken)
-  public apiTokens: HasMany<typeof ApiToken>
-
-  @hasMany(() => Profile)
-  public profiles: HasMany<typeof Profile>
-
   @beforeSave()
   public static async hashPassword(user: User) {
     if (user.$dirty.password) {
       user.password = await Hash.make(user.password)
-    }
-  }
-
-  @beforeSave()
-  public static async unverifyEmail(user: User) {
-    if (user.$dirty.email) {
-      user.emailVerifiedAt = null
     }
   }
 }

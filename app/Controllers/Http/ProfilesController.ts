@@ -1,10 +1,11 @@
-import { bind } from '@adonisjs/route-model-binding'
-import { Attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Profile from 'App/Models/Profile'
-import ProfilePolicy from 'App/Policies/ProfilePolicy'
+import ProfilesPolicy from 'App/Policies/ProfilesPolicy'
 import IndexValidator from 'App/Validators/Profiles/IndexValidator'
+import StoreValidator from 'App/Validators/Profiles/StoreValidator'
 import UpdateValidator from 'App/Validators/Profiles/UpdateValidator'
+import { bind } from '@adonisjs/route-model-binding'
+import { Attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 
 export default class ProfilesController {
   public async index({ request, bouncer }: HttpContextContract) {
@@ -18,62 +19,111 @@ export default class ProfilesController {
 
     const profilesQuery = Profile.query()
 
-    profilesQuery.where('isVisible', true)
     profilesQuery.where('isPersonal', true)
+    profilesQuery.where('isVisible', true)
 
-    profilesQuery.if(userId, (query) => {
-      query.andWhere('userId', userId!)
-    })
+    if (userId) {
+      profilesQuery.where('userId', userId)
+    }
 
-    profilesQuery.if(industry, (query) => {
-      query.andWhereIn('industry', industry!)
-    })
+    if (industry) {
+      profilesQuery.whereIn('industry', industry)
+    }
 
-    profilesQuery.if(search, (query) => {
-      query.andWhere((query) => {
+    if (search) {
+      profilesQuery.andWhere((query) => {
         query.whereLike('displayName', `%${search}%`)
         query.orWhereILike('location', `%${search}%`)
+        query.orWhereILike('displayName', `%${search}%`)
+        query.orWhereILike('description', `%${search}%`)
+        query.orWhereILike('location', `%${search}%`)
+        query.orWhereILike('ownedIntellectualResources', `%${search}%`)
+        query.orWhereILike('ownedMaterialResources', `%${search}%`)
+        query.orWhereILike('performance', `%${search}%`)
       })
-    })
+    }
 
     const profiles = await profilesQuery.paginate(page, perPage)
 
-    const allowedToViewProfiles = await Promise.all(
+    const formattedOrganizations = await Promise.all(
       profiles.map(async (profile) => {
-        const isAllowedToView = await bouncer.with('ProfilePolicy').allows('view', profile)
+        const isAllowedToView = await bouncer.with('ProfilesPolicy').allows('view', profile)
 
         if (isAllowedToView) {
           return {
-            profile,
+            organization: profile,
           }
         } else {
-          return ProfilePolicy.stripRestrictedViewFieldsFromProfile(profile)
+          return ProfilesPolicy.stripRestrictedViewFieldsFromProfile(profile)
         }
       })
     )
 
     return {
       meta: profiles.getMeta(),
-      data: allowedToViewProfiles,
+      data: formattedOrganizations,
+    }
+  }
+
+  public async store({ request, auth, response }: HttpContextContract) {
+    const {
+      display_name: displayName,
+      description,
+      location,
+      industry,
+      owned_intellectual_resources: ownedIntellectualResources,
+      owned_material_resources: ownedMaterialResources,
+      tin,
+      is_visible: isVisible,
+      avatar,
+    } = await request.validate(StoreValidator)
+
+    const profile = new Profile()
+
+    profile.merge({
+      displayName,
+      description,
+      location,
+      industry,
+      ownedIntellectualResources,
+      ownedMaterialResources,
+      tin,
+      isVisible,
+      isPersonal: true,
+      userId: auth.user!.id,
+    })
+
+    if (avatar) {
+      profile.merge({
+        avatar: Attachment.fromFile(avatar),
+      })
+    }
+
+    await profile.save()
+
+    response.status(201)
+
+    return {
+      data: profile,
     }
   }
 
   @bind()
   public async show({ bouncer }: HttpContextContract, profile: Profile) {
-    const isAllowedToView = await bouncer.with('ProfilePolicy').allows('view', profile)
+    const isAllowedToView = await bouncer.with('ProfilesPolicy').allows('view', profile)
 
     if (isAllowedToView) {
       return {
         data: profile,
       }
     } else {
-      return { data: ProfilePolicy.stripRestrictedViewFieldsFromProfile(profile) }
+      return { data: ProfilesPolicy.stripRestrictedViewFieldsFromProfile(profile) }
     }
   }
 
   @bind()
   public async update({ request, bouncer }: HttpContextContract, profile: Profile) {
-    await bouncer.with('ProfilePolicy').authorize('update', profile)
+    await bouncer.with('ProfilesPolicy').authorize('update', profile)
 
     const {
       display_name: displayName,
@@ -109,5 +159,14 @@ export default class ProfilesController {
     return {
       data: profile,
     }
+  }
+
+  @bind()
+  public async destroy({ bouncer, response }: HttpContextContract, profile: Profile) {
+    await bouncer.with('ProfilesPolicy').authorize('delete', profile)
+
+    await profile.delete()
+
+    response.status(204)
   }
 }

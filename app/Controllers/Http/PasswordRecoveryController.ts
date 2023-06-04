@@ -1,11 +1,10 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import InvalidTokenException from 'App/Exceptions/InvalidTokenException'
-import RecoverPassword from 'App/Mailers/RecoverPassword'
-import ApiToken from 'App/Models/ApiToken'
+import PasswordRecovery from 'App/Mailers/PasswordRecovery'
 import User from 'App/Models/User'
 import UpdateValidator from 'App/Validators/PasswordRecovery/UpdateValidator'
 import StoreValidator from 'App/Validators/PasswordRecovery/StoreValidator'
-import { DateTime } from 'luxon'
+import { TOTP } from 'otpauth'
 
 export default class PasswordRecoveryController {
   public async store({ request, response }: HttpContextContract) {
@@ -13,34 +12,34 @@ export default class PasswordRecoveryController {
 
     const user = await User.findByOrFail('email', email)
 
-    const token = await ApiToken.generate(user, {
-      type: 'PASSWORD_RECOVERY',
-      size: 8,
-      expiresAt: DateTime.now().plus({ minutes: 15 }),
+    const totp = new TOTP({
+      secret: user.secret,
     })
 
-    await new RecoverPassword(user, token).sendLater()
+    const token = totp.generate()
+
+    await new PasswordRecovery(user, token).sendLater()
 
     response.status(201)
   }
 
-  public async update({ request }: HttpContextContract) {
-    const { token, password } = await request.validate(UpdateValidator)
+  public async update({ request, response }: HttpContextContract) {
+    const { email, password, token } = await request.validate(UpdateValidator)
 
-    const apiToken = await ApiToken.isValid(token, 'PASSWORD_RECOVERY')
+    const user = await User.findByOrFail('email', email)
 
-    if (apiToken) {
-      await apiToken.load('user')
+    const totp = new TOTP({
+      secret: user.secret,
+    })
 
-      apiToken.user.merge({
-        password,
-      })
+    const isValid = totp.validate({ token }) !== null
 
-      await apiToken.user.save()
-
-      await apiToken.delete()
+    if (isValid) {
+      user.merge({ password })
+      await user.save()
+      response.status(204)
     } else {
-      throw new InvalidTokenException('Password Recovery Token')
+      throw new InvalidTokenException()
     }
   }
 }

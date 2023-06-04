@@ -1,53 +1,10 @@
-import { bind } from '@adonisjs/route-model-binding'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import User from 'App/Models/User'
-import IndexValidator from 'App/Validators/Users/IndexValidator'
 import StoreValidator from 'App/Validators/Users/StoreValidator'
-import UpdateValidator from 'App/Validators/Users/UpdateValidator'
+import { Secret } from 'otpauth'
 
 export default class UsersController {
-  public async index({ request }: HttpContextContract) {
-    const { page, per_page: perPage } = await request.validate(IndexValidator)
-
-    const users = await User.query().paginate(page, perPage)
-
-    return users
-  }
-
   public async store({ request, response }: HttpContextContract) {
-    const {
-      email,
-      password,
-      first_name: firstName,
-      last_name: lastName,
-    } = await request.validate(StoreValidator)
-
-    const user = await User.updateOrCreate({ email }, { email, password, firstName, lastName })
-
-    await user.related('profiles').create({
-      displayName: `${user.firstName} ${user.lastName}`,
-      isPersonal: true,
-      isVisible: true,
-    })
-
-    response.status(201)
-
-    return {
-      data: user,
-    }
-  }
-
-  @bind()
-  public async show({}: HttpContextContract, user: User) {
-    await user.load('selectedProfile')
-    return {
-      data: user,
-    }
-  }
-
-  @bind()
-  public async update({ request, bouncer }: HttpContextContract, user: User) {
-    await bouncer.with('UserPolicy').authorize('update', user)
     const {
       email,
       password,
@@ -55,20 +12,21 @@ export default class UsersController {
       last_name: lastName,
       patronymic,
       born_at: bornAt,
-      selected_profile_id: selectedProfileId,
-    } = await request.validate(UpdateValidator)
+    } = await request.validate(StoreValidator)
 
-    user.merge({
+    const secret = new Secret({ size: 64 })
+
+    const user = await User.create({
       email,
       password,
+      secret: secret.base32,
       firstName,
       lastName,
-      bornAt,
       patronymic,
-      selectedProfileId,
+      bornAt,
     })
 
-    await user.save()
+    response.status(201)
 
     return {
       data: user,

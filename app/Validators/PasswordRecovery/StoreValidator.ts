@@ -24,7 +24,7 @@ export default class StoreValidator {
    *    ```
    */
   public schema = schema.create({
-    email: schema.string({ trim: true }, [
+    email: schema.string({}, [
       rules.email(),
       rules.exists({
         table: 'users',

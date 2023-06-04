@@ -16,13 +16,13 @@
       "@adonisjs/core",
       "@adonisjs/repl",
       "@japa/preset-adonis/build/adonis-typings",
-      "@adonisjs/lucid",
-      "@adonisjs/view",
       "@adonisjs/auth",
-      "@adonisjs/route-model-binding/build/adonis-typings",
-      "@adonisjs/bouncer",
+      "@adonisjs/lucid",
       "@adonisjs/mail",
-      "@adonisjs/attachment-lite"
+      "@adonisjs/view",
+      "@adonisjs/attachment-lite",
+      "@adonisjs/route-model-binding/build/adonis-typings",
+      "@adonisjs/bouncer"
     ]
   }
 }

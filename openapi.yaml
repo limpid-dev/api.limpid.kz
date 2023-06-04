@@ -1,0 +1,236 @@
+openapi: 3.1.0
+info:
+  title: api.limpid.kz
+  version: 1.0.0
+servers:
+  - url: 'http://127.0.0.1:3333'
+  - url: 'https://api.limpid.kz'
+tags:
+  - name: User
+  - name: Users
+  - name: Session
+  - name: Email verification
+  - name: Password recovery
+security:
+  - bearerAuth: []
+paths:
+  /users:
+    post:
+      tags:
+        - Users
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              required:
+                - email
+                - password
+              type: object
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '201':
+          description: User is created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/User'
+  /session:
+    post:
+      tags:
+        - Session
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '201':
+          description: User is logged in
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: object
+                    properties:
+                      type:
+                        type: string
+                      token:
+                        type: string
+                      expires_at:
+                        type: string
+
+    delete:
+      tags:
+        - Session
+      responses:
+        '204':
+          description: User is logged out
+  /email-verification:
+    post:
+      tags:
+        - Email verification
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+                  description: User email
+      responses:
+        '201':
+          description: User email verification mail send
+    patch:
+      tags:
+        - Email verification
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - email
+                - token
+              properties:
+                email:
+                  type: string
+                token:
+                  type: string
+      responses:
+        '204':
+          description: User email verified
+  /password-recovery:
+    post:
+      tags:
+        - Password recovery
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - email
+              properties:
+                email:
+                  type: string
+      responses:
+        '201':
+          description: Password recovery mail send
+    patch:
+      tags:
+        - Password recovery
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+                - token
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+                token:
+                  type: string
+
+      responses:
+        '204':
+          description: User's password is changed
+  /user:
+    get:
+      tags:
+        - User
+      responses:
+        '200':
+          description: User data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/User'
+    patch:
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - email
+                - password
+              properties:
+                email:
+                  type: string
+                password:
+                  type: string
+      responses:
+        '200':
+          description: Updated user's data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/User'
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+  schemas:
+    User:
+      type: object
+      properties:
+        id:
+          type: integer
+        email:
+          type: string
+        first_name:
+          type: string
+        last_name:
+          type: string
+        patronymic:
+          type: string
+        born_at:
+          type: string
+        email_verified_at:
+          type: string
+          nullable: true
+        created_at:
+          type: string
+        updated_at:
+          type: string

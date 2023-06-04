@@ -4,9 +4,9 @@ WORKDIR /api
 FROM base AS dependencies
 COPY package.json package-lock.json ./
 RUN npm ci
-COPY . .
 
 FROM dependencies AS build
+COPY . .
 RUN node ace build --production
 
 FROM base AS production

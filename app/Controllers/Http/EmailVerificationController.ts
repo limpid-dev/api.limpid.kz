@@ -1,38 +1,46 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import InvalidTokenException from 'App/Exceptions/InvalidTokenException'
-import VerifyEmail from 'App/Mailers/VerifyEmail'
-import ApiToken from 'App/Models/ApiToken'
+import User from 'App/Models/User'
+import StoreValidator from 'App/Validators/EmailVerification/StoreValidator'
+import { TOTP } from 'otpauth'
+import EmailVerification from 'App/Mailers/EmailVerification'
 import UpdateValidator from 'App/Validators/EmailVerification/UpdateValidator'
 import { DateTime } from 'luxon'
+import InvalidTokenException from 'App/Exceptions/InvalidTokenException'
 
 export default class EmailVerificationController {
-  public async store({ bouncer, auth, response }: HttpContextContract) {
-    await bouncer.with('VerificationPolicy').authorize('create')
+  public async store({ request, response }: HttpContextContract) {
+    const { email } = await request.validate(StoreValidator)
 
-    const token = await ApiToken.generate(auth.user!, {
-      type: 'EMAIL_VERIFICATION',
-      size: 8,
-      expiresAt: DateTime.now().plus({ minutes: 15 }),
+    const user = await User.findByOrFail('email', email)
+
+    const totp = new TOTP({
+      secret: user.secret,
     })
 
-    await new VerifyEmail(auth.user!, token).sendLater()
+    const token = totp.generate()
+
+    await new EmailVerification(user, token).sendLater()
 
     response.status(201)
   }
 
-  public async update({ request, auth }: HttpContextContract) {
-    const { token } = await request.validate(UpdateValidator)
+  public async update({ request, response }: HttpContextContract) {
+    const { email, token } = await request.validate(UpdateValidator)
 
-    const isTokenValid = await ApiToken.isValid(token, 'EMAIL_VERIFICATION')
+    const user = await User.findByOrFail('email', email)
 
-    if (isTokenValid) {
-      auth.user?.merge({
-        emailVerifiedAt: DateTime.now(),
-      })
+    const totp = new TOTP({
+      secret: user.secret,
+    })
 
-      await auth.user?.save()
+    const isValid = totp.validate({ token }) !== null
+
+    if (isValid) {
+      user.merge({ emailVerifiedAt: DateTime.now() })
+      await user.save()
+      response.status(204)
     } else {
-      throw new InvalidTokenException('Email Verification Token')
+      throw new InvalidTokenException()
     }
   }
 }

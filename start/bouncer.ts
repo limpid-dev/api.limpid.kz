@@ -55,11 +55,7 @@ export const { actions } = Bouncer
 |****************************************************************
 */
 export const { policies } = Bouncer.registerPolicies({
-  UserPolicy: () => import('App/Policies/UserPolicy'),
-  VerificationPolicy: () => import('App/Policies/VerificationPolicy'),
-  ProfilePolicy: () => import('App/Policies/ProfilePolicy'),
-  OrganizationPolicy: () => import('App/Policies/OrganizationPolicy'),
-  ProjectPolicy: () => import('App/Policies/ProjectPolicy'),
-  TenderPolicy: () => import('App/Policies/TenderPolicy'),
-  TenderBidPolicy: () => import('App/Policies/TenderBidPolicy'),
+  OrganizationsPolicy: () => import('App/Policies/OrganizationsPolicy'),
+  ProfilesPolicy: () => import('App/Policies/ProfilesPolicy'),
+  ProfileSubResourcePolicy: () => import('App/Policies/ProfileSubResourcePolicy'),
 })

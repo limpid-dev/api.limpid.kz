@@ -14,8 +14,8 @@ import { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 |
 */
 export default class InvalidTokenException extends Exception {
-  constructor(name: string) {
-    super(`${name} is invalid`, 422, 'E_INVALID_TOKEN')
+  constructor() {
+    super(`Invalid token Exception`, 422, 'E_INVALID_TOKEN')
   }
 
   public async handle(error: this, ctx: HttpContextContract) {

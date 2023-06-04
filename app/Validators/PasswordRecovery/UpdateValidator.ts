@@ -24,10 +24,18 @@ export default class UpdateValidator {
    *    ```
    */
   public schema = schema.create({
-    token: schema.string({
-      trim: true,
-    }),
-    password: schema.string({}, [rules.minLength(8), rules.maxLength(180)]),
+    email: schema.string({ trim: true }, [
+      rules.email(),
+      rules.exists({
+        table: 'users',
+        column: 'email',
+        where: {
+          email_verified_at: null,
+        },
+      }),
+    ]),
+    password: schema.string({ trim: true }, [rules.minLength(8), rules.maxLength(255)]),
+    token: schema.string({ trim: true }, [rules.minLength(6), rules.maxLength(6)]),
   })
 
   /**

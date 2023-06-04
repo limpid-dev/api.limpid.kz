@@ -5,8 +5,8 @@
     "@adonisjs/core/build/commands/index.js",
     "@adonisjs/repl/build/commands",
     "@adonisjs/lucid/build/commands",
-    "@adonisjs/bouncer/build/commands",
-    "@adonisjs/mail/build/commands"
+    "@adonisjs/mail/build/commands",
+    "@adonisjs/bouncer/build/commands"
   ],
   "exceptionHandlerNamespace": "App/Exceptions/Handler",
   "aliases": {
@@ -15,26 +15,17 @@
     "Database": "database",
     "Contracts": "contracts"
   },
-  "preloads": [
-    "./start/routes",
-    "./start/kernel",
-    "./start/bouncer",
-    {
-      "file": "./start/validator",
-      "environment": ["web"]
-    },
-    "./start/events"
-  ],
+  "preloads": ["./start/routes", "./start/kernel", "./start/bouncer"],
   "providers": [
     "./providers/AppProvider",
     "@adonisjs/core",
-    "@adonisjs/lucid",
-    "@adonisjs/view",
     "@adonisjs/auth",
-    "@adonisjs/route-model-binding/build/providers/RmbProvider",
-    "@adonisjs/bouncer",
+    "@adonisjs/lucid",
     "@adonisjs/mail",
-    "@adonisjs/attachment-lite"
+    "@adonisjs/view",
+    "@adonisjs/attachment-lite",
+    "@adonisjs/route-model-binding/build/providers/RmbProvider",
+    "@adonisjs/bouncer"
   ],
   "aceProviders": ["@adonisjs/repl"],
   "tests": {

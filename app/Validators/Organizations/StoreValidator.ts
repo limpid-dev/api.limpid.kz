@@ -28,21 +28,21 @@ export default class StoreValidator {
     description: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
     location: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
     industry: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
-    owned_intellectual_resources: schema.string({ trim: true }, [
+    owned_intellectual_resources: schema.string.optional({ trim: true }, [
       rules.minLength(1),
       rules.maxLength(2048),
     ]),
-    owned_material_resources: schema.string({ trim: true }, [
+    owned_material_resources: schema.string.optional({ trim: true }, [
       rules.minLength(1),
       rules.maxLength(2048),
     ]),
-    tin: schema.string({ trim: true }, [rules.minLength(1), rules.regex(/^\d+$/)]),
+    tin: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
     performance: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(2048)]),
     legal_structure: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
     is_visible: schema.boolean(),
     avatar: schema.file.optional({
       size: '1mb',
-      extnames: ['jpg', 'jpeg', 'png', 'gif', 'svg', 'webp'],
+      extnames: ['jpg', 'jpeg', 'png', 'webp'],
     }),
   })
 
