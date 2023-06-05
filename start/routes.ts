@@ -90,6 +90,12 @@ Route.group(() => {
     .apiOnly()
     .as('organizations.contacts')
     .paramFor('contacts', '>contact')
+
+  Route.get('members', 'OrganizationMembersController.index')
+  Route.post('members', 'OrganizationMembersController.store')
+  Route.post('members/:member/accept', 'OrganizationMembersController.accept')
+  Route.post('members/:member/reject', 'OrganizationMembersController.reject')
+  Route.delete('members/:member', 'OrganizationMembersController.destroy')
 })
   .prefix('organizations/:organization')
   .middleware('auth')
