@@ -9,22 +9,22 @@ import { DateTime } from 'luxon'
 
 export default class OrganizationMembersController {
   @bind()
-  public async index({ request, bouncer }: HttpContextContract, organization: Profile) {
-    await bouncer.with('OrganizationMembersPolicy').authorize('viewList', organization)
+  public async index({ request, bouncer }: HttpContextContract, profile: Profile) {
+    await bouncer.with('OrganizationMembersPolicy').authorize('viewList', profile)
 
     const { page, per_page: perPage } = await request.validate(PaginationValidator)
 
-    return organization.related('members').query().paginate(page, perPage)
+    return profile.related('members').query().paginate(page, perPage)
   }
 
   @bind()
-  public async store({ request, auth, bouncer }: HttpContextContract, organization: Profile) {
-    await bouncer.with('OrganizationMembersPolicy').authorize('create', organization)
+  public async store({ request, auth, bouncer }: HttpContextContract, profile: Profile) {
+    await bouncer.with('OrganizationMembersPolicy').authorize('create', profile)
     const { application_message: applicationMessage } = await request.validate(StoreValidator)
 
     const membership = await ProfileMember.create({
       applicationMessage,
-      profileId: organization.id,
+      profileId: profile.id,
       userId: auth.user!.id,
     })
 
@@ -34,12 +34,8 @@ export default class OrganizationMembersController {
   }
 
   @bind()
-  public async accept(
-    { bouncer }: HttpContextContract,
-    organization: Profile,
-    member: ProfileMember
-  ) {
-    await bouncer.with('OrganizationMembersPolicy').authorize('update', organization, member)
+  public async accept({ bouncer }: HttpContextContract, profile: Profile, member: ProfileMember) {
+    await bouncer.with('OrganizationMembersPolicy').authorize('update', profile, member)
 
     member.merge({
       acceptedAt: DateTime.now(),
@@ -55,10 +51,10 @@ export default class OrganizationMembersController {
   @bind()
   public async reject(
     { request, bouncer }: HttpContextContract,
-    organization: Profile,
+    profile: Profile,
     member: ProfileMember
   ) {
-    await bouncer.with('OrganizationMembersPolicy').authorize('update', organization, member)
+    await bouncer.with('OrganizationMembersPolicy').authorize('update', profile, member)
 
     const { rejection_message: rejectionMessage } = await request.validate(RejectValidator)
 
@@ -77,10 +73,10 @@ export default class OrganizationMembersController {
   @bind()
   public async destroy(
     { bouncer, response }: HttpContextContract,
-    organization: Profile,
+    profile: Profile,
     member: ProfileMember
   ) {
-    await bouncer.with('OrganizationMembersPolicy').authorize('delete', organization, member)
+    await bouncer.with('OrganizationMembersPolicy').authorize('delete', profile, member)
 
     await member.delete()
 

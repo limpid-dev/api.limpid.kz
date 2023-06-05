@@ -87,6 +87,8 @@ Route.group(() => {
   Route.get('project-memberships', 'ProjectMembershipsController.index')
   Route.get('project-memberships/:>projectMembership', 'ProjectMembershipsController.show')
   Route.delete('project-memberships/:>projectMembership', 'ProjectMembershipsController.destroy')
+
+  Route.get('tender-bids', 'ProfileTenderBidsController.index')
 })
   .prefix('profiles/:profile')
   .middleware('auth')
@@ -118,8 +120,10 @@ Route.group(() => {
   Route.post('members/:>member/accept', 'OrganizationMembersController.accept')
   Route.post('members/:>member/reject', 'OrganizationMembersController.reject')
   Route.delete('members/:>member', 'OrganizationMembersController.destroy')
+
+  Route.get('tender-bids', 'ProfileTenderBidsController.index')
 })
-  .prefix('organizations/:organization')
+  .prefix('organizations/:profile')
   .middleware('auth')
 
 Route.resource('projects', 'ProjectsController')

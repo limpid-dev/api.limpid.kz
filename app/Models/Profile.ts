@@ -4,6 +4,8 @@ import User from './User'
 import { attachment, AttachmentContract } from '@ioc:Adonis/Addons/AttachmentLite'
 import ProfileMember from './ProfileMember'
 import ProjectMember from './ProjectMember'
+import Tender from './Tender'
+import TenderBid from './TenderBid'
 
 export default class Profile extends BaseModel {
   @column({ isPrimary: true })
@@ -62,6 +64,12 @@ export default class Profile extends BaseModel {
 
   @hasMany(() => ProfileMember)
   public members: HasMany<typeof ProfileMember>
+
+  @hasMany(() => Tender)
+  public tenders: HasMany<typeof Tender>
+
+  @hasMany(() => TenderBid)
+  public tenderBids: HasMany<typeof TenderBid>
 
   @hasMany(() => ProjectMember)
   public projectMemberships: HasMany<typeof ProjectMember>
