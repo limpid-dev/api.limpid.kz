@@ -41,6 +41,20 @@ Route.patch('password-recovery', 'PasswordRecoveryController.update')
 Route.get('user', 'UserController.show').middleware('auth')
 Route.patch('user', 'UserController.update').middleware('auth')
 
+Route.group(() => {
+  Route.get('organization-memberships', 'OrganizationMembershipsController.index')
+  Route.get(
+    'organization-memberships/:organizationMembership',
+    'OrganizationMembershipsController.show'
+  )
+  Route.delete(
+    'organization-memberships/:organizationMembership',
+    'OrganizationMembershipsController.destroy'
+  )
+})
+  .prefix('user')
+  .middleware('auth')
+
 Route.resource('profiles', 'ProfilesController')
   .apiOnly()
   .as('profiles')
