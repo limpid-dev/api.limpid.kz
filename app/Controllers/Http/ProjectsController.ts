@@ -96,7 +96,7 @@ export default class ProjectsController {
       requiredMaterialResources,
       ownedMaterialResources,
       profitability,
-      profileId: auth.user!.selectedProfileId,
+      profileId: auth.user!.selectedProfileId!,
     })
 
     response.created()
