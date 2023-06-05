@@ -29,8 +29,6 @@ paths:
                 - password
                 - first_name
                 - last_name
-                - patronymic
-                - born_at
               type: object
               properties:
                 email:
@@ -40,10 +38,6 @@ paths:
                 first_name:
                   type: string
                 last_name:
-                  type: string
-                patronymic:
-                  type: string
-                born_at:
                   type: string
       responses:
         '201':

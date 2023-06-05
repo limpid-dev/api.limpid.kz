@@ -10,8 +10,6 @@ export default class UsersController {
       password,
       first_name: firstName,
       last_name: lastName,
-      patronymic,
-      born_at: bornAt,
     } = await request.validate(StoreValidator)
 
     const secret = new Secret({ size: 64 })
@@ -22,8 +20,6 @@ export default class UsersController {
       secret: secret.base32,
       firstName,
       lastName,
-      patronymic,
-      bornAt,
     })
 
     response.status(201)

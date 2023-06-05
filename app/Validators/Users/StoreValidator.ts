@@ -34,8 +34,6 @@ export default class StoreValidator {
     password: schema.string({}, [rules.minLength(8), rules.maxLength(255)]),
     first_name: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
     last_name: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
-    patronymic: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
-    born_at: schema.date({ format: 'yyyy-MM-dd' }),
   })
 
   /**

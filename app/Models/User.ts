@@ -11,6 +11,8 @@ import {
 } from '@ioc:Adonis/Lucid/Orm'
 import Profile from './Profile'
 import ProfileMember from './ProfileMember'
+import Chat from './Chat'
+import ChatMember from './ChatMember'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -57,6 +59,12 @@ export default class User extends BaseModel {
 
   @hasMany(() => ProfileMember)
   public profileMemberships: HasMany<typeof ProfileMember>
+
+  @hasMany(() => Chat)
+  public chats: HasMany<typeof Chat>
+
+  @hasMany(() => ChatMember)
+  public chatMemberships: HasMany<typeof ChatMember>
 
   @beforeSave()
   public static async hashPassword(user: User) {

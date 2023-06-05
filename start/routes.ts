@@ -154,3 +154,7 @@ Route.group(() => {
   Route.get('/bids/:tenderBid', 'TenderBidsController.show')
   Route.patch('/bids/:tenderBid', 'TenderBidsController.update').middleware(['auth'])
 }).prefix('/tenders/:tender')
+
+Route.get('/chats', 'ChatsController.index').middleware(['auth'])
+Route.post('/chats', 'ChatsController.store').middleware(['auth'])
+Route.delete('/chats/:chat', 'ChatsController.destroy').middleware(['auth'])
