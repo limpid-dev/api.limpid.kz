@@ -3,6 +3,7 @@ import { BaseModel, BelongsTo, HasMany, belongsTo, column, hasMany } from '@ioc:
 import User from './User'
 import { attachment, AttachmentContract } from '@ioc:Adonis/Addons/AttachmentLite'
 import ProfileMember from './ProfileMember'
+import ProjectMember from './ProjectMember'
 
 export default class Profile extends BaseModel {
   @column({ isPrimary: true })
@@ -61,4 +62,7 @@ export default class Profile extends BaseModel {
 
   @hasMany(() => ProfileMember)
   public members: HasMany<typeof ProfileMember>
+
+  @hasMany(() => ProjectMember)
+  public projectMemberships: HasMany<typeof ProjectMember>
 }

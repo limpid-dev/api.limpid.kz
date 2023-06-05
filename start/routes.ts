@@ -83,6 +83,10 @@ Route.group(() => {
     .apiOnly()
     .as('profiles.experiences')
     .paramFor('experiences', '>experience')
+
+  Route.get('project-memberships', 'ProjectMembershipsController.index')
+  Route.get('project-memberships/:>projectMembership', 'ProjectMembershipsController.show')
+  Route.delete('project-memberships/:>projectMembership', 'ProjectMembershipsController.destroy')
 })
   .prefix('profiles/:profile')
   .middleware('auth')
@@ -104,6 +108,10 @@ Route.group(() => {
     .apiOnly()
     .as('organizations.contacts')
     .paramFor('contacts', '>contact')
+
+  Route.get('project-memberships', 'ProjectMembershipsController.index')
+  Route.get('project-memberships/:>projectMembership', 'ProjectMembershipsController.show')
+  Route.delete('project-memberships/:>projectMembership', 'ProjectMembershipsController.destroy')
 
   Route.get('members', 'OrganizationMembersController.index')
   Route.post('members', 'OrganizationMembersController.store')
