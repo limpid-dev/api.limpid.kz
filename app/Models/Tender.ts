@@ -13,6 +13,7 @@ import {
 import { duration } from 'App/Utilities/Duration'
 import TenderBid from './TenderBid'
 import Profile from './Profile'
+import { AttachmentContract, attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 
 export default class Tender extends BaseModel {
   @column({ isPrimary: true })
@@ -60,6 +61,9 @@ export default class Tender extends BaseModel {
 
   @hasMany(() => TenderBid)
   public bids: HasMany<typeof TenderBid>
+
+  @attachment({ preComputeUrl: true })
+  public technicalSpecification: AttachmentContract | null
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

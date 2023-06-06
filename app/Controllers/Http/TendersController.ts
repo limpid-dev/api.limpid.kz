@@ -1,4 +1,5 @@
 import { bind } from '@adonisjs/route-model-binding'
+import { Attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Chat from 'App/Models/Chat'
 import Tender from 'App/Models/Tender'
@@ -24,15 +25,24 @@ export default class TendersController {
       description: description,
       starting_price: startingPrice,
       duration: duration,
+      technical_specification: technicalSpecification,
     } = await request.validate(StoreValidator)
 
-    const tender = await Tender.create({
+    const tender = new Tender()
+
+    tender.merge({
       title,
       description,
       startingPrice,
       duration: Duration.fromISO(duration),
       profileId: auth.user!.selectedProfileId!,
     })
+
+    if (technicalSpecification) {
+      tender.merge({
+        technicalSpecification: Attachment.fromFile(technicalSpecification),
+      })
+    }
 
     response.status(201)
 

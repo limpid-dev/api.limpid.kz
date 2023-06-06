@@ -28,6 +28,10 @@ export default class StoreValidator {
     description: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(2048)]),
     starting_price: schema.number.optional([rules.range(1, Number.MAX_SAFE_INTEGER)]),
     duration: schema.string({ trim: true }, [rules.duration()]),
+    technical_specification: schema.file.optional({
+      size: '64mb',
+      extnames: ['pdf', 'docx'],
+    }),
   })
 
   /**

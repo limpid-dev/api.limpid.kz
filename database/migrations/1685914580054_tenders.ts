@@ -18,6 +18,7 @@ export default class extends BaseSchema {
       table.string('industry', 255).notNullable()
       table.decimal('starting_price', 20, 4).nullable()
       table.string('duration', 255).notNullable()
+      table.json('technical_specification').nullable()
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
