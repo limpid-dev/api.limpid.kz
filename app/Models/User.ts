@@ -1,18 +1,18 @@
-import { DateTime } from 'luxon'
 import Hash from '@ioc:Adonis/Core/Hash'
 import {
-  column,
-  beforeSave,
   BaseModel,
-  HasOne,
-  hasOne,
   HasMany,
+  HasOne,
+  beforeSave,
+  column,
   hasMany,
+  hasOne,
 } from '@ioc:Adonis/Lucid/Orm'
+import { DateTime } from 'luxon'
+import ChatMember from './ChatMember'
+import ChatMessage from './ChatMessage'
 import Profile from './Profile'
 import ProfileMember from './ProfileMember'
-import Chat from './Chat'
-import ChatMember from './ChatMember'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -60,11 +60,11 @@ export default class User extends BaseModel {
   @hasMany(() => ProfileMember)
   public profileMemberships: HasMany<typeof ProfileMember>
 
-  @hasMany(() => Chat)
-  public chats: HasMany<typeof Chat>
-
   @hasMany(() => ChatMember)
   public chatMemberships: HasMany<typeof ChatMember>
+
+  @hasMany(() => ChatMessage)
+  public chatMessages: HasMany<typeof ChatMessage>
 
   @beforeSave()
   public static async hashPassword(user: User) {

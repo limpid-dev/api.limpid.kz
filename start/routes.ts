@@ -153,3 +153,10 @@ Route.group(() => {
 Route.get('/chats', 'ChatsController.index').middleware('auth')
 Route.post('/chats', 'ChatsController.store').middleware('auth')
 Route.delete('/chats/:chat', 'ChatsController.destroy').middleware('auth')
+
+Route.group(() => {
+  Route.get('/messages', 'MessagesController.index')
+  Route.post('/messages', 'MessagesController.store')
+
+  Route.get('/members', 'MembersController.index')
+}).prefix('/chat/:chat')

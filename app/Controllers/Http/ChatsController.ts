@@ -2,24 +2,32 @@ import { bind } from '@adonisjs/route-model-binding'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Chat from 'App/Models/Chat'
 import ChatMember from 'App/Models/ChatMember'
+import IndexValidator from 'App/Validators/Chats/IndexValidator'
 import StoreValidator from 'App/Validators/Chats/StoreValidator'
 
 export default class ChatsController {
-  public async index({ auth }: HttpContextContract) {
-    const userChats = await auth.user!.related('chats').query()
-    const chatsIds = await ChatMember.query().where('userId', auth.user!.id).preload('chat')
+  public async index({ request, auth }: HttpContextContract) {
+    const { page, per_page: perPage } = await request.validate(IndexValidator)
 
-    const memberChats = chatsIds.map((chatMember) => chatMember.chat)
+    const chatsMemberships = await ChatMember.query()
+      .where('userId', auth.user!.id)
+      .preload('chat')
+      .paginate(page, perPage)
+
+    const chats = chatsMemberships.map((chatsMembership) => chatsMembership.chat)
 
     return {
-      data: [...userChats, ...memberChats],
+      meta: chatsMemberships.getMeta(),
+      data: chats,
     }
   }
 
-  public async store({ request, auth, response }: HttpContextContract) {
-    const { user_ids: userIds } = await request.validate(StoreValidator)
+  public async store({ request, response }: HttpContextContract) {
+    const { user_ids: userIds, name } = await request.validate(StoreValidator)
 
-    const chat = await Chat.create({ userId: auth.user!.id })
+    const chat = await Chat.create({
+      name,
+    })
 
     await chat.related('members').createMany(userIds.map((id) => ({ userId: id })))
 
@@ -31,11 +39,15 @@ export default class ChatsController {
   }
 
   @bind()
-  public async destroy({ response, bouncer }: HttpContextContract, chat: Chat) {
-    await bouncer.with('ChatPolicy').allows('delete', chat)
+  public async destroy({ response, auth }: HttpContextContract, chat: Chat) {
+    const membership = await chat
+      .related('members')
+      .query()
+      .where('userId', auth.user!.id)
+      .firstOrFail()
 
-    await chat.delete()
+    await membership.delete()
 
-    response.noContent()
+    return response.noContent()
   }
 }
