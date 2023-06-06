@@ -50,7 +50,7 @@ export default class ProfilesController {
         const isAllowedToView = await bouncer.with('ProfilesPolicy').allows('view', profile)
 
         if (isAllowedToView) {
-          return profile;
+          return profile
         } else {
           return ProfilesPolicy.stripRestrictedViewFieldsFromProfile(profile)
         }
@@ -65,7 +65,7 @@ export default class ProfilesController {
     }
   }
 
-  public async store({ request, auth, response }: HttpContextContract) {
+  public async store({ request, auth }: HttpContextContract) {
     const {
       display_name: displayName,
       description,
@@ -100,8 +100,6 @@ export default class ProfilesController {
     }
 
     await profile.save()
-
-    response.created()
 
     return {
       data: profile,
@@ -162,11 +160,9 @@ export default class ProfilesController {
   }
 
   @bind()
-  public async destroy({ bouncer, response }: HttpContextContract, profile: Profile) {
+  public async destroy({ bouncer }: HttpContextContract, profile: Profile) {
     await bouncer.with('ProfilesPolicy').authorize('delete', profile)
 
     await profile.delete()
-
-    response.noContent()
   }
 }

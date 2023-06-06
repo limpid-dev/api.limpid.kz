@@ -13,7 +13,7 @@ export default class CertificatesController {
   }
 
   @bind()
-  public async store({ bouncer, request, response }: HttpContextContract, profile: Profile) {
+  public async store({ bouncer, request }: HttpContextContract, profile: Profile) {
     await bouncer.with('ProfileSubResourcePolicy').authorize('create', profile)
     const {
       title,
@@ -42,8 +42,6 @@ export default class CertificatesController {
     }
 
     await certificate.save()
-
-    response.created()
 
     return { data: certificate }
   }
@@ -86,13 +84,12 @@ export default class CertificatesController {
 
   @bind()
   public async destroy(
-    { bouncer, response }: HttpContextContract,
+    { bouncer }: HttpContextContract,
     profile: Profile,
     certificate: Certificate
   ) {
     await bouncer.with('ProfileSubResourcePolicy').authorize('delete', profile, certificate)
 
     await certificate.delete()
-    response.noContent()
   }
 }

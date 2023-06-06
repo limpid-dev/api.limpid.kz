@@ -22,7 +22,7 @@ export default class ChatsController {
     }
   }
 
-  public async store({ request, response }: HttpContextContract) {
+  public async store({ request }: HttpContextContract) {
     const { user_ids: userIds, name } = await request.validate(StoreValidator)
 
     const chat = await Chat.create({
@@ -31,15 +31,13 @@ export default class ChatsController {
 
     await chat.related('members').createMany(userIds.map((id) => ({ userId: id })))
 
-    response.created()
-
     return {
       data: chat,
     }
   }
 
   @bind()
-  public async destroy({ response, auth }: HttpContextContract, chat: Chat) {
+  public async destroy({ auth }: HttpContextContract, chat: Chat) {
     const membership = await chat
       .related('members')
       .query()
@@ -47,7 +45,5 @@ export default class ChatsController {
       .firstOrFail()
 
     await membership.delete()
-
-    return response.noContent()
   }
 }

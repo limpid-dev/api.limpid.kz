@@ -41,7 +41,7 @@ export default class TenderBidsController {
   }
 
   @bind()
-  public async store({ request, auth, bouncer, response }: HttpContextContract, tender: Tender) {
+  public async store({ request, auth, bouncer }: HttpContextContract, tender: Tender) {
     const { price } = await request.validate(StoreValidator)
 
     await bouncer.with('TenderBidPolicy').allows('create', tender)
@@ -58,8 +58,6 @@ export default class TenderBidsController {
       price,
       profileId: auth.user!.selectedProfileId!,
     })
-
-    response.created()
 
     return {
       data: tenderBid,

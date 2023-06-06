@@ -8,7 +8,7 @@ import { DateTime } from 'luxon'
 import InvalidTokenException from 'App/Exceptions/InvalidTokenException'
 
 export default class EmailVerificationController {
-  public async store({ request, response }: HttpContextContract) {
+  public async store({ request }: HttpContextContract) {
     const { email } = await request.validate(StoreValidator)
 
     const user = await User.findByOrFail('email', email)
@@ -20,11 +20,9 @@ export default class EmailVerificationController {
     const token = totp.generate()
 
     await new EmailVerification(user, token).sendLater()
-
-    response.created()
   }
 
-  public async update({ request, response }: HttpContextContract) {
+  public async update({ request }: HttpContextContract) {
     const { email, token } = await request.validate(UpdateValidator)
 
     const user = await User.findByOrFail('email', email)
@@ -38,7 +36,6 @@ export default class EmailVerificationController {
     if (isValid) {
       user.merge({ emailVerifiedAt: DateTime.now() })
       await user.save()
-      return response.noContent()
     } else {
       throw new InvalidTokenException()
     }

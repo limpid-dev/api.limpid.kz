@@ -67,7 +67,7 @@ export default class ProjectsController {
     return projects
   }
 
-  public async store({ auth, request, response }: HttpContextContract) {
+  public async store({ auth, request }: HttpContextContract) {
     const {
       title: title,
       description: description,
@@ -106,8 +106,6 @@ export default class ProjectsController {
     await chat.related('members').create({
       userId: auth.user!.id,
     })
-
-    response.created()
 
     return {
       data: project,
@@ -163,11 +161,9 @@ export default class ProjectsController {
   }
 
   @bind()
-  public async destroy({ bouncer, response }: HttpContextContract, project: Project) {
+  public async destroy({ bouncer }: HttpContextContract, project: Project) {
     await bouncer.with('ProjectPolicy').authorize('delete', project)
 
     await project.delete()
-
-    response.noContent()
   }
 }

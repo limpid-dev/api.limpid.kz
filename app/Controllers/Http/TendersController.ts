@@ -19,7 +19,7 @@ export default class TendersController {
     return tenders
   }
 
-  public async store({ request, auth, response }: HttpContextContract) {
+  public async store({ request, auth }: HttpContextContract) {
     const {
       title: title,
       description: description,
@@ -43,8 +43,6 @@ export default class TendersController {
         technicalSpecification: Attachment.fromFile(technicalSpecification),
       })
     }
-
-    response.created()
 
     return {
       data: tender,
@@ -123,11 +121,9 @@ export default class TendersController {
   }
 
   @bind()
-  public async destroy({ response, bouncer }: HttpContextContract, tender: Tender) {
+  public async destroy({ bouncer }: HttpContextContract, tender: Tender) {
     await bouncer.with('TenderPolicy').allows('delete', tender)
 
     await tender.delete()
-
-    response.noContent()
   }
 }

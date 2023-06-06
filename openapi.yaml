@@ -194,31 +194,31 @@ paths:
               type: object
               properties:
                 email:
-                  type: 
+                  type:
                     - string
                     - 'null'
                 password:
-                  type: 
+                  type:
                     - string
                     - 'null'
                 first_name:
-                  type: 
+                  type:
                     - string
                     - 'null'
                 last_name:
-                  type: 
+                  type:
                     - string
                     - 'null'
                 patronymic:
-                  type: 
+                  type:
                     - string
                     - 'null'
                 born_at:
-                  type: 
+                  type:
                     - string
                     - 'null'
                 selected_profile_id:
-                  type: 
+                  type:
                     - integer
                     - 'null'
       responses:

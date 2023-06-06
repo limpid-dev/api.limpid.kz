@@ -18,9 +18,7 @@ export default class OrganizationMembershipsController {
   }
 
   @bind()
-  public async destroy({ response }: HttpContextContract, organizationMembership: ProfileMember) {
+  public async destroy({}: HttpContextContract, organizationMembership: ProfileMember) {
     await organizationMembership.delete()
-
-    response.noContent()
   }
 }

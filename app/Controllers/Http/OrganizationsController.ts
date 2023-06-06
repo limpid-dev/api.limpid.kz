@@ -67,7 +67,7 @@ export default class OrganizationsController {
     }
   }
 
-  public async store({ request, auth, response }: HttpContextContract) {
+  public async store({ request, auth }: HttpContextContract) {
     const {
       display_name: displayName,
       description,
@@ -106,8 +106,6 @@ export default class OrganizationsController {
     }
 
     await organization.save()
-
-    response.created()
 
     return {
       data: organization,
@@ -172,11 +170,9 @@ export default class OrganizationsController {
   }
 
   @bind()
-  public async destroy({ bouncer, response }: HttpContextContract, organization: Profile) {
+  public async destroy({ bouncer }: HttpContextContract, organization: Profile) {
     await bouncer.with('OrganizationsPolicy').authorize('delete', organization)
 
     await organization.delete()
-
-    response.noContent()
   }
 }

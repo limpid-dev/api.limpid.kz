@@ -4,7 +4,7 @@ import StoreValidator from 'App/Validators/Users/StoreValidator'
 import { Secret } from 'otpauth'
 
 export default class UsersController {
-  public async store({ request, response }: HttpContextContract) {
+  public async store({ request }: HttpContextContract) {
     const {
       email,
       password,
@@ -21,8 +21,6 @@ export default class UsersController {
       firstName,
       lastName,
     })
-
-    response.created()
 
     return {
       data: user,

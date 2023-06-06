@@ -18,7 +18,7 @@ export default class ProjectMembersController {
   }
 
   @bind()
-  public async store({ request, bouncer, response }: HttpContextContract, project: Project) {
+  public async store({ request, bouncer }: HttpContextContract, project: Project) {
     await bouncer.with('ProjectMembersPolicy').authorize('create', project)
     const { application_message: applicationMessage } = await request.validate(StoreValidator)
 
@@ -27,8 +27,6 @@ export default class ProjectMembersController {
       profileId: project.id,
       projectId: project.id,
     })
-
-    response.created()
 
     return {
       data: membership,
@@ -83,15 +81,9 @@ export default class ProjectMembersController {
   }
 
   @bind()
-  public async destroy(
-    { bouncer, response }: HttpContextContract,
-    project: Project,
-    member: ProjectMember
-  ) {
+  public async destroy({ bouncer }: HttpContextContract, project: Project, member: ProjectMember) {
     await bouncer.with('ProjectMembersPolicy').authorize('delete', project, member)
 
     await member.delete()
-
-    response.noContent()
   }
 }

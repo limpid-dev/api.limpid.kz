@@ -15,7 +15,7 @@ export default class ContactsController {
   }
 
   @bind()
-  public async store({ bouncer, request, response }: HttpContextContract, profile: Profile) {
+  public async store({ bouncer, request }: HttpContextContract, profile: Profile) {
     await bouncer.with('ProfileSubResourcePolicy').authorize('create', profile)
     const { name, value } = await request.validate(StoreValidator)
 
@@ -28,8 +28,6 @@ export default class ContactsController {
     })
 
     await contact.save()
-
-    response.created()
 
     return { data: contact }
   }
@@ -55,14 +53,9 @@ export default class ContactsController {
   }
 
   @bind()
-  public async destroy(
-    { bouncer, response }: HttpContextContract,
-    profile: Profile,
-    contact: Contact
-  ) {
+  public async destroy({ bouncer }: HttpContextContract, profile: Profile, contact: Contact) {
     await bouncer.with('ProfileSubResourcePolicy').authorize('delete', profile, contact)
 
     await contact.delete()
-    response.noContent()
   }
 }

@@ -21,12 +21,10 @@ export default class ProjectMembershipsController {
 
   @bind()
   public async destroy(
-    { response }: HttpContextContract,
+    {}: HttpContextContract,
     _profile: Profile,
     projectMembership: ProjectMember
   ) {
     await projectMembership.delete()
-
-    response.noContent()
   }
 }

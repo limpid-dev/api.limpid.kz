@@ -15,7 +15,7 @@ export default class ExperiencesController {
   }
 
   @bind()
-  public async store({ bouncer, request, response }: HttpContextContract, profile: Profile) {
+  public async store({ bouncer, request }: HttpContextContract, profile: Profile) {
     await bouncer.with('ProfileSubResourcePolicy').authorize('create', profile)
     const {
       title,
@@ -37,8 +37,6 @@ export default class ExperiencesController {
     })
 
     await experience.save()
-
-    response.created()
 
     return { data: experience }
   }
@@ -73,14 +71,9 @@ export default class ExperiencesController {
   }
 
   @bind()
-  public async destroy(
-    { bouncer, response }: HttpContextContract,
-    profile: Profile,
-    experience: Experience
-  ) {
+  public async destroy({ bouncer }: HttpContextContract, profile: Profile, experience: Experience) {
     await bouncer.with('ProfileSubResourcePolicy').authorize('delete', profile, experience)
 
     await experience.delete()
-    response.noContent()
   }
 }

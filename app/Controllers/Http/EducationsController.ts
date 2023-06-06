@@ -15,7 +15,7 @@ export default class EducationsController {
   }
 
   @bind()
-  public async store({ bouncer, request, response }: HttpContextContract, profile: Profile) {
+  public async store({ bouncer, request }: HttpContextContract, profile: Profile) {
     await bouncer.with('ProfileSubResourcePolicy').authorize('create', profile)
     const {
       title,
@@ -37,8 +37,6 @@ export default class EducationsController {
     })
 
     await education.save()
-
-    response.created()
 
     return { data: education }
   }
@@ -73,14 +71,9 @@ export default class EducationsController {
   }
 
   @bind()
-  public async destroy(
-    { bouncer, response }: HttpContextContract,
-    profile: Profile,
-    education: Education
-  ) {
+  public async destroy({ bouncer }: HttpContextContract, profile: Profile, education: Education) {
     await bouncer.with('ProfileSubResourcePolicy').authorize('delete', profile, education)
 
     await education.delete()
-    response.noContent()
   }
 }

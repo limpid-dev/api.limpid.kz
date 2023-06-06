@@ -15,7 +15,7 @@ export default class SkillsController {
   }
 
   @bind()
-  public async store({ bouncer, request, response }: HttpContextContract, profile: Profile) {
+  public async store({ bouncer, request }: HttpContextContract, profile: Profile) {
     await bouncer.with('ProfileSubResourcePolicy').authorize('create', profile)
     const { name } = await request.validate(StoreValidator)
 
@@ -27,8 +27,6 @@ export default class SkillsController {
     })
 
     await skill.save()
-
-    response.created()
 
     return { data: skill }
   }
@@ -49,10 +47,9 @@ export default class SkillsController {
   }
 
   @bind()
-  public async destroy({ bouncer, response }: HttpContextContract, profile: Profile, skill: Skill) {
+  public async destroy({ bouncer }: HttpContextContract, profile: Profile, skill: Skill) {
     await bouncer.with('ProfileSubResourcePolicy').authorize('delete', profile, skill)
 
     await skill.delete()
-    response.noContent()
   }
 }
