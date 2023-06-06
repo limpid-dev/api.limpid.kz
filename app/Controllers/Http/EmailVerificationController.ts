@@ -38,7 +38,7 @@ export default class EmailVerificationController {
     if (isValid) {
       user.merge({ emailVerifiedAt: DateTime.now() })
       await user.save()
-      response.noContent()
+      return response.noContent()
     } else {
       throw new InvalidTokenException()
     }
