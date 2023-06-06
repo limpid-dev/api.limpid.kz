@@ -99,6 +99,14 @@ export default class ProjectsController {
       profileId: auth.user!.selectedProfileId!,
     })
 
+    const chat = await project.related('chat').create({
+      name: title,
+    })
+
+    await chat.related('members').create({
+      userId: auth.user!.id,
+    })
+
     response.created()
 
     return {

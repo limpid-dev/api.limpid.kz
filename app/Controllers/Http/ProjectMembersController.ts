@@ -43,6 +43,16 @@ export default class ProjectMembersController {
 
     await member.save()
 
+    const chat = await project.related('chat').query().firstOrFail()
+
+    await member.load('profile')
+
+    await member.profile.load('user')
+
+    await chat.related('members').create({
+      userId: member.profile.user.id,
+    })
+
     return {
       data: member,
     }

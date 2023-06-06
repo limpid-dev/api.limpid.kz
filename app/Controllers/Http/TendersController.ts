@@ -1,6 +1,8 @@
 import { bind } from '@adonisjs/route-model-binding'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import Chat from 'App/Models/Chat'
 import Tender from 'App/Models/Tender'
+import TenderBid from 'App/Models/TenderBid'
 import IndexValidator from 'App/Validators/Tenders/IndexValidator'
 import StoreValidator from 'App/Validators/Tenders/StoreValidator'
 import UpdateValidator from 'App/Validators/Tenders/UpdateValidator'
@@ -49,7 +51,7 @@ export default class TendersController {
   }
 
   @bind()
-  public async update({ request, bouncer }: HttpContextContract, tender: Tender) {
+  public async update({ request, bouncer, auth }: HttpContextContract, tender: Tender) {
     if (request.all().won_tender_bid_id) {
       await bouncer.with('TenderPolicy').allows('updateWinner', tender)
 
@@ -60,6 +62,22 @@ export default class TendersController {
       })
 
       await tender.save()
+
+      const wonTenderBid = await TenderBid.findOrFail(wonTenderBidId)
+
+      await wonTenderBid.load('profile')
+
+      await wonTenderBid.profile.load('user')
+
+      const chat = await Chat.create({
+        name: `${auth.user!.firstName} ${auth.user!.lastName}, ${
+          wonTenderBid.profile.user.firstName
+        } ${wonTenderBid.profile.user.lastName}`,
+      })
+
+      await chat
+        .related('members')
+        .createMany([{ userId: auth.user!.id }, { userId: wonTenderBid.profile.user.id }])
 
       return {
         data: tender,
