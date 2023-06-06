@@ -7,7 +7,7 @@ export default class SessionController {
 
     const attempt = await auth.use('api').attempt(email, password, { expiresIn: '7d' })
 
-    response.status(201)
+    response.created()
 
     return {
       data: attempt,
@@ -15,7 +15,7 @@ export default class SessionController {
   }
 
   public async destroy({ auth, response }: HttpContextContract) {
-    response.status(204)
+    response.noContent()
     await auth.use('api').logout()
   }
 }

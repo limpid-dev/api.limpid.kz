@@ -50,9 +50,7 @@ export default class ProfilesController {
         const isAllowedToView = await bouncer.with('ProfilesPolicy').allows('view', profile)
 
         if (isAllowedToView) {
-          return {
-            organization: profile,
-          }
+          return profile;
         } else {
           return ProfilesPolicy.stripRestrictedViewFieldsFromProfile(profile)
         }
@@ -103,7 +101,7 @@ export default class ProfilesController {
 
     await profile.save()
 
-    response.status(201)
+    response.created()
 
     return {
       data: profile,
@@ -169,6 +167,6 @@ export default class ProfilesController {
 
     await profile.delete()
 
-    response.status(204)
+    response.noContent()
   }
 }

@@ -40,13 +40,13 @@ export default class User extends BaseModel {
   public lastName: string
 
   @column()
-  public patronymic: string
+  public patronymic: string | null
 
   @column.dateTime()
   public emailVerifiedAt: DateTime | null
 
   @column.date()
-  public bornAt: DateTime
+  public bornAt: DateTime | null
 
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime

@@ -44,7 +44,7 @@ export default class TendersController {
       })
     }
 
-    response.status(201)
+    response.created()
 
     return {
       data: tender,
@@ -128,6 +128,6 @@ export default class TendersController {
 
     await tender.delete()
 
-    response.status(204)
+    response.noContent()
   }
 }

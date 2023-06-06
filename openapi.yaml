@@ -194,19 +194,33 @@ paths:
               type: object
               properties:
                 email:
-                  type: string
+                  type: 
+                    - string
+                    - 'null'
                 password:
-                  type: string
-                selected_profile_id:
-                  type: integer
+                  type: 
+                    - string
+                    - 'null'
                 first_name:
-                  type: string
+                  type: 
+                    - string
+                    - 'null'
                 last_name:
-                  type: string
+                  type: 
+                    - string
+                    - 'null'
                 patronymic:
-                  type: string
+                  type: 
+                    - string
+                    - 'null'
                 born_at:
-                  type: string
+                  type: 
+                    - string
+                    - 'null'
+                selected_profile_id:
+                  type: 
+                    - integer
+                    - 'null'
       responses:
         '200':
           description: Updated user's data
@@ -416,17 +430,26 @@ components:
           type: integer
         email:
           type: string
+        selected_profile_id:
+          type:
+            - integer
+            - 'null'
         first_name:
           type: string
         last_name:
           type: string
         patronymic:
-          type: string
-        born_at:
-          type: string
+          type:
+            - string
+            - 'null'
         email_verified_at:
-          type: string
-          nullable: true
+          type:
+            - string
+            - 'null'
+        born_at:
+          type:
+            - string
+            - 'null'
         created_at:
           type: string
         updated_at:
@@ -447,22 +470,47 @@ components:
         industry:
           type: string
         owned_intellectual_resources:
-          type: string
-          nullable: true
+          type:
+            - string
+            - 'null'
         owned_material_resources:
-          type: string
-          nullable: true
+          type:
+            - string
+            - 'null'
         tin:
           type: string
+        legal_structure:
+          type:
+            - string
+            - 'null'
         is_visible:
           type: boolean
+        is_personal:
+          type: boolean
         avatar:
-          type: string
-          nullable: true
+          $ref: '#/components/schemas/Attachment'
         tin_verified_at:
-          type: string
-          nullable: true
+          type:
+            - string
+            - 'null'
         created_at:
           type: string
         updated_at:
+          type: string
+    Attachment:
+      type: object
+      properties:
+        url:
+          type:
+            - string
+            - 'null'
+        name:
+          type:
+            - string
+            - 'null'
+        size:
+          type: string
+        extname:
+          type: string
+        mimeType:
           type: string

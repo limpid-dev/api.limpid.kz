@@ -22,7 +22,7 @@ export default class UsersController {
       lastName,
     })
 
-    response.status(201)
+    response.created()
 
     return {
       data: user,

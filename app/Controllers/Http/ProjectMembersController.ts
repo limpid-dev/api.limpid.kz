@@ -18,7 +18,7 @@ export default class ProjectMembersController {
   }
 
   @bind()
-  public async store({ request, bouncer }: HttpContextContract, project: Project) {
+  public async store({ request, bouncer, response }: HttpContextContract, project: Project) {
     await bouncer.with('ProjectMembersPolicy').authorize('create', project)
     const { application_message: applicationMessage } = await request.validate(StoreValidator)
 
@@ -27,6 +27,8 @@ export default class ProjectMembersController {
       profileId: project.id,
       projectId: project.id,
     })
+
+    response.created()
 
     return {
       data: membership,
@@ -90,6 +92,6 @@ export default class ProjectMembersController {
 
     await member.delete()
 
-    response.status(204)
+    response.noContent()
   }
 }

@@ -52,9 +52,7 @@ export default class OrganizationsController {
           .allows('view', organization)
 
         if (isAllowedToView) {
-          return {
-            organization,
-          }
+          return organization
         } else {
           return OrganizationsPolicy.stripRestrictedViewFieldsFromOrganization(organization)
         }
@@ -109,7 +107,7 @@ export default class OrganizationsController {
 
     await organization.save()
 
-    response.status(201)
+    response.created()
 
     return {
       data: organization,
@@ -179,6 +177,6 @@ export default class OrganizationsController {
 
     await organization.delete()
 
-    response.status(204)
+    response.noContent()
   }
 }

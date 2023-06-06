@@ -18,7 +18,7 @@ export default class OrganizationMembersController {
   }
 
   @bind()
-  public async store({ request, auth, bouncer }: HttpContextContract, profile: Profile) {
+  public async store({ request, auth, bouncer, response }: HttpContextContract, profile: Profile) {
     await bouncer.with('OrganizationMembersPolicy').authorize('create', profile)
     const { application_message: applicationMessage } = await request.validate(StoreValidator)
 
@@ -27,6 +27,8 @@ export default class OrganizationMembersController {
       profileId: profile.id,
       userId: auth.user!.id,
     })
+
+    response.created()
 
     return {
       data: membership,
@@ -80,6 +82,6 @@ export default class OrganizationMembersController {
 
     await member.delete()
 
-    response.status(204)
+    response.noContent()
   }
 }

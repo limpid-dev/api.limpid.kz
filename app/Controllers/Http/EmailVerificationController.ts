@@ -21,7 +21,7 @@ export default class EmailVerificationController {
 
     await new EmailVerification(user, token).sendLater()
 
-    response.status(201)
+    response.created()
   }
 
   public async update({ request, response }: HttpContextContract) {
@@ -38,7 +38,7 @@ export default class EmailVerificationController {
     if (isValid) {
       user.merge({ emailVerifiedAt: DateTime.now() })
       await user.save()
-      response.status(204)
+      response.noContent()
     } else {
       throw new InvalidTokenException()
     }

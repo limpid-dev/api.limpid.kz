@@ -20,7 +20,7 @@ export default class PasswordRecoveryController {
 
     await new PasswordRecovery(user, token).sendLater()
 
-    response.status(201)
+    response.created()
   }
 
   public async update({ request, response }: HttpContextContract) {
@@ -37,7 +37,7 @@ export default class PasswordRecoveryController {
     if (isValid) {
       user.merge({ password })
       await user.save()
-      response.status(204)
+      response.noContent()
     } else {
       throw new InvalidTokenException()
     }

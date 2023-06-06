@@ -59,7 +59,7 @@ export default class TenderBidsController {
       profileId: auth.user!.selectedProfileId!,
     })
 
-    response.status(201)
+    response.created()
 
     return {
       data: tenderBid,
