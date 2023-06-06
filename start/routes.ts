@@ -55,12 +55,9 @@ Route.group(() => {
   .prefix('user')
   .middleware('auth')
 
-Route.resource('profiles', 'ProfilesController')
-  .apiOnly()
-  .as('profiles')
-  .middleware({
-    '*': ['auth'],
-  })
+Route.resource('profiles', 'ProfilesController').apiOnly().as('profiles').middleware({
+  '*': 'auth',
+})
 
 Route.group(() => {
   Route.resource('certificates', 'CertificatesController')
@@ -97,7 +94,7 @@ Route.resource('organizations', 'OrganizationsController')
   .apiOnly()
   .as('organizations')
   .middleware({
-    '*': ['auth'],
+    '*': 'auth',
   })
   .paramFor('organizations', 'organization')
 
@@ -126,11 +123,9 @@ Route.group(() => {
   .prefix('organizations/:profile')
   .middleware('auth')
 
-Route.resource('projects', 'ProjectsController')
-  .paramFor('projects', 'project')
-  .middleware({
-    '*': ['auth'],
-  })
+Route.resource('projects', 'ProjectsController').paramFor('projects', 'project').middleware({
+  '*': 'auth',
+})
 
 Route.group(() => {
   Route.get('members', 'ProjectMembersController.index')
@@ -143,18 +138,18 @@ Route.group(() => {
   .middleware('auth')
 
 Route.get('/tenders', 'TendersController.index')
-Route.post('/tenders', 'TendersController.store').middleware(['auth'])
+Route.post('/tenders', 'TendersController.store').middleware('auth')
 Route.get('/tenders/:tender', 'TendersController.show')
-Route.patch('/tenders/:tender', 'TendersController.update').middleware(['auth'])
-Route.delete('/tenders/:tender', 'TendersController.destroy').middleware(['auth'])
+Route.patch('/tenders/:tender', 'TendersController.update').middleware('auth')
+Route.delete('/tenders/:tender', 'TendersController.destroy').middleware('auth')
 
 Route.group(() => {
   Route.get('/bids', 'TenderBidsController.index')
-  Route.post('/bids', 'TenderBidsController.store').middleware(['auth'])
+  Route.post('/bids', 'TenderBidsController.store').middleware('auth')
   Route.get('/bids/:tenderBid', 'TenderBidsController.show')
-  Route.patch('/bids/:tenderBid', 'TenderBidsController.update').middleware(['auth'])
+  Route.patch('/bids/:tenderBid', 'TenderBidsController.update').middleware('auth')
 }).prefix('/tenders/:tender')
 
-Route.get('/chats', 'ChatsController.index').middleware(['auth'])
-Route.post('/chats', 'ChatsController.store').middleware(['auth'])
-Route.delete('/chats/:chat', 'ChatsController.destroy').middleware(['auth'])
+Route.get('/chats', 'ChatsController.index').middleware('auth')
+Route.post('/chats', 'ChatsController.store').middleware('auth')
+Route.delete('/chats/:chat', 'ChatsController.destroy').middleware('auth')

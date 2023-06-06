@@ -15,13 +15,13 @@ export default class ProjectsController {
       required_money_amount: requiredMoneyAmount,
       search,
       stage,
-      profile_id,
+      profile_id: profileId,
     } = await request.validate(IndexValidator)
 
     const query = Project.query()
 
-    if (profile_id) {
-      query.where('profileId', profile_id)
+    if (profileId) {
+      query.where('profileId', profileId)
     }
 
     if (industry) {
