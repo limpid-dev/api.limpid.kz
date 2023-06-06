@@ -159,4 +159,6 @@ Route.group(() => {
   Route.post('/messages', 'MessagesController.store')
 
   Route.get('/members', 'MembersController.index')
-}).prefix('/chat/:chat')
+})
+  .prefix('/chat/:chat')
+  .middleware('auth')

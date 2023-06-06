@@ -11,7 +11,7 @@ export default class extends BaseSchema {
       table.string('secret', 64).notNullable().unique()
       table.string('first_name', 255).notNullable()
       table.string('last_name', 255).notNullable()
-      table.string('patronymic', 255).notNullable()
+      table.string('patronymic', 255).nullable()
       /**
        * Uses timestampz for PostgreSQL and DATETIME2 for MSSQL
        */
