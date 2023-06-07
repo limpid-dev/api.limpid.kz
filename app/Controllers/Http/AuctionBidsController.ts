@@ -22,7 +22,7 @@ export default class AuctionBidsController {
     auctionBids.queryString(request.qs())
 
     const allowedToViewAuctionBids = await Promise.all(
-        auctionBids.map(async (auctionBid) => {
+      auctionBids.map(async (auctionBid) => {
         const isAllowedToView = await bouncer
           .with('AuctionBidPolicy')
           .allows('view', auction, auctionBid)
@@ -50,20 +50,22 @@ export default class AuctionBidsController {
     if (auction.startingPrice) {
       await request.validate({
         schema: schema.create({
-          price: schema.number([rules.range(auction.startingPrice * PRICE_MODIFIER, Number.MAX_SAFE_INTEGER)]),
+          price: schema.number([
+            rules.range(auction.startingPrice * PRICE_MODIFIER, Number.MAX_SAFE_INTEGER),
+          ]),
         }),
       })
     }
 
     if (price != auction.purchasePrice) {
       const auctionBid = auction.related('bids').create({
-      price,
-      profileId: auth.user!.selectedProfileId!,
-    })
-    return {
-      data: auctionBid,
-    }}
-    else {
+        price,
+        profileId: auth.user!.selectedProfileId!,
+      })
+      return {
+        data: auctionBid,
+      }
+    } else {
       const auctionBid = await auction.related('bids').create({
         price,
         profileId: auth.user!.selectedProfileId!,
@@ -86,23 +88,26 @@ export default class AuctionBidsController {
       await wonAuction.profile.load('user')
 
       const chat = await Chat.create({
-        name: `${wonAuction.profile.user.firstName} ${wonAuction.profile.user.lastName}, ${
-          wonAuctionBid.profile.user.firstName
-        } ${wonAuctionBid.profile.user.lastName}`,
+        name: `${wonAuction.profile.user.firstName} ${wonAuction.profile.user.lastName}, ${wonAuctionBid.profile.user.firstName} ${wonAuctionBid.profile.user.lastName}`,
       })
 
       await chat
         .related('members')
-        .createMany([{ userId: wonAuction.profile.user.id }, { userId: wonAuctionBid.profile.user.id }])
+        .createMany([
+          { userId: wonAuction.profile.user.id },
+          { userId: wonAuctionBid.profile.user.id },
+        ])
       return {
-        data: auction
+        data: auction,
       }
     }
   }
 
   @bind()
   public async show({ bouncer }: HttpContextContract, auction: Auction, auctionBid: AuctionBid) {
-    const isAllowedToView = await bouncer.with('AuctionBidPolicy').allows('view', auction, auctionBid)
+    const isAllowedToView = await bouncer
+      .with('AuctionBidPolicy')
+      .allows('view', auction, auctionBid)
 
     if (isAllowedToView) {
       return { data: auctionBid }
@@ -127,17 +132,15 @@ export default class AuctionBidsController {
       }),
     })
 
-    if (price != auction.purchasePrice)
-    {
+    if (price != auction.purchasePrice) {
       auctionBid.merge({ price })
 
       await auctionBid.save()
 
-    return {
-      data: auctionBid,
-    }}
-    else {
-
+      return {
+        data: auctionBid,
+      }
+    } else {
       auctionBid.merge({ price })
 
       await auctionBid.save()
@@ -161,16 +164,17 @@ export default class AuctionBidsController {
       await wonAuction.profile.load('user')
 
       const chat = await Chat.create({
-        name: `${wonAuction.profile.user.firstName} ${wonAuction.profile.user.lastName}, ${
-          wonAuctionBid.profile.user.firstName
-        } ${wonAuctionBid.profile.user.lastName}`,
+        name: `${wonAuction.profile.user.firstName} ${wonAuction.profile.user.lastName}, ${wonAuctionBid.profile.user.firstName} ${wonAuctionBid.profile.user.lastName}`,
       })
 
       await chat
         .related('members')
-        .createMany([{ userId: wonAuction.profile.user.id }, { userId: wonAuctionBid.profile.user.id }])
+        .createMany([
+          { userId: wonAuction.profile.user.id },
+          { userId: wonAuctionBid.profile.user.id },
+        ])
       return {
-        data: auction
+        data: auction,
       }
     }
   }

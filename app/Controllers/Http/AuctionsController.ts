@@ -94,7 +94,7 @@ export default class AuctionsController {
         .createMany([{ userId: auth.user!.id }, { userId: wonAuctionBid.profile.user.id }])
 
       return {
-        data: auction
+        data: auction,
       }
     }
 

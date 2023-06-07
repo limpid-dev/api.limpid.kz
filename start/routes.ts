@@ -172,7 +172,7 @@ Route.post('/auctions', 'AuctionsController.store').middleware(['auth'])
 Route.get('/auctions/:auction', 'AuctionsController.show')
 Route.patch('/auctions/:auction', 'AuctionsController.update').middleware(['auth'])
 Route.delete('/auctions/:auction', 'AuctionsController.destroy').middleware(['auth'])
-  
+
 Route.group(() => {
   Route.get('/bids', 'AuctionBidsController.index')
   Route.post('/bids', 'AuctionBidsController.store').middleware(['auth'])

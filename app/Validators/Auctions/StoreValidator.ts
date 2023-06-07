@@ -28,7 +28,8 @@ export default class StoreValidator {
     description: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(2048)]),
     starting_price: schema.number.optional([rules.range(1, Number.MAX_SAFE_INTEGER)]),
     purchase_price: schema.number.optional([
-        rules.range(this.ctx.request.input('starting_price', 1), Number.MAX_SAFE_INTEGER)]),
+      rules.range(this.ctx.request.input('starting_price', 1), Number.MAX_SAFE_INTEGER),
+    ]),
     duration: schema.string({ trim: true }, [rules.duration()]),
     industry: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
     technical_specification: schema.file.optional({

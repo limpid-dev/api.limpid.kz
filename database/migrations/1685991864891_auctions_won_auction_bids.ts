@@ -3,7 +3,7 @@ import BaseSchema from '@ioc:Adonis/Lucid/Schema'
 export default class extends BaseSchema {
   protected tableName = 'auctions'
 
-  public async up () {
+  public async up() {
     this.schema.alterTable(this.tableName, (table) => {
       table
         .integer('won_auction_bid_id')
@@ -15,7 +15,7 @@ export default class extends BaseSchema {
     })
   }
 
-  public async down () {
+  public async down() {
     this.schema.alterTable(this.tableName, (table) => {
       table.dropForeign('won_auction_bid_id')
     })
