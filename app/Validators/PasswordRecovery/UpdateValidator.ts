@@ -29,7 +29,7 @@ export default class UpdateValidator {
       rules.exists({
         table: 'users',
         column: 'email',
-        where: {
+        whereNot: {
           email_verified_at: null,
         },
       }),
