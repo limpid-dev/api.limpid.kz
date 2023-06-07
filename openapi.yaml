@@ -555,6 +555,154 @@ paths:
       responses:
         '200':
           description: Certificate is deleted
+  '/profiles/{profile_id}/educations':
+    get:
+      tags:
+        - Profiles
+      parameters:
+        - in: path
+          name: profile_id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: page
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: per_page
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Profile's educations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: '#/components/schemas/Pagination'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Education'
+    post:
+      tags:
+        - Profiles
+      parameters:
+        - in: path
+          name: profile_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - title
+                - description
+                - institution
+                - started_at
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                institution:
+                  type: string
+                started_at:
+                  type: string
+                finished_at:
+                  type: string
+  '/profiles/{profile_id}/educations/{education_id}':
+    get:
+      tags:
+        - Profiles
+      parameters:
+        - in: path
+          name: profile_id
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: education_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Education data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Education'
+    patch:
+      tags:
+        - Profiles
+      parameters:
+        - in: path
+          name: profile_id
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: education_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                institution:
+                  type: string
+                started_at:
+                  type: string
+                finished_at:
+                  type: string
+      responses:
+        '200':
+          description: Updated education's data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Education'
+    delete:
+      tags:
+        - Profiles
+      parameters:
+        - in: path
+          name: profile_id
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: education_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Education is deleted
 components:
   securitySchemes:
     bearerAuth:
@@ -682,5 +830,23 @@ components:
         issued_at:
           type: string
         expired_at:
+          type: string
+          nullable: true
+    Education:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        institution:
+          type: string
+        profile_id:
+          type: integer
+        started_at:
+          type: string
+        finished_at:
           type: string
           nullable: true
