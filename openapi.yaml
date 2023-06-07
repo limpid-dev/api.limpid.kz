@@ -263,30 +263,15 @@ paths:
                 type: object
                 properties:
                   meta:
-                    type: object
-                    properties:
-                      total:
-                        type: integer
-                      per_page:
-                        type: integer
-                      current_page:
-                        type: integer
-                      last_page:
-                        type: integer
-                      first_page:
-                        type: integer
-                      first_page_url:
-                        type: string
-                      last_page_url:
-                        type: string
-                      next_page_url:
-                        type: string
-                      previous_page_url:
-                        type: string
+                    $ref: '#/components/schemas/Pagination'
                   data:
                     type: array
                     items:
                       $ref: '#/components/schemas/Profile'
+                      type: object
+                      properties:
+                        user:
+                          $ref: '#/components/schemas/User'
     post:
       tags:
         - Profiles
@@ -353,6 +338,11 @@ paths:
                 properties:
                   data:
                     $ref: '#/components/schemas/Profile'
+                    type: object
+                    properties:
+                      user:
+                        $ref: '#/components/schemas/User'
+                    
     patch:
       tags:
         - Profiles
@@ -479,6 +469,92 @@ paths:
                 attachment:
                   type: string
                   format: binary
+  '/profiles/{profile_id}/certificates/{certificate_id}':
+    get:
+      tags:
+        - Profiles
+      parameters:
+        - in: path
+          name: profile_id
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: certificate_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Certificate data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Certificate'
+    patch:
+      tags:
+        - Profiles
+      parameters:
+        - in: path
+          name: profile_id
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: certificate_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                institution:
+                  type: string
+                issued_at:
+                  type: string
+                expired_at:
+                  type: string
+                attachment:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Updated certificate's data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Certificate'
+    delete:
+      tags:
+        - Profiles
+      parameters:
+        - in: path
+          name: profile_id
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: certificate_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Certificate is deleted
 components:
   securitySchemes:
     bearerAuth:

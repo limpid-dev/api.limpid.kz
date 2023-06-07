@@ -112,6 +112,8 @@ export default class ProfilesController {
   public async show({ bouncer }: HttpContextContract, profile: Profile) {
     const isAllowedToView = await bouncer.with('ProfilesPolicy').allows('view', profile)
 
+    await profile.load('user')
+
     if (isAllowedToView) {
       return {
         data: profile,
