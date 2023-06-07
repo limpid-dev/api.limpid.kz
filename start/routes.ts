@@ -86,6 +86,8 @@ Route.group(() => {
   Route.delete('project-memberships/:>projectMembership', 'ProjectMembershipsController.destroy')
 
   Route.get('tender-bids', 'ProfileTenderBidsController.index')
+
+  Route.get('auction-bids', 'ProfileAuctionBidsController.index')
 })
   .prefix('profiles/:profile')
   .middleware('auth')
@@ -119,6 +121,8 @@ Route.group(() => {
   Route.delete('members/:>member', 'OrganizationMembersController.destroy')
 
   Route.get('tender-bids', 'ProfileTenderBidsController.index')
+
+  Route.get('auction-bids', 'ProfileAuctionBidsController.index')
 })
   .prefix('organizations/:profile')
   .middleware('auth')
@@ -162,3 +166,16 @@ Route.group(() => {
 })
   .prefix('/chat/:chat')
   .middleware('auth')
+
+Route.get('/auctions', 'AuctionsController.index')
+Route.post('/auctions', 'AuctionsController.store').middleware(['auth'])
+Route.get('/auctions/:auction', 'AuctionsController.show')
+Route.patch('/auctions/:auction', 'AuctionsController.update').middleware(['auth'])
+Route.delete('/auctions/:auction', 'AuctionsController.destroy').middleware(['auth'])
+  
+Route.group(() => {
+  Route.get('/bids', 'AuctionBidsController.index')
+  Route.post('/bids', 'AuctionBidsController.store').middleware(['auth'])
+  Route.get('/bids/:auctionBid', 'AuctionBidsController.show')
+  Route.patch('/bids/:auctionBid', 'AuctionBidsController.update').middleware(['auth'])
+}).prefix('/auctions/:auction')
