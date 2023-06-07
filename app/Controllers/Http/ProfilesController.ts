@@ -19,6 +19,8 @@ export default class ProfilesController {
 
     const profilesQuery = Profile.query()
 
+    profilesQuery.preload('user')
+
     profilesQuery.where('isPersonal', true)
     profilesQuery.where('isVisible', true)
 

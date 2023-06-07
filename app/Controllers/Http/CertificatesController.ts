@@ -5,11 +5,14 @@ import Profile from 'App/Models/Profile'
 import StoreValidator from 'App/Validators/Certificates/StoreValidator'
 import { Attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 import UpdateValidator from 'App/Validators/Certificates/UpdateValidator'
+import PaginationValidator from 'App/Validators/PaginationValidator'
 
 export default class CertificatesController {
   @bind()
-  public async index({}: HttpContextContract, profile: Profile) {
-    return await Certificate.query().where('profileId', profile.id)
+  public async index({request}: HttpContextContract, profile: Profile) {
+    const {page,per_page:perPage} = await request.validate(PaginationValidator)
+
+    return await Certificate.query().where('profileId', profile.id).paginate(page,perPage)
   }
 
   @bind()

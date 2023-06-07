@@ -1,4 +1,4 @@
-openapi: 3.1.0
+openapi: 3.0.0
 info:
   title: api.limpid.kz
   version: 1.0.0
@@ -40,7 +40,7 @@ paths:
                 last_name:
                   type: string
       responses:
-        '201':
+        '200':
           description: User is created
           content:
             application/json:
@@ -68,7 +68,7 @@ paths:
                 password:
                   type: string
       responses:
-        '201':
+        '200':
           description: User is logged in
           content:
             application/json:
@@ -88,7 +88,7 @@ paths:
       tags:
         - Session
       responses:
-        '204':
+        '200':
           description: User is logged out
   /email-verification:
     post:
@@ -106,7 +106,7 @@ paths:
                 email:
                   type: string
       responses:
-        '201':
+        '200':
           description: User email verification mail send
     patch:
       tags:
@@ -126,7 +126,7 @@ paths:
                 token:
                   type: string
       responses:
-        '204':
+        '200':
           description: User email verified
   /password-recovery:
     post:
@@ -144,7 +144,7 @@ paths:
                 email:
                   type: string
       responses:
-        '201':
+        '200':
           description: Password recovery mail send
     patch:
       tags:
@@ -167,7 +167,7 @@ paths:
                 token:
                   type: string
       responses:
-        '204':
+        '200':
           description: User's password is changed
   /user:
     get:
@@ -194,33 +194,26 @@ paths:
               type: object
               properties:
                 email:
-                  type:
-                    - string
-                    - 'null'
+                  type: string
+                  nullable: true
                 password:
-                  type:
-                    - string
-                    - 'null'
+                  type: string
+                  nullable: true
                 first_name:
-                  type:
-                    - string
-                    - 'null'
+                  type: string
+                  nullable: true
                 last_name:
-                  type:
-                    - string
-                    - 'null'
+                  type: string
+                  nullable: true
                 patronymic:
-                  type:
-                    - string
-                    - 'null'
+                  type: string
+                  nullable: true
                 born_at:
-                  type:
-                    - string
-                    - 'null'
+                  type: string
+                  nullable: true
                 selected_profile_id:
-                  type:
-                    - integer
-                    - 'null'
+                  type: integer
+                  nullable: true
       responses:
         '200':
           description: Updated user's data
@@ -331,7 +324,7 @@ paths:
                   type: string
                   format: binary
       responses:
-        '201':
+        '200':
           description: Profile is created
           content:
             application/json:
@@ -340,7 +333,7 @@ paths:
                 properties:
                   data:
                     $ref: '#/components/schemas/Profile'
-  /profiles/{profile_id}:
+  '/profiles/{profile_id}':
     get:
       tags:
         - Profiles
@@ -415,14 +408,105 @@ paths:
           schema:
             type: integer
       responses:
-        '204':
+        '200':
           description: Profile is deleted
+  '/profiles/{profile_id}/certificates':
+    get:
+      tags:
+        - Profiles
+      parameters:
+        - in: path
+          name: profile_id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: page
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: per_page
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Profile's certificates
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: '#/components/schemas/Pagination'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Certificate'
+    post:
+      tags:
+        - Profiles
+      parameters:
+        - in: path
+          name: profile_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - title
+                - description
+                - institution
+                - issued_at
+                - attachment
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                institution:
+                  type: string
+                issued_at:
+                  type: string
+                expired_at:
+                  type: string
+                attachment:
+                  type: string
+                  format: binary
 components:
   securitySchemes:
     bearerAuth:
       type: http
       scheme: bearer
   schemas:
+    Pagination:
+      type: object
+      properties:
+        total: 
+          type: integer
+        per_page: 
+          type: integer
+        current_page: 
+          type: integer
+        last_page: 
+          type: integer
+        first_page: 
+          type: integer
+        first_page_url: 
+          type: string
+        last_page_url: 
+          type: string
+        next_page_url: 
+          type: string
+        previous_page_url:
+          type: string
+          nullable: true
     User:
       type: object
       properties:
@@ -431,25 +515,21 @@ components:
         email:
           type: string
         selected_profile_id:
-          type:
-            - integer
-            - 'null'
+          type: integer
+          nullable: true
         first_name:
           type: string
         last_name:
           type: string
         patronymic:
-          type:
-            - string
-            - 'null'
+          type: string
+          nullable: true
         email_verified_at:
-          type:
-            - string
-            - 'null'
+          type: string
+          nullable: true
         born_at:
-          type:
-            - string
-            - 'null'
+          type: string
+          nullable: true
         created_at:
           type: string
         updated_at:
@@ -470,19 +550,16 @@ components:
         industry:
           type: string
         owned_intellectual_resources:
-          type:
-            - string
-            - 'null'
+          type: string
+          nullable: true
         owned_material_resources:
-          type:
-            - string
-            - 'null'
+          type: string
+          nullable: true
         tin:
           type: string
         legal_structure:
-          type:
-            - string
-            - 'null'
+          type: string
+          nullable: true
         is_visible:
           type: boolean
         is_personal:
@@ -490,9 +567,8 @@ components:
         avatar:
           $ref: '#/components/schemas/Attachment'
         tin_verified_at:
-          type:
-            - string
-            - 'null'
+          type: string
+          nullable: true
         created_at:
           type: string
         updated_at:
@@ -501,16 +577,34 @@ components:
       type: object
       properties:
         url:
-          type:
-            - string
-            - 'null'
+          type: string
+          nullable: true
         name:
-          type:
-            - string
-            - 'null'
+          type: string
+          nullable: true
         size:
           type: string
         extname:
           type: string
         mimeType:
           type: string
+    Certificate:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        institution:
+          type: string
+        profile_id:
+          type: integer
+        attachment:
+          $ref: '#/components/schemas/Attachment'
+        issued_at:
+          type: string
+        expired_at:
+          type: string
+          nullable: true
