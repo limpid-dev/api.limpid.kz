@@ -308,6 +308,21 @@ paths:
                 avatar:
                   type: string
                   format: binary
+                instagram_url:
+                  type: string
+                  nullable: true
+                whatsapp_url:
+                  type: string
+                  nullable: true
+                website_url:
+                  type: string
+                  nullable: true
+                telegram_url:
+                  type: string
+                  nullable: true
+                two_gis_url:
+                  type: string
+                  nullable: true
       responses:
         '200':
           description: Profile is created
@@ -342,7 +357,6 @@ paths:
                     properties:
                       user:
                         $ref: '#/components/schemas/User'
-
     patch:
       tags:
         - Profiles
@@ -378,6 +392,21 @@ paths:
                 avatar:
                   type: string
                   format: binary
+                instagram_url:
+                  type: string
+                  nullable: true
+                whatsapp_url:
+                  type: string
+                  nullable: true
+                website_url:
+                  type: string
+                  nullable: true
+                telegram_url:
+                  type: string
+                  nullable: true
+                two_gis_url:
+                  type: string
+                  nullable: true
       responses:
         '200':
           description: Updated profile's data
@@ -790,6 +819,21 @@ components:
           type: boolean
         avatar:
           $ref: '#/components/schemas/Attachment'
+        instagram_url:
+          type: string
+          nullable: true
+        whatsapp_url:
+          type: string
+          nullable: true
+        website_url:
+          type: string
+          nullable: true
+        telegram_url:
+          type: string
+          nullable: true
+        two_gis_url:
+          type: string
+          nullable: true
         tin_verified_at:
           type: string
           nullable: true
