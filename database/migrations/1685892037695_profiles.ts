@@ -26,11 +26,11 @@ export default class extends BaseSchema {
       table.boolean('is_visible').notNullable()
       table.boolean('is_personal').notNullable()
       table.json('avatar').nullable()
-      table.string('instagram_url', 2048).nullable()
-      table.string('whatsapp_url', 2048).nullable()
-      table.string('website_url', 2048).nullable()
-      table.string('telegram_url', 2048).nullable()
-      table.string('two_gis_url', 2048).nullable()
+      table.text('instagram_url').nullable()
+      table.text('whatsapp_url').nullable()
+      table.text('website_url').nullable()
+      table.text('telegram_url').nullable()
+      table.text('two_gis_url').nullable()
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
