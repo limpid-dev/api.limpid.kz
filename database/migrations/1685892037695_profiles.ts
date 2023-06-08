@@ -22,9 +22,15 @@ export default class extends BaseSchema {
       table.string('tin', 255).notNullable()
       table.string('performance', 2048).nullable()
       table.string('legal_structure', 255).nullable()
+      table.integer('views').notNullable().defaultTo(0)
       table.boolean('is_visible').notNullable()
       table.boolean('is_personal').notNullable()
       table.json('avatar').nullable()
+      table.string('instagram_url', 2048).nullable()
+      table.string('whatsapp_url', 2048).nullable()
+      table.string('website_url', 2048).nullable()
+      table.string('telegram_url', 2048).nullable()
+      table.string('two_gis_url', 2048).nullable()
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

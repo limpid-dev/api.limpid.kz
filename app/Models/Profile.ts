@@ -45,6 +45,9 @@ export default class Profile extends BaseModel {
   public legalStructure: string | null
 
   @column()
+  public views: number
+
+  @column()
   public isVisible: boolean
 
   @column()
@@ -52,6 +55,21 @@ export default class Profile extends BaseModel {
 
   @attachment({ preComputeUrl: true })
   public avatar: AttachmentContract | null
+
+  @column()
+  public instagramUrl: string | null
+
+  @column()
+  public whatsappUrl: string | null
+
+  @column()
+  public websiteUrl: string | null
+
+  @column()
+  public telegramUrl: string | null
+
+  @column()
+  public twoGisUrl: string | null
 
   @column.dateTime()
   public tinVerifiedAt: DateTime | null

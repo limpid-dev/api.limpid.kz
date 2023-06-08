@@ -57,7 +57,7 @@ export default class AuctionBidsController {
       })
     }
 
-    if (price != auction.purchasePrice) {
+    if (price !== auction.purchasePrice) {
       const auctionBid = auction.related('bids').create({
         price,
         profileId: auth.user!.selectedProfileId!,
@@ -132,7 +132,7 @@ export default class AuctionBidsController {
       }),
     })
 
-    if (price != auction.purchasePrice) {
+    if (price !== auction.purchasePrice) {
       auctionBid.merge({ price })
 
       await auctionBid.save()

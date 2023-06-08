@@ -9,10 +9,10 @@ import PaginationValidator from 'App/Validators/PaginationValidator'
 
 export default class CertificatesController {
   @bind()
-  public async index({request}: HttpContextContract, profile: Profile) {
-    const {page,per_page:perPage} = await request.validate(PaginationValidator)
+  public async index({ request }: HttpContextContract, profile: Profile) {
+    const { page, per_page: perPage } = await request.validate(PaginationValidator)
 
-    return await Certificate.query().where('profileId', profile.id).paginate(page,perPage)
+    return await Certificate.query().where('profileId', profile.id).paginate(page, perPage)
   }
 
   @bind()

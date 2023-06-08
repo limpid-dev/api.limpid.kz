@@ -78,6 +78,11 @@ export default class ProfilesController {
       tin,
       is_visible: isVisible,
       avatar,
+      instagram_url: instagramUrl,
+      whatsapp_url: whatsappUrl,
+      website_url: websiteUrl,
+      telegram_url: telegramUrl,
+      two_gis_url: twoGisUrl,
     } = await request.validate(StoreValidator)
 
     const profile = new Profile()
@@ -93,6 +98,11 @@ export default class ProfilesController {
       isVisible,
       isPersonal: true,
       userId: auth.user!.id,
+      instagramUrl,
+      whatsappUrl,
+      websiteUrl,
+      telegramUrl,
+      twoGisUrl,
     })
 
     if (avatar) {
@@ -109,10 +119,16 @@ export default class ProfilesController {
   }
 
   @bind()
-  public async show({ bouncer }: HttpContextContract, profile: Profile) {
+  public async show({ auth, bouncer }: HttpContextContract, profile: Profile) {
     const isAllowedToView = await bouncer.with('ProfilesPolicy').allows('view', profile)
 
     await profile.load('user')
+
+    if (auth.user?.id !== profile.user.id) {
+      profile.views += 1
+
+      await profile.save()
+    }
 
     if (isAllowedToView) {
       return {
@@ -137,6 +153,11 @@ export default class ProfilesController {
       tin,
       is_visible: isVisible,
       avatar,
+      instagram_url: instagramUrl,
+      whatsapp_url: whatsappUrl,
+      website_url: websiteUrl,
+      telegram_url: telegramUrl,
+      two_gis_url: twoGisUrl,
     } = await request.validate(UpdateValidator)
 
     profile.merge({
@@ -148,6 +169,11 @@ export default class ProfilesController {
       ownedMaterialResources,
       tin,
       isVisible,
+      instagramUrl,
+      whatsappUrl,
+      websiteUrl,
+      telegramUrl,
+      twoGisUrl,
     })
 
     if (avatar) {

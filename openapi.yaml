@@ -342,7 +342,7 @@ paths:
                     properties:
                       user:
                         $ref: '#/components/schemas/User'
-                    
+
     patch:
       tags:
         - Profiles
@@ -712,21 +712,21 @@ components:
     Pagination:
       type: object
       properties:
-        total: 
+        total:
           type: integer
-        per_page: 
+        per_page:
           type: integer
-        current_page: 
+        current_page:
           type: integer
-        last_page: 
+        last_page:
           type: integer
-        first_page: 
+        first_page:
           type: integer
-        first_page_url: 
+        first_page_url:
           type: string
-        last_page_url: 
+        last_page_url:
           type: string
-        next_page_url: 
+        next_page_url:
           type: string
         previous_page_url:
           type: string
