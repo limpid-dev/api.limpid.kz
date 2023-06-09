@@ -37,6 +37,13 @@ export default class ChatsController {
   }
 
   @bind()
+  public async show({}: HttpContextContract,chat:Chat) {
+    return {
+      data: chat,
+    }
+  }
+
+  @bind()
   public async destroy({ auth }: HttpContextContract, chat: Chat) {
     const membership = await chat
       .related('members')
