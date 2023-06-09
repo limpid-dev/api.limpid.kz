@@ -893,6 +893,145 @@ paths:
       responses:
         '200':
           description: Experience is deleted
+  '/profiles/{profile_id}/skills':
+    get:
+      tags:
+        - Profiles
+      parameters:
+        - in: path
+          name: profile_id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: page
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: per_page
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Profile's skills
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: '#/components/schemas/Pagination'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Skill'
+    post:
+      tags:
+        - Profiles
+      parameters:
+        - in: path
+          name: profile_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - name
+              properties:
+                name:
+                  type: string
+      responses:
+        '200':
+          description: Skill data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Skill'
+  '/profiles/{profile_id}/skills/{skill_id}':
+    get:
+      tags:
+        - Profiles
+      parameters:
+        - in: path
+          name: profile_id
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: skill_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Skill data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Skill'
+    patch:
+      tags:
+        - Profiles
+      parameters:
+        - in: path
+          name: profile_id
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: skill_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+      responses:
+        '200':
+          description: Updated skill's data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Skill'
+    delete:
+      tags:
+        - Profiles
+      parameters:
+        - in: path
+          name: profile_id
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: skill_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Skill is deleted
   '/projects':
     get:
       tags:
@@ -1321,4 +1460,13 @@ components:
         created_at:
           type: string
         updated_at:
+          type: string
+    Skill:
+      type: object
+      properties:
+        id:
+          type: integer
+        profile_id:
+          type: integer
+        name:
           type: string

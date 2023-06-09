@@ -32,6 +32,11 @@ export default class SkillsController {
   }
 
   @bind()
+  public async show({ }: HttpContextContract, _profile: Profile, skill: Skill) {
+    return { data: skill }
+  }
+
+  @bind()
   public async update({ bouncer, request }: HttpContextContract, profile: Profile, skill: Skill) {
     await bouncer.with('ProfileSubResourcePolicy').authorize('update', profile, skill)
 
