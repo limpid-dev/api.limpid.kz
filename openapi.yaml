@@ -13,6 +13,8 @@ tags:
   - name: Password recovery
   - name: Profiles
   - name: Projects
+  - name: Auctions
+  - name: "AuctionBids"
 security:
   - bearerAuth: []
 paths:
@@ -1244,6 +1246,295 @@ paths:
       responses:
         '200':
           description: Project is deleted
+  '/auctions':
+    get:
+      tags:
+        - Auctions
+      parameters:
+        - in: query
+          name: page
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: per_page
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: profile_id
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: industry
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+        - in: query
+          name: search
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Auctions
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: '#/components/schemas/Pagination'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Auction'
+    post:
+      tags:
+        - Auctions
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - title
+                - description
+                - industry
+                - duration
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                industry:
+                  type: string
+                duration:
+                  type: string
+                starting_price:
+                  type: number
+                purchase_price:
+                  type: number
+      responses:
+        '200':
+          description: Auction data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Auction'
+  '/auctions/{auction_id}':
+    get:
+      tags:
+        - Auctions
+      parameters:
+        - in: path
+          name: auction_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Auction data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Auction'
+    patch:
+      tags:
+        - Auctions
+      parameters:
+        - in: path
+          name: auction_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                industry:
+                  type: string
+                duration:
+                  type: string
+                starting_price:
+                  type: number
+                purchase_price:
+                  type: number
+                won_auction_bid_id:
+                  type: integer
+      responses:
+        '200':
+          description: Updated auctions's data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Auction'
+    delete:
+      tags:
+        - Auctions
+      parameters:
+        - in: path
+          name: auction_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Auction is deleted
+  '/auctions/{auction_id}/bids':
+    get:
+      tags:
+        - AuctionBids
+      parameters:
+        - in: query
+          name: page
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: per_page
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: auction_id
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: industry
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+        - in: query
+          name: search
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: AuctionBids
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: '#/components/schemas/Pagination'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AuctionBid'
+    post:
+      tags:
+        - AuctionBids
+      parameters:
+        - in: query
+          name: auction_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - price
+              properties:
+                price:
+                  type: number
+      responses:
+        '200':
+          description: AuctionBid data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/AuctionBid'
+  '/auctions/{auction_id}/bids/{auctionBid_id}':
+    get:
+      tags:
+        - AuctionBids
+      parameters:
+        - in: path
+          name: auction_id
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: auctionBid_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: AuctionBid data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/AuctionBid'
+    patch:
+      tags:
+        - AuctionBids
+      parameters:
+        - in: path
+          name: auction_id
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: auctionBid_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                price:
+                  type: number
+      responses:
+        '200':
+          description: Updated auctionBid's data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/AuctionBid'
 components:
   securitySchemes:
     bearerAuth:
@@ -1469,4 +1760,51 @@ components:
         profile_id:
           type: integer
         name:
+          type: string
+    Auction:
+      type: object
+      properties:
+        id:
+          type: integer
+        profile_id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        industry:
+          type: string
+        duration:
+          type: string
+        starting_price:
+          type: number
+          nullable: true
+        purchase_price:
+          type: number
+          nullable: true
+        technical_specification:
+          type: json
+          nullable: true
+        won_auction_bid_id :
+          type: integer
+        verified_at:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string
+    "AuctionBid":
+      type: object
+      properties:
+        id:
+          type: integer
+        profile_id:
+          type: integer
+        auction_id:
+          type: integer
+        price:
+          type: number
+        created_at:
+          type: string
+        updated_at:
           type: string
