@@ -13,6 +13,7 @@ import ChatMember from './ChatMember'
 import ChatMessage from './ChatMessage'
 import Profile from './Profile'
 import ProfileMember from './ProfileMember'
+import Invoice from './Invoice'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -42,6 +43,18 @@ export default class User extends BaseModel {
   @column()
   public patronymic: string | null
 
+  @column()
+  public projects_atmpts: number
+
+  @column()
+  public auction_atmpts: number
+
+  @column.dateTime({ autoCreate: true })
+  public payment_start: DateTime
+
+  @column.dateTime()
+  public payment_end: DateTime
+
   @column.dateTime()
   public emailVerifiedAt: DateTime | null
 
@@ -65,6 +78,9 @@ export default class User extends BaseModel {
 
   @hasMany(() => ChatMessage)
   public chatMessages: HasMany<typeof ChatMessage>
+
+  @hasMany(() => Invoice)
+  public invoices: HasMany<typeof Invoice>
 
   @beforeSave()
   public static async hashPassword(user: User) {
