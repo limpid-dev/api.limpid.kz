@@ -50,14 +50,14 @@ export default class ProjectsController {
     if (search) {
       query.andWhere((query) => {
         query
-          .whereILike('title', `%${search}%`)
-          .orWhereILike('description', `%${search}%`)
-          .orWhereILike('location', `%${search}%`)
-          .orWhereILike('requiredIntellectualResources', `%${search}%`)
-          .orWhereILike('ownedIntellectualResources', `%${search}%`)
-          .orWhereILike('requiredMaterialResources', `%${search}%`)
-          .orWhereILike('ownedMaterialResources', `%${search}%`)
-          .orWhereILike('profitability', `%${search}%`)
+          .whereLike('title', `%${search}%`)
+          .orWhereLike('description', `%${search}%`)
+          .orWhereLike('location', `%${search}%`)
+          .orWhereLike('requiredIntellectualResources', `%${search}%`)
+          .orWhereLike('ownedIntellectualResources', `%${search}%`)
+          .orWhereLike('requiredMaterialResources', `%${search}%`)
+          .orWhereLike('ownedMaterialResources', `%${search}%`)
+          .orWhereLike('profitability', `%${search}%`)
       })
     }
 

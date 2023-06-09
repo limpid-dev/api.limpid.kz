@@ -35,13 +35,13 @@ export default class ProfilesController {
     if (search) {
       profilesQuery.andWhere((query) => {
         query.whereLike('displayName', `%${search}%`)
-        query.orWhereILike('location', `%${search}%`)
-        query.orWhereILike('displayName', `%${search}%`)
-        query.orWhereILike('description', `%${search}%`)
-        query.orWhereILike('location', `%${search}%`)
-        query.orWhereILike('ownedIntellectualResources', `%${search}%`)
-        query.orWhereILike('ownedMaterialResources', `%${search}%`)
-        query.orWhereILike('performance', `%${search}%`)
+        query.orWhereLike('location', `%${search}%`)
+        query.orWhereLike('displayName', `%${search}%`)
+        query.orWhereLike('description', `%${search}%`)
+        query.orWhereLike('location', `%${search}%`)
+        query.orWhereLike('ownedIntellectualResources', `%${search}%`)
+        query.orWhereLike('ownedMaterialResources', `%${search}%`)
+        query.orWhereLike('performance', `%${search}%`)
       })
     }
 
