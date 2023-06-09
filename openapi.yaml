@@ -12,6 +12,7 @@ tags:
   - name: Email verification
   - name: Password recovery
   - name: Profiles
+  - name: Projects
 security:
   - bearerAuth: []
 paths:
@@ -892,6 +893,218 @@ paths:
       responses:
         '200':
           description: Experience is deleted
+  '/projects':
+    get:
+      tags:
+        - Projects
+      parameters:
+        - in: query
+          name: page
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: per_page
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: profile_id
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: industry
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+        - in: query
+          name: stage
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+        - in: query
+          name: required_money_amount
+          required: false
+          schema:
+            type: object
+            properties:
+              min:
+                type: integer
+              max:
+                type: integer
+        - in: query
+          name: owned_money_amount
+          required: false
+          schema:
+            type: object
+            properties:
+              min:
+                type: integer
+              max:
+                type: integer
+        - in: query
+          name: search
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Projects
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: '#/components/schemas/Pagination'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Project'
+    post:
+      tags:
+        - Projects
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - title
+                - description
+                - location
+                - industry
+                - stage
+                - required_money_amount
+                - owned_money_amount
+                - required_intellectual_resources
+                - owned_intellectual_resources
+                - required_material_resources
+                - owned_material_resources
+                - profitability
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                location:
+                  type: string
+                industry:
+                  type: string
+                stage:
+                  type: string
+                required_money_amount:
+                  type: number
+                owned_money_amount:
+                  type: number
+                required_intellectual_resources:
+                  type: string
+                owned_intellectual_resources:
+                  type: string
+                required_material_resources:
+                  type: string
+                owned_material_resources:
+                  type: string
+                profitability:
+                  type: string
+      responses:
+        '200':
+          description: Project data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Project'
+  '/projects/{project_id}':
+    get:
+      tags:
+        - Projects
+      parameters:
+        - in: path
+          name: project_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Project data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Project'
+    patch:
+      tags:
+        - Projects
+      parameters:
+        - in: path
+          name: project_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                location:
+                  type: string
+                industry:
+                  type: string
+                stage:
+                  type: string
+                required_money_amount:
+                  type: number
+                owned_money_amount:
+                  type: number
+                required_intellectual_resources:
+                  type: string
+                owned_intellectual_resources:
+                  type: string
+                required_material_resources:
+                  type: string
+                owned_material_resources:
+                  type: string
+                profitability:
+                  type: string
+      responses:
+        '200':
+          description: Updated project's data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Project'
+    delete:
+      tags:
+        - Projects
+      parameters:
+        - in: path
+          name: project_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Project is deleted
 components:
   securitySchemes:
     bearerAuth:
@@ -1072,3 +1285,40 @@ components:
         finished_at:
           type: string
           nullable: true
+    Project:
+      type: object
+      properties:
+        id:
+          type: integer
+        profile_id:
+          type: integer
+        chat_id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        location:
+          type: string
+        industry:
+          type: string
+        stage:
+          type: string
+        required_money_amount:
+          type: number
+        owned_money_amount:
+          type: number
+        required_material_resources:
+          type: string
+        owned_material_resources:
+          type: string
+        required_intellectual_resources:
+          type: string
+        owned_intellectual_resources:
+          type: string
+        profitability:
+          type: string
+        created_at:
+          type: string
+        updated_at:
+          type: string

@@ -119,7 +119,7 @@ Route.group(() => {
   .prefix('organizations/:profile')
   .middleware('auth')
 
-Route.resource('projects', 'ProjectsController').paramFor('projects', 'project').middleware({
+Route.resource('projects', 'ProjectsController').apiOnly().paramFor('projects', 'project').middleware({
   '*': 'auth',
 })
 
