@@ -12,7 +12,7 @@ import {
 import Profile from './Profile'
 import ProjectMember from './ProjectMember'
 import Chat from './Chat'
-import { AttachmentContract } from '@ioc:Adonis/Addons/AttachmentLite'
+import { AttachmentContract, attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 
 export default class Project extends BaseModel {
   @column({ isPrimary: true })
@@ -60,16 +60,24 @@ export default class Project extends BaseModel {
   @column()
   public profitability: string
 
-  @column()
+  @attachment({
+    preComputeUrl: true,
+  })
   public logo: AttachmentContract | null
 
-  @column()
+  @attachment({
+    preComputeUrl: true,
+  })
   public videoIntroduction: AttachmentContract | null
 
-  @column()
+  @attachment({
+    preComputeUrl: true,
+  })
   public presentation: AttachmentContract | null
 
-  @column()
+  @attachment({
+    preComputeUrl: true,
+  })
   public businessPlan: AttachmentContract | null
 
   @column.dateTime({ autoCreate: true })

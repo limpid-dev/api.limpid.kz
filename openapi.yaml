@@ -1155,6 +1155,18 @@ paths:
                   type: string
                 profitability:
                   type: string
+                logo:
+                  type: string
+                  format: binary
+                video_introduction:
+                  type: string
+                  format: binary
+                presentation:
+                  type: string
+                  format: binary
+                business_plan:
+                  type: string
+                  format: binary
       responses:
         '200':
           description: Project data
@@ -1225,6 +1237,18 @@ paths:
                   type: string
                 profitability:
                   type: string
+                logo:
+                  type: string
+                  format: binary
+                video_introduction:
+                  type: string
+                  format: binary
+                presentation:
+                  type: string
+                  format: binary
+                business_plan:
+                  type: string
+                  format: binary
       responses:
         '200':
           description: Updated project's data
@@ -1829,6 +1853,18 @@ components:
           type: string
         profitability:
           type: string
+        logo:
+          $ref: '#/components/schemas/Attachment'
+          nullable: true
+        video_introduction:
+          $ref: '#/components/schemas/Attachment'
+          nullable: true
+        presentation:
+          $ref: '#/components/schemas/Attachment'
+          nullable: true
+        business_plan:
+          $ref: '#/components/schemas/Attachment'
+          nullable: true
         created_at:
           type: string
         updated_at:
