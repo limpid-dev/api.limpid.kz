@@ -6,6 +6,10 @@ import ProfileMember from './ProfileMember'
 import ProjectMember from './ProjectMember'
 import Tender from './Tender'
 import TenderBid from './TenderBid'
+import Education from './Education'
+import Experience from './Experience'
+import Certificate from './Certificate'
+import Skill from './Skill'
 
 export default class Profile extends BaseModel {
   @column({ isPrimary: true })
@@ -82,6 +86,18 @@ export default class Profile extends BaseModel {
 
   @hasMany(() => ProfileMember)
   public members: HasMany<typeof ProfileMember>
+
+  @hasMany(()=>Education)
+  public educations: HasMany<typeof Education>
+
+  @hasMany(()=>Experience)
+  public experiences: HasMany<typeof Experience>
+
+  @hasMany(()=>Certificate)
+  public certificates: HasMany<typeof Certificate>
+
+  @hasMany(()=>Skill)
+  public skills: HasMany<typeof Skill>
 
   @hasMany(() => Tender)
   public tenders: HasMany<typeof Tender>
