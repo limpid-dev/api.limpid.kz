@@ -34,11 +34,11 @@ export default class IndexValidator {
     ]),
     industry: schema.array.optional().members(schema.string()),
     stage: schema.array.optional().members(schema.string()),
-    required_money_amount: schema.object().members({
+    required_money_amount: schema.object.optional().members({
       min: schema.number.optional([rules.unsigned()]),
       max: schema.number.optional([rules.unsigned()]),
     }),
-    owned_money_amount: schema.object().members({
+    owned_money_amount: schema.object.optional().members({
       min: schema.number.optional([rules.unsigned()]),
       max: schema.number.optional([rules.unsigned()]),
     }),
