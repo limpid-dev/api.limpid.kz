@@ -1,5 +1,6 @@
 import { bind } from '@adonisjs/route-model-binding'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
+import Chat from 'App/Models/Chat'
 import Project from 'App/Models/Project'
 import IndexValidator from 'App/Validators/Projects/IndexValidator'
 import StoreValidator from 'App/Validators/Projects/StoreValidator'
@@ -83,6 +84,10 @@ export default class ProjectsController {
       profitability: profitability,
     } = await request.validate(StoreValidator)
 
+    const chat = await Chat.create({
+      name: title,
+    })
+
     const project = await Project.create({
       title,
       description,
@@ -97,11 +102,14 @@ export default class ProjectsController {
       ownedMaterialResources,
       profitability,
       profileId: auth.user!.selectedProfileId!,
+      chatId: chat.id,
     })
 
-    const chat = await project.related('chat').create({
-      name: title,
+    chat.merge({
+      projectId: project.id,
     })
+
+    await chat.save()
 
     await chat.related('members').create({
       userId: auth.user!.id,
