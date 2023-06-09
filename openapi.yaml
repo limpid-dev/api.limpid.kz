@@ -13,6 +13,7 @@ tags:
   - name: Password recovery
   - name: Profiles
   - name: Projects
+  - name: Chats
 security:
   - bearerAuth: []
 paths:
@@ -1244,6 +1245,86 @@ paths:
       responses:
         '200':
           description: Project is deleted
+  '/chats':
+    get:
+      tags:
+        - Chats
+      parameters:
+        - in: query
+          name: page
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: per_page
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Chats
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: '#/components/schemas/Pagination'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Chat'
+    post:
+      tags:
+        - Chats
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - user_ids
+                - name
+              properties:
+                user_ids:
+                  type: array
+                  items:
+                    type: integer
+                name:
+                  type: string
+  '/chat/{chat_id}':
+    get:
+      tags:
+        - Chats
+      parameters:
+        - in: path
+          name: chat_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Chat
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Chat'
+    delete:
+      tags:
+        - Chats
+      parameters:
+        - in: path
+          name: chat_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Chat is deleted
 components:
   securitySchemes:
     bearerAuth:
@@ -1470,3 +1551,29 @@ components:
           type: integer
         name:
           type: string
+    Chat:
+      type: object
+      properties:
+        id:
+          type: integer
+        project_id:
+          type: integer
+          nullable: true
+        name:
+          type: string
+        created_at:
+          type: string
+    Message:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        chat_id:
+          type: integer
+        message:
+          type: string
+        created_at:
+          type: string
+        
