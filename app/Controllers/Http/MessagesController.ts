@@ -11,7 +11,7 @@ export default class MessagesController {
 
     const { page, per_page: perPage } = await request.validate(IndexValidator)
 
-    return chat.related('messages').query().paginate(page, perPage)
+    return chat.related('messages').query().preload('user').paginate(page, perPage)
   }
 
   @bind()
