@@ -25,6 +25,10 @@ export default class extends BaseSchema {
       table.string('required_material_resources', 2048).notNullable()
       table.string('owned_material_resources', 2048).notNullable()
       table.string('profitability', 2048).notNullable()
+      table.json('logo').nullable()
+      table.json('video_introduction').nullable()
+      table.json('presentation').nullable()
+      table.json('business_plan').nullable()
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

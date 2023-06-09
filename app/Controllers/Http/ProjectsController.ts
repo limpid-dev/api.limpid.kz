@@ -1,4 +1,5 @@
 import { bind } from '@adonisjs/route-model-binding'
+import { Attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Chat from 'App/Models/Chat'
 import Project from 'App/Models/Project'
@@ -82,6 +83,10 @@ export default class ProjectsController {
       required_material_resources: requiredMaterialResources,
       owned_material_resources: ownedMaterialResources,
       profitability: profitability,
+      logo: logo,
+      video_introduction: videoIntroduction,
+      presentation: presentation,
+      business_plan: businessPlan,
     } = await request.validate(StoreValidator)
 
     const chat = await Chat.create({
@@ -104,6 +109,29 @@ export default class ProjectsController {
       profileId: auth.user!.selectedProfileId!,
       chatId: chat.id,
     })
+
+    if (logo) {
+      project.merge({
+        logo: Attachment.fromFile(logo),
+      })
+    }
+    if (videoIntroduction) {
+      project.merge({
+        videoIntroduction: Attachment.fromFile(videoIntroduction),
+      })
+    }
+    if (presentation) {
+      project.merge({
+        presentation: Attachment.fromFile(presentation),
+      })
+    }
+    if (businessPlan) {
+      project.merge({
+        businessPlan: Attachment.fromFile(businessPlan),
+      })
+    }
+
+    await project.save()
 
     chat.merge({
       projectId: project.id,
@@ -144,6 +172,10 @@ export default class ProjectsController {
       required_material_resources: requiredMaterialResources,
       owned_material_resources: ownedMaterialResources,
       profitability: profitability,
+      logo: logo,
+      video_introduction: videoIntroduction,
+      presentation: presentation,
+      business_plan: businessPlan,
     } = await request.validate(UpdateValidator)
 
     project.merge({
@@ -160,6 +192,27 @@ export default class ProjectsController {
       ownedMaterialResources,
       profitability,
     })
+
+    if (logo) {
+      project.merge({
+        logo: Attachment.fromFile(logo),
+      })
+    }
+    if (videoIntroduction) {
+      project.merge({
+        videoIntroduction: Attachment.fromFile(videoIntroduction),
+      })
+    }
+    if (presentation) {
+      project.merge({
+        presentation: Attachment.fromFile(presentation),
+      })
+    }
+    if (businessPlan) {
+      project.merge({
+        businessPlan: Attachment.fromFile(businessPlan),
+      })
+    }
 
     await project.save()
 

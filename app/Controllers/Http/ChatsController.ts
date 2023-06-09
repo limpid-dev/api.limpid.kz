@@ -37,7 +37,7 @@ export default class ChatsController {
   }
 
   @bind()
-  public async show({}: HttpContextContract,chat:Chat) {
+  public async show({}: HttpContextContract, chat: Chat) {
     return {
       data: chat,
     }

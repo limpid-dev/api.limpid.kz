@@ -32,7 +32,7 @@ export default class SkillsController {
   }
 
   @bind()
-  public async show({ }: HttpContextContract, _profile: Profile, skill: Skill) {
+  public async show({}: HttpContextContract, _profile: Profile, skill: Skill) {
     return { data: skill }
   }
 

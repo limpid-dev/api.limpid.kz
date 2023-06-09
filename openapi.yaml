@@ -1891,7 +1891,7 @@ components:
         technical_specification:
           type: json
           nullable: true
-        won_auction_bid_id :
+        won_auction_bid_id:
           type: integer
         verified_at:
           type: string

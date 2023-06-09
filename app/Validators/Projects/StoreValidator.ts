@@ -48,6 +48,22 @@ export default class StoreValidator {
       rules.maxLength(2048),
     ]),
     profitability: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(2048)]),
+    logo: schema.file.optional({
+      extnames: ['jpg', 'png', 'jpeg'],
+      size: '1mb',
+    }),
+    video_introduction: schema.file.optional({
+      extnames: ['mp4'],
+      size: '128mb',
+    }),
+    presentation: schema.file.optional({
+      extnames: ['pdf', 'pptx'],
+      size: '8mb',
+    }),
+    business_plan: schema.file.optional({
+      extnames: ['pdf', 'docx'],
+      size: '8mb',
+    }),
   })
 
   /**

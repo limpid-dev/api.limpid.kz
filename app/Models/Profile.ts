@@ -87,16 +87,16 @@ export default class Profile extends BaseModel {
   @hasMany(() => ProfileMember)
   public members: HasMany<typeof ProfileMember>
 
-  @hasMany(()=>Education)
+  @hasMany(() => Education)
   public educations: HasMany<typeof Education>
 
-  @hasMany(()=>Experience)
+  @hasMany(() => Experience)
   public experiences: HasMany<typeof Experience>
 
-  @hasMany(()=>Certificate)
+  @hasMany(() => Certificate)
   public certificates: HasMany<typeof Certificate>
 
-  @hasMany(()=>Skill)
+  @hasMany(() => Skill)
   public skills: HasMany<typeof Skill>
 
   @hasMany(() => Tender)
