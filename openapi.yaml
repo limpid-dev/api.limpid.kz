@@ -2204,6 +2204,125 @@ paths:
       responses:
         '200':
           description: Experience is deleted
+  '/organizations/{organization_id}/members':
+    get:
+      tags:
+        - Organizations
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: page
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: per_page
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Organization's members
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: '#/components/schemas/Pagination'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/OrganizationMember'
+    post:
+      tags:
+        - Organizations
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - application_message
+              properties:
+                application_message:
+                  type: string
+      responses:
+        '200':
+          description: Organization's member
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/OrganizationMember'
+  '/organizations/{organization_id}/members/{member_id}':
+    delete:
+      tags:
+        - Organizations
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: member_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Organization's member is deleted
+  '/organizations/{organization_id}/members/{member_id}/accept':
+    post:
+      tags:
+        - Organizations
+      responses:
+        '200':
+          description: Organization's member
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/OrganizationMember'
+  '/organizations/{organization_id}/members/{member_id}/reject':
+    post:
+      tags:
+        - Organizations
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                rejection_message:
+                  type: string
+      responses:
+        '200':
+          description: Organization's member
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/OrganizationMember'
 components:
   securitySchemes:
     bearerAuth:
@@ -2520,6 +2639,27 @@ components:
         id:
           type: integer
         project_id:
+          type: integer
+        profile_id:
+          type: integer
+        application_message:
+          type: string
+        rejection_message:
+          type: string
+          nullable: true
+        applied_at:
+          type: string
+          format: date-time
+        accepted_at:
+          type: string
+          nullable: true
+        rejected_at:
+          type: string
+          nullable: true
+    OrganizationMember:
+      type: object
+      properties:
+        id:
           type: integer
         profile_id:
           type: integer
