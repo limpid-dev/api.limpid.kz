@@ -19,7 +19,6 @@ export default class extends BaseSchema {
        */
       table.timestamp('created_at', { useTz: true }).notNullable()
       table.timestamp('deleted_at', { useTz: true }).nullable()
-      
     })
   }
 

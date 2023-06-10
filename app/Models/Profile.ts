@@ -1,5 +1,16 @@
 import { DateTime } from 'luxon'
-import { BaseModel, BelongsTo, HasMany, ModelQueryBuilderContract, beforeFetch, beforeFind, beforePaginate, belongsTo, column, hasMany } from '@ioc:Adonis/Lucid/Orm'
+import {
+  BaseModel,
+  BelongsTo,
+  HasMany,
+  ModelQueryBuilderContract,
+  beforeFetch,
+  beforeFind,
+  beforePaginate,
+  belongsTo,
+  column,
+  hasMany,
+} from '@ioc:Adonis/Lucid/Orm'
 import User from './User'
 import { attachment, AttachmentContract } from '@ioc:Adonis/Addons/AttachmentLite'
 import ProfileMember from './ProfileMember'
