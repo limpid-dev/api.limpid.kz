@@ -19,10 +19,10 @@ export default class SubPlans extends BaseModel {
   public amount: number | null
 
   @column()
-  public projects_atmpts: number
+  public projects_attempts: number
 
   @column()
-  public auction_atmpts: number
+  public auctions_attempts: number
 
   @column()
   public duration: number

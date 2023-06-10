@@ -87,8 +87,8 @@ export default class PaymentsController {
     user.merge({
       payment_start: DateTime.now(),
       payment_end: DateTime.now().plus({ days: plan.duration }),
-      projects_atmpts: plan.projects_atmpts,
-      auction_atmpts: plan.auction_atmpts,
+      projects_attempts: plan.projects_attempts,
+      auctions_attempts: plan.auctions_attempts,
     })
 
     await user.save()
@@ -157,10 +157,10 @@ export default class PaymentsController {
     }
 
     if (
-      users.auction_atmpts === plan.auction_atmpts &&
-      users.projects_atmpts === plan.projects_atmpts
+      users.auctions_attempts === plan.auctions_attempts &&
+      users.projects_attempts === plan.projects_attempts
     ) {
-      const url = `https://testepay.homebank.kz/api/operation/${payId}/refund`
+      const url = `https://epay-api.homebank.kz/operation/${payId}/refund`
 
       const response = await fetch(url, {
         method: 'POST',
@@ -174,8 +174,8 @@ export default class PaymentsController {
       })
 
       users.merge({
-        auction_atmpts: 0,
-        projects_atmpts: 0,
+        auctions_attempts: 0,
+        projects_attempts: 0,
       })
 
       await invoice.save()

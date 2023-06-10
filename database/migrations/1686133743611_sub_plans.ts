@@ -8,8 +8,8 @@ export default class extends BaseSchema {
       table.increments('id')
       table.string('name')
       table.integer('amount')
-      table.integer('projects_atmpts')
-      table.integer('auction_atmpts')
+      table.integer('projects_attempts')
+      table.integer('auctions_attempts')
       table.integer('duration')
 
       /**
