@@ -2517,7 +2517,7 @@ components:
     ProjectMember:
       type: object
       properties:
-        id: 
+        id:
           type: integer
         project_id:
           type: integer
