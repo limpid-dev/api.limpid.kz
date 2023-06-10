@@ -16,6 +16,7 @@ tags:
   - name: Chats
   - name: Auctions
   - name: AuctionBids
+  - name: Organizations
 security:
   - bearerAuth: []
 paths:
@@ -1827,6 +1828,382 @@ paths:
                 properties:
                   data:
                     $ref: '#/components/schemas/AuctionBid'
+  '/organizations':
+    get:
+      tags:
+        - Organizations
+      parameters:
+        - in: query
+          name: page
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: per_page
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: user_id
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: industry
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+        - in: query
+          name: search
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Organizations
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: '#/components/schemas/Pagination'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Profile'
+    post:
+      tags:
+        - Organizations
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - display_name
+                - description
+                - location
+                - industry
+                - tin
+                - perfomance
+                - legal_structure
+                - is_visible
+              properties:
+                display_name:
+                  type: string
+                description:
+                  type: string
+                location:
+                  type: string
+                industry:
+                  type: string
+                owned_intellectual_resources:
+                  type: string
+                owned_material_resources:
+                  type: string
+                tin:
+                  type: string
+                perfomance:
+                  type: string
+                legal_structure:
+                  type: string
+                is_visible:
+                  type: boolean
+                avatar:
+                  type: string
+                  format: binary
+                instagram_url:
+                  type: string
+                  nullable: true
+                whatsapp_url:
+                  type: string
+                  nullable: true
+                website_url:
+                  type: string
+                  nullable: true
+                telegram_url:
+                  type: string
+                  nullable: true
+                two_gis_url:
+                  type: string
+                  nullable: true
+      responses:
+        '200':
+          description: Organization data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Profile'
+  '/organizations/{organization_id}':
+    get:
+      tags:
+        - Organizations
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Organization data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Profile'
+    patch:
+      tags:
+        - Organizations
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                display_name:
+                  type: string
+                description:
+                  type: string
+                location:
+                  type: string
+                industry:
+                  type: string
+                owned_intellectual_resources:
+                  type: string
+                owned_material_resources:
+                  type: string
+                tin:
+                  type: string
+                perfomance:
+                  type: string
+                legal_structure:
+                  type: string
+                is_visible:
+                  type: boolean
+                avatar:
+                  type: string
+                  format: binary
+                instagram_url:
+                  type: string
+                  nullable: true
+                whatsapp_url:
+                  type: string
+                  nullable: true
+                website_url:
+                  type: string
+                  nullable: true
+                telegram_url:
+                  type: string
+                  nullable: true
+                two_gis_url:
+                  type: string
+                  nullable: true
+      responses:
+        '200':
+          description: Updated organization's data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Profile'
+    delete:
+      tags:
+        - Organizations
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Deleted organization's data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Profile'
+  '/organizations/{organization_id}/experiences':
+    get:
+      tags:
+        - Organizations
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: page
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: per_page
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Organization's experiences
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: '#/components/schemas/Pagination'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Experience'
+    post:
+      tags:
+        - Organizations
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - title
+                - description
+                - institution
+                - started_at
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                institution:
+                  type: string
+                started_at:
+                  type: string
+                finished_at:
+                  type: string
+                  nullable: true
+      responses:
+        '200':
+          description: Experience data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Experience'
+  '/organizations/{organization_id}/experiences/{experience_id}':
+    get:
+      tags:
+        - Organizations
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: experience_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Experience data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Experience'
+    patch:
+      tags:
+        - Organizations
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: experience_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                institution:
+                  type: string
+                started_at:
+                  type: string
+                finished_at:
+                  type: string
+                  nullable: true
+      responses:
+        '200':
+          description: Updated experience's data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Experience'
+    delete:
+      tags:
+        - Organizations
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: experience_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Experience is deleted
 components:
   securitySchemes:
     bearerAuth:
@@ -2160,4 +2537,3 @@ components:
         rejected_at:
           type: string
           nullable: true
-        

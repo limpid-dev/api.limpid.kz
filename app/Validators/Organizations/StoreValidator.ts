@@ -44,6 +44,11 @@ export default class StoreValidator {
       size: '1mb',
       extnames: ['jpg', 'jpeg', 'png', 'webp'],
     }),
+    instagram_url: schema.string.optional({ trim: true }, [rules.url()]),
+whatsapp_url: schema.string.optional({ trim: true }, [rules.url()]),
+website_url: schema.string.optional({ trim: true }, [rules.url()]),
+telegram_url: schema.string.optional({ trim: true }, [rules.url()]),
+two_gis_url: schema.string.optional({ trim: true }, [rules.url()]),
   })
 
   /**

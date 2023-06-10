@@ -80,6 +80,11 @@ export default class OrganizationsController {
       legal_structure: legalStructure,
       is_visible: isVisible,
       avatar,
+      instagram_url: instagramUrl,
+      whatsapp_url: whatsappUrl,
+      website_url: websiteUrl,
+      telegram_url: telegramUrl,
+      two_gis_url: twoGisUrl,
     } = await request.validate(StoreValidator)
 
     const organization = new Profile()
@@ -97,6 +102,11 @@ export default class OrganizationsController {
       isVisible,
       isPersonal: false,
       userId: auth.user!.id,
+      instagramUrl,
+      whatsappUrl,
+      websiteUrl,
+      telegramUrl,
+      twoGisUrl,
     })
 
     if (avatar) {
@@ -141,6 +151,11 @@ export default class OrganizationsController {
       performance,
       is_visible: isVisible,
       avatar,
+      instagram_url: instagramUrl,
+      whatsapp_url: whatsappUrl,
+      website_url: websiteUrl,
+      telegram_url: telegramUrl,
+      two_gis_url: twoGisUrl,
     } = await request.validate(UpdateValidator)
 
     organization.merge({
@@ -154,6 +169,11 @@ export default class OrganizationsController {
       legalStructure,
       performance,
       isVisible,
+      instagramUrl,
+      whatsappUrl,
+      websiteUrl,
+      telegramUrl,
+      twoGisUrl,
     })
 
     if (avatar) {
