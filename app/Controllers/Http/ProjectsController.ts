@@ -225,6 +225,6 @@ export default class ProjectsController {
   public async destroy({ bouncer }: HttpContextContract, project: Project) {
     await bouncer.with('ProjectPolicy').authorize('delete', project)
 
-    await project.delete()
+    await project.softDelete()
   }
 }

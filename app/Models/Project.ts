@@ -4,6 +4,10 @@ import {
   BelongsTo,
   HasMany,
   HasOne,
+  ModelQueryBuilderContract,
+  beforeFetch,
+  beforeFind,
+  beforePaginate,
   belongsTo,
   column,
   hasMany,
@@ -13,6 +17,8 @@ import Profile from './Profile'
 import ProjectMember from './ProjectMember'
 import Chat from './Chat'
 import { AttachmentContract, attachment } from '@ioc:Adonis/Addons/AttachmentLite'
+
+type ProjectQuery = ModelQueryBuilderContract<typeof Project>
 
 export default class Project extends BaseModel {
   @column({ isPrimary: true })
@@ -94,4 +100,31 @@ export default class Project extends BaseModel {
 
   @hasMany(() => ProjectMember)
   public members: HasMany<typeof ProjectMember>
+
+  @column.dateTime({ serializeAs: null })
+  public deletedAt: DateTime | null
+
+  public async softDelete() {
+    this.deletedAt = DateTime.now()
+    await this.save()
+  }
+
+  @beforeFetch()
+  public static fetchWithoutSoftDeletes(query: ProjectQuery) {
+    query.whereNull('deleted_at')
+  }
+
+  @beforeFind()
+  public static findWithoutSoftDeletes(query: ProjectQuery) {
+    query.whereNull('deleted_at')
+  }
+
+  @beforePaginate()
+  public static paginateWithoutSoftDeletes([countQuery, query]: [
+    ProjectQuery,
+    ProjectQuery
+  ]): void {
+    countQuery.whereNull('deleted_at')
+    query.whereNull('deleted_at')
+  }
 }
