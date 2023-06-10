@@ -18,13 +18,13 @@ export default class ProjectMembersController {
   }
 
   @bind()
-  public async store({ request, bouncer }: HttpContextContract, project: Project) {
+  public async store({ request, bouncer,auth }: HttpContextContract, project: Project) {
     await bouncer.with('ProjectMembersPolicy').authorize('create', project)
     const { application_message: applicationMessage } = await request.validate(StoreValidator)
 
     const membership = await ProjectMember.create({
       applicationMessage,
-      profileId: project.id,
+      profileId: auth.user!.selectedProfileId!,
       projectId: project.id,
     })
 

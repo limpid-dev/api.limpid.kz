@@ -1271,6 +1271,125 @@ paths:
       responses:
         '200':
           description: Project is deleted
+  '/projects/{project_id}/members':
+    get:
+      tags:
+        - Projects
+      parameters:
+        - in: path
+          name: project_id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: page
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: per_page
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Project's members
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: '#/components/schemas/Pagination'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ProjectMember'
+    post:
+      tags:
+        - Projects
+      parameters:
+        - in: path
+          name: project_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - application_message
+              properties:
+                application_message:
+                  type: string
+      responses:
+        '200':
+          description: Project's member
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ProjectMember'
+  '/projects/{project_id}/members/{member_id}':
+    delete:
+      tags:
+        - Projects
+      parameters:
+        - in: path
+          name: project_id
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: member_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Project's member is deleted
+  '/projects/{project_id}/members/{member_id}/accept':
+    post:
+      tags:
+        - Projects
+      responses:
+        '200':
+          description: Project's member
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ProjectMember'
+  '/projects/{project_id}/members/{member_id}/reject':
+    post:
+      tags:
+        - Projects
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                rejection_message:
+                  type: string
+      responses:
+        '200':
+          description: Project's member
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ProjectMember'
   '/chats':
     get:
       tags:
@@ -2018,3 +2137,27 @@ components:
           type: string
         updated_at:
           type: string
+    ProjectMember:
+      type: object
+      properties:
+        id: 
+          type: integer
+        project_id:
+          type: integer
+        profile_id:
+          type: integer
+        application_message:
+          type: string
+        rejection_message:
+          type: string
+          nullable: true
+        applied_at:
+          type: string
+          format: date-time
+        accepted_at:
+          type: string
+          nullable: true
+        rejected_at:
+          type: string
+          nullable: true
+        
