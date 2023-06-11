@@ -193,6 +193,6 @@ export default class OrganizationsController {
   public async destroy({ bouncer }: HttpContextContract, organization: Profile) {
     await bouncer.with('OrganizationsPolicy').authorize('delete', organization)
 
-    await organization.softDelete()
+    await organization.delete()
   }
 }

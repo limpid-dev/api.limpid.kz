@@ -1,28 +1,15 @@
+import { AttachmentContract, attachment } from '@ioc:Adonis/Addons/AttachmentLite'
+import { BaseModel, BelongsTo, HasMany, belongsTo, column, hasMany } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
-import {
-  BaseModel,
-  BelongsTo,
-  HasMany,
-  ModelQueryBuilderContract,
-  beforeFetch,
-  beforeFind,
-  beforePaginate,
-  belongsTo,
-  column,
-  hasMany,
-} from '@ioc:Adonis/Lucid/Orm'
-import User from './User'
-import { attachment, AttachmentContract } from '@ioc:Adonis/Addons/AttachmentLite'
-import ProfileMember from './ProfileMember'
-import ProjectMember from './ProjectMember'
-import Tender from './Tender'
-import TenderBid from './TenderBid'
+import Certificate from './Certificate'
 import Education from './Education'
 import Experience from './Experience'
-import Certificate from './Certificate'
+import ProfileMember from './ProfileMember'
+import ProjectMember from './ProjectMember'
 import Skill from './Skill'
-
-type ProfileQuery = ModelQueryBuilderContract<typeof Profile>
+import Tender from './Tender'
+import TenderBid from './TenderBid'
+import User from './User'
 
 export default class Profile extends BaseModel {
   @column({ isPrimary: true })
@@ -120,31 +107,4 @@ export default class Profile extends BaseModel {
 
   @hasMany(() => ProjectMember)
   public projectMemberships: HasMany<typeof ProjectMember>
-
-  @column.dateTime({ serializeAs: null })
-  public deletedAt: DateTime | null
-
-  public async softDelete() {
-    this.deletedAt = DateTime.now()
-    await this.save()
-  }
-
-  @beforeFetch()
-  public static fetchWithoutSoftDeletes(query: ProfileQuery) {
-    query.whereNull('deleted_at')
-  }
-
-  @beforeFind()
-  public static findWithoutSoftDeletes(query: ProfileQuery) {
-    query.whereNull('deleted_at')
-  }
-
-  @beforePaginate()
-  public static paginateWithoutSoftDeletes([countQuery, query]: [
-    ProfileQuery,
-    ProfileQuery
-  ]): void {
-    countQuery.whereNull('deleted_at')
-    query.whereNull('deleted_at')
-  }
 }

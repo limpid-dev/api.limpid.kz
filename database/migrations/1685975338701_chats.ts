@@ -12,13 +12,12 @@ export default class extends BaseSchema {
         .unsigned()
         .references('id')
         .inTable('projects')
-        .onDelete('SET NULL')
+        .onDelete('CASCADE')
         .nullable()
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL
        */
       table.timestamp('created_at', { useTz: true }).notNullable()
-      table.timestamp('deleted_at', { useTz: true }).nullable()
     })
   }
 

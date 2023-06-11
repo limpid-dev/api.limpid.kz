@@ -100,7 +100,7 @@ Route.group(() => {
   Route.resource('certificates', 'CertificatesController')
     .apiOnly()
     .as('organizations.certificates')
-    .paramFor('certificates', ':>certificate')
+    .paramFor('certificates', '>certificate')
 
   Route.get('project-memberships', 'ProjectMembershipsController.index')
   Route.get('project-memberships/:>projectMembership', 'ProjectMembershipsController.show')

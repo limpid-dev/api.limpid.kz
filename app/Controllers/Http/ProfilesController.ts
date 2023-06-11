@@ -193,6 +193,6 @@ export default class ProfilesController {
   public async destroy({ bouncer }: HttpContextContract, profile: Profile) {
     await bouncer.with('ProfilesPolicy').authorize('delete', profile)
 
-    await profile.softDelete()
+    await profile.delete()
   }
 }

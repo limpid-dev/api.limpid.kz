@@ -11,15 +11,15 @@ export default class extends BaseSchema {
         .unsigned()
         .references('id')
         .inTable('users')
-        .onDelete('SET NULL')
-        .nullable()
+        .onDelete('CASCADE')
+        .notNullable()
       table
         .integer('chat_id')
         .unsigned()
         .references('id')
         .inTable('chats')
-        .onDelete('SET NULL')
-        .nullable()
+        .onDelete('CASCADE')
+        .notNullable()
       table.text('message').notNullable()
 
       /**
