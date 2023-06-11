@@ -160,7 +160,7 @@ Route.group(() => {
 
   Route.get('/members', 'MembersController.index')
 })
-  .prefix('/chat/:chat')
+  .prefix('/chats/:chat')
   .middleware('auth')
 
 Route.get('/auctions', 'AuctionsController.index')
