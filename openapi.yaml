@@ -2383,6 +2383,8 @@ components:
           type: integer
         user_id:
           type: integer
+        views:
+          type: integer
         display_name:
           type: string
         description:
@@ -2400,6 +2402,9 @@ components:
         tin:
           type: string
         legal_structure:
+          type: string
+          nullable: true
+        perfomance:
           type: string
           nullable: true
         is_visible:
