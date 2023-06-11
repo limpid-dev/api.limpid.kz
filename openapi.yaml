@@ -2166,6 +2166,161 @@ paths:
                 properties:
                   data:
                     $ref: '#/components/schemas/OrganizationMember'
+  '/organizations/{profile_id}/certificates':
+    get:
+      tags:
+        - Organizations
+      parameters:
+        - in: path
+          name: profile_id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: page
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: per_page
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Profile's certificates
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: '#/components/schemas/Pagination'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Certificate'
+    post:
+      tags:
+        - Organizations
+      parameters:
+        - in: path
+          name: profile_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - title
+                - description
+                - institution
+                - issued_at
+                - attachment
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                institution:
+                  type: string
+                issued_at:
+                  type: string
+                expired_at:
+                  type: string
+                attachment:
+                  type: string
+                  format: binary
+  '/organizations/{organization_id}/certificates/{certificate_id}':
+    get:
+      tags:
+        - Organizations
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: certificate_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Certificate data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Certificate'
+    patch:
+      tags:
+        - Organizations
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: certificate_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                institution:
+                  type: string
+                issued_at:
+                  type: string
+                expired_at:
+                  type: string
+                attachment:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Updated certificate's data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Certificate'
+    delete:
+      tags:
+        - Organizations
+      parameters:
+        - in: path
+          name: organization_id
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: certificate_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Certificate is deleted
 components:
   securitySchemes:
     bearerAuth:
