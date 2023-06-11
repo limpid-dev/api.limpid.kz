@@ -36,6 +36,26 @@ export default class StoreValidator {
       size: '64mb',
       extnames: ['pdf', 'docx'],
     }),
+    photo_one: schema.file.optional({
+      size: '1mb',
+      extnames: ['jpg', 'jpeg', 'png', 'webp'],
+    }),
+    photo_two: schema.file.optional({
+      size: '1mb',
+      extnames: ['jpg', 'jpeg', 'png', 'webp'],
+    }),
+    photo_three: schema.file.optional({
+      size: '1mb',
+      extnames: ['jpg', 'jpeg', 'png', 'webp'],
+    }),
+    photo_four: schema.file.optional({
+      size: '1mb',
+      extnames: ['jpg', 'jpeg', 'png', 'webp'],
+    }),
+    photo_five: schema.file.optional({
+      size: '1mb',
+      extnames: ['jpg', 'jpeg', 'png', 'webp'],
+    }),
   })
 
   /**

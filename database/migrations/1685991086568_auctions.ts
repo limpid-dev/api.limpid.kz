@@ -20,6 +20,11 @@ export default class extends BaseSchema {
       table.decimal('purchase_price', 20, 4).nullable()
       table.string('duration', 255).notNullable()
       table.json('technical_specification').nullable()
+      table.json('photo_one').nullable()
+      table.json('photo_two').nullable()
+      table.json('photo_three').nullable()
+      table.json('photo_four').nullable()
+      table.json('photo_five').nullable()
 
       /**
        * Uses timestamptz for PostgreSQL and DATETIME2 for MSSQL

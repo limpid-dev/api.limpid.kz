@@ -28,6 +28,11 @@ export default class AuctionsController {
       duration: duration,
       industry: industry,
       technical_specification: technicalSpecification,
+      photo_one: photoOne,
+      photo_two: photoTwo,
+      photo_three: photoThree,
+      photo_four: photoFour,
+      photo_five: photoFive,
     } = await request.validate(StoreValidator)
 
     const auction = new Auction()
@@ -45,6 +50,36 @@ export default class AuctionsController {
     if (technicalSpecification) {
       auction.merge({
         technicalSpecification: Attachment.fromFile(technicalSpecification),
+      })
+    }
+
+    if (photoOne) {
+      auction.merge({
+        photoOne: Attachment.fromFile(photoOne)
+      })
+    }
+
+    if (photoTwo) {
+      auction.merge({
+        photoTwo: Attachment.fromFile(photoTwo),
+      })
+    }
+
+    if (photoThree) {
+      auction.merge({
+        photoThree: Attachment.fromFile(photoThree),
+      })
+    }
+
+    if (photoFour) {
+      auction.merge({
+        photoFour: Attachment.fromFile(photoFour),
+      })
+    }
+
+    if (photoFive) {
+      auction.merge({
+        photoFive: Attachment.fromFile(photoFive),
       })
     }
 

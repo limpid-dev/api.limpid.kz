@@ -68,6 +68,21 @@ export default class Auction extends BaseModel {
   @attachment({ preComputeUrl: true })
   public technicalSpecification: AttachmentContract | null
 
+  @attachment({ preComputeUrl: true })
+  public photoOne: AttachmentContract | null
+
+  @attachment({ preComputeUrl: true })
+  public photoTwo: AttachmentContract | null
+
+  @attachment({ preComputeUrl: true })
+  public photoThree: AttachmentContract | null
+
+  @attachment({ preComputeUrl: true })
+  public photoFour: AttachmentContract | null
+
+  @attachment({ preComputeUrl: true })
+  public photoFive: AttachmentContract | null
+
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 
