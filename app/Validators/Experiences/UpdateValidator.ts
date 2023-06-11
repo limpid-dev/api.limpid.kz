@@ -25,7 +25,10 @@ export default class UpdateValidator {
    */
   public schema = schema.create({
     title: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
-    description: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
+    description: schema.string.optional({ trim: true }, [
+      rules.minLength(1),
+      rules.maxLength(2048),
+    ]),
     institution: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
     started_at: schema.date.optional({ format: 'yyyy-MM-dd' }),
     finished_at: schema.date.optional({

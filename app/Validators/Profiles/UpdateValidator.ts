@@ -28,7 +28,10 @@ export default class UpdateValidator {
       rules.minLength(1),
       rules.maxLength(255),
     ]),
-    description: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
+    description: schema.string.optional({ trim: true }, [
+      rules.minLength(1),
+      rules.maxLength(2048),
+    ]),
     location: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
     industry: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
     owned_intellectual_resources: schema.string.optional({ trim: true }, [

@@ -25,7 +25,7 @@ export default class StoreValidator {
    */
   public schema = schema.create({
     display_name: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
-    description: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
+    description: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(2048)]),
     location: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
     industry: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
     owned_intellectual_resources: schema.string.optional({ trim: true }, [

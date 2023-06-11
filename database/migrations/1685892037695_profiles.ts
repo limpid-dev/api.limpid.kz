@@ -14,7 +14,7 @@ export default class extends BaseSchema {
         .onDelete('CASCADE')
         .notNullable()
       table.string('display_name', 255).notNullable()
-      table.string('description', 255).notNullable()
+      table.string('description', 2048).notNullable()
       table.string('location', 255).notNullable()
       table.string('industry', 255).notNullable()
       table.string('owned_intellectual_resources', 2048).nullable()
