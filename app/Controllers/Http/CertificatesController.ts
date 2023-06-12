@@ -16,6 +16,11 @@ export default class CertificatesController {
   }
 
   @bind()
+  public async show({}: HttpContextContract, _profile: Profile, certificate: Certificate) {
+    return { data: certificate }
+  }
+
+  @bind()
   public async store({ bouncer, request }: HttpContextContract, profile: Profile) {
     await bouncer.with('ProfileSubResourcePolicy').authorize('create', profile)
     const {
