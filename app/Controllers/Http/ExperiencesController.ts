@@ -42,6 +42,11 @@ export default class ExperiencesController {
   }
 
   @bind()
+  public async show({}: HttpContextContract, _profile: Profile, experience: Experience) {
+    return { data: experience }
+  }
+
+  @bind()
   public async update(
     { bouncer, request }: HttpContextContract,
     profile: Profile,
