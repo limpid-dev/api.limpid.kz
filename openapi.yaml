@@ -1600,6 +1600,7 @@ paths:
                 - description
                 - industry
                 - duration
+                - starting_price
               properties:
                 title:
                   type: string
@@ -1614,6 +1615,21 @@ paths:
                 purchase_price:
                   type: number
                 technical_specification:
+                  type: string
+                  format: binary
+                photo_one:
+                  type: string
+                  format: binary
+                photo_two:
+                  type: string
+                  format: binary
+                photo_three:
+                  type: string
+                  format: binary
+                photo_four:
+                  type: string
+                  format: binary
+                photo_five:
                   type: string
                   format: binary
       responses:
@@ -2749,8 +2765,26 @@ components:
         technical_specification:
           $ref: '#/components/schemas/Attachment'
           nullable: true
+        photo_one:
+          $ref: '#/components/schemas/Attachment'
+          nullable: true
+        photo_two:
+          $ref: '#/components/schemas/Attachment'
+          nullable: true
+        photo_three:
+          $ref: '#/components/schemas/Attachment'
+          nullable: true
+        photo_four:
+          $ref: '#/components/schemas/Attachment'
+          nullable: true
+        photo_five:
+          $ref: '#/components/schemas/Attachment'
+          nullable: true
         won_auction_bid_id:
           type: integer
+        won_auction_bid:
+          $ref: '#/components/schemas/AuctionBid'
+          nullable: true
         verified_at:
           type: string
         created_at:
