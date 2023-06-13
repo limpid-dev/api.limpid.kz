@@ -60,37 +60,37 @@ export default class TendersController {
 
   @bind()
   public async update({ request, bouncer, auth }: HttpContextContract, tender: Tender) {
-    if (request.all().won_tender_bid_id) {
-      await bouncer.with('TenderPolicy').allows('updateWinner', tender)
+    // if (request.all().won_tender_bid_id) {
+    //   await bouncer.with('TenderPolicy').allows('updateWinner', tender)
 
-      const { won_tender_bid_id: wonTenderBidId } = await request.validate(UpdateWinnerValidator)
+    //   const { won_tender_bid_id: wonTenderBidId } = await request.validate(UpdateWinnerValidator)
 
-      tender.merge({
-        wonTenderBidId,
-      })
+    //   tender.merge({
+    //     wonTenderBidId,
+    //   })
 
-      await tender.save()
+    //   await tender.save()
 
-      const wonTenderBid = await TenderBid.findOrFail(wonTenderBidId)
+    //   const wonTenderBid = await TenderBid.findOrFail(wonTenderBidId)
 
-      await wonTenderBid.load('profile')
+    //   await wonTenderBid.load('profile')
 
-      await wonTenderBid.profile.load('user')
+    //   await wonTenderBid.profile.load('user')
 
-      const chat = await Chat.create({
-        name: `${auth.user!.firstName} ${auth.user!.lastName}, ${
-          wonTenderBid.profile.user.firstName
-        } ${wonTenderBid.profile.user.lastName}`,
-      })
+    //   const chat = await Chat.create({
+    //     name: `${auth.user!.firstName} ${auth.user!.lastName}, ${
+    //       wonTenderBid.profile.user.firstName
+    //     } ${wonTenderBid.profile.user.lastName}`,
+    //   })
 
-      await chat
-        .related('members')
-        .createMany([{ userId: auth.user!.id }, { userId: wonTenderBid.profile.user.id }])
+    //   await chat
+    //     .related('members')
+    //     .createMany([{ userId: auth.user!.id }, { userId: wonTenderBid.profile.user.id }])
 
-      return {
-        data: tender,
-      }
-    }
+    //   return {
+    //     data: tender,
+    //   }
+    // }
 
     await bouncer.with('TenderPolicy').allows('update', tender)
 
@@ -99,6 +99,7 @@ export default class TendersController {
       description: description,
       starting_price: startingPrice,
       duration: duration,
+      technical_specification: technicalSpecification,
     } = await request.validate(UpdateValidator)
 
     tender.merge({
@@ -110,6 +111,12 @@ export default class TendersController {
     if (duration) {
       tender.merge({
         duration: Duration.fromISO(duration),
+      })
+    }
+
+    if (technicalSpecification) {
+      tender.merge({
+        technicalSpecification: Attachment.fromFile(technicalSpecification),
       })
     }
 

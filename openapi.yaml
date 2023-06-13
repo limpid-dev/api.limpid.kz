@@ -17,6 +17,7 @@ tags:
   - name: Auctions
   - name: AuctionBids
   - name: Organizations
+  - name: Tenders
 security:
   - bearerAuth: []
 paths:
@@ -2321,6 +2322,141 @@ paths:
       responses:
         '200':
           description: Certificate is deleted
+  '/tenders':
+    get:
+      tags:
+        - Tenders
+      parameters:
+        - in: query
+          name: page
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: per_page
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Tenders
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: '#/components/schemas/Pagination'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Tender'
+    post:
+      tags:
+        - Tenders
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - title
+                - description
+                - starting_price
+                - duration
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                starting_price:
+                  type: integer
+                duration:
+                  type: integer
+                tecnical_specification:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Tender
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Tender'
+  '/tenders/{tender_id}':
+    get:
+      tags:
+        - Tenders
+      parameters:
+        - in: path
+          name: tender_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Tender
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Tender'
+    patch:
+      tags:
+        - Tenders
+      parameters:
+        - in: path
+          name: tender_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                title:
+                  type: string
+                description:
+                  type: string
+                starting_price:
+                  type: integer
+                duration:
+                  type: integer
+                tecnical_specification:
+                  type: string
+                  format: binary
+      responses:
+        '200':
+          description: Updated tender's data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Tender'
+    delete:
+      tags:
+        - Tenders
+      parameters:
+        - in: path
+          name: tender_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Tender is deleted
+
 components:
   securitySchemes:
     bearerAuth:
@@ -2680,3 +2816,56 @@ components:
         rejected_at:
           type: string
           nullable: true
+    Tender:
+      type: object
+      properties:
+        id:
+          type: integer
+        profile_id:
+          type: integer
+        won_tender_bid_id:
+          type: integer
+          nullable: true
+        won_tender_bid:
+          $ref: '#/components/schemas/TenderBid'
+          nullable: true
+        title:
+          type: string
+        description:
+          type: string
+        industry:
+          type: string
+        starting_price:
+          type: number
+          nullable: true
+        duration:
+          type: string
+        technical_specification:
+          $ref: '#/components/schemas/Attachment'
+          nullable: true
+        verified_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    TenderBid:
+      type: object
+      properties:
+        id:
+          type: integer
+        profile_id:
+          type: integer
+        tender_id:
+          type: integer
+        price:
+          type: number
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
