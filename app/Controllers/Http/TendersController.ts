@@ -1,13 +1,10 @@
 import { bind } from '@adonisjs/route-model-binding'
 import { Attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
-import Chat from 'App/Models/Chat'
 import Tender from 'App/Models/Tender'
-import TenderBid from 'App/Models/TenderBid'
 import IndexValidator from 'App/Validators/Tenders/IndexValidator'
 import StoreValidator from 'App/Validators/Tenders/StoreValidator'
 import UpdateValidator from 'App/Validators/Tenders/UpdateValidator'
-import UpdateWinnerValidator from 'App/Validators/Tenders/UpdateWinnerValidator'
 import { Duration } from 'luxon'
 
 export default class TendersController {
@@ -59,7 +56,7 @@ export default class TendersController {
   }
 
   @bind()
-  public async update({ request, bouncer, auth }: HttpContextContract, tender: Tender) {
+  public async update({ request, bouncer }: HttpContextContract, tender: Tender) {
     // if (request.all().won_tender_bid_id) {
     //   await bouncer.with('TenderPolicy').allows('updateWinner', tender)
 

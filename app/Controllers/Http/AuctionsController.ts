@@ -55,7 +55,7 @@ export default class AuctionsController {
 
     if (photoOne) {
       auction.merge({
-        photoOne: Attachment.fromFile(photoOne)
+        photoOne: Attachment.fromFile(photoOne),
       })
     }
 
