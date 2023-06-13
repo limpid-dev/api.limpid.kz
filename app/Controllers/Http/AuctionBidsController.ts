@@ -7,6 +7,7 @@ import StoreValidator from 'App/Validators/AuctionBids/StoreValidator'
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
 import { bind } from '@adonisjs/route-model-binding'
 import AuctionBidPolicy from 'App/Policies/AuctionBidPolicy'
+import { DateTime } from 'luxon'
 
 const PRICE_MODIFIER = 1.01
 
@@ -43,6 +44,28 @@ export default class AuctionBidsController {
 
   @bind()
   public async store({ request, auth, bouncer }: HttpContextContract, auction: Auction) {
+
+    const now = DateTime.now()
+
+    if (auction.finishedAt) {
+
+      if (auction.finishedAt < now) {
+
+      const winnerBid = await AuctionBid.query()
+      .where('auctionId', auction.id)
+      .orderBy('price', 'desc')
+      .firstOrFail()
+      
+      auction.merge({
+        wonAuctionBidId: winnerBid.id
+      })
+
+      auction.save()
+
+      return { data: auction }
+      }
+    }
+
     const { price } = await request.validate(StoreValidator)
 
     await bouncer.with('AuctionBidPolicy').allows('create', auction)
@@ -124,6 +147,28 @@ export default class AuctionBidsController {
     auction: Auction,
     auctionBid: AuctionBid
   ) {
+
+    const now = DateTime.now()
+
+    if (auction.finishedAt) {
+
+      if (auction.finishedAt < now) {
+
+      const winnerBid = await AuctionBid.query()
+      .where('auctionId', auction.id)
+      .orderBy('price', 'desc')
+      .firstOrFail()
+      
+      auction.merge({
+        wonAuctionBidId: winnerBid.id
+      })
+
+      auction.save()
+      
+      return { data: auction }
+      }
+    }
+
     await bouncer.with('AuctionBidPolicy').allows('update', auction, auctionBid)
 
     const { price } = await request.validate({
@@ -141,6 +186,7 @@ export default class AuctionBidsController {
         data: auctionBid,
       }
     } else {
+
       auctionBid.merge({ price })
 
       await auctionBid.save()
