@@ -22,7 +22,6 @@ export default class ProfilesController {
     profilesQuery.preload('user')
 
     profilesQuery.where('isPersonal', true)
-    profilesQuery.where('isVisible', true)
 
     if (userId) {
       profilesQuery.where('userId', userId)
