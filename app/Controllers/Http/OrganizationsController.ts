@@ -20,7 +20,6 @@ export default class OrganizationsController {
     const organizationsQuery = Profile.query()
 
     organizationsQuery.where('isPersonal', false)
-    organizationsQuery.where('isVisible', true)
 
     if (userId) {
       organizationsQuery.where('userId', userId)
