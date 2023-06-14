@@ -4,13 +4,14 @@ import Project from 'App/Models/Project'
 import ProjectMember from 'App/Models/ProjectMember'
 
 export default class MembersPolicy extends BasePolicy {
-  public async viewList(user: User, project: Project) {
-    return user.selectedProfileId === project.profileId
+  public async viewList(_user: User, _project: Project) {
+    // return user.selectedProfileId === project.profileId
+    return true
   }
   public async create(user: User, project: Project) {
     return (
-      user.selectedProfileId === project.profileId &&
-      !project.related('members').query().where('profileId', user.id).first()
+      user.selectedProfileId !== project.profileId &&
+      !project.related('members').query().where('profileId', user.selectedProfileId!).first()
     )
   }
   public async update(user: User, project: Project, member: ProjectMember) {
