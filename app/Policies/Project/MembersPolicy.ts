@@ -13,9 +13,9 @@ export default class MembersPolicy extends BasePolicy {
         return false
       }
 
-      // if(await project.related('members').query().where('profileId', user.selectedProfileId!).first()){
-      //   return false
-      // }
+      if(!!(await project.related('members').query().where('profileId', user.selectedProfileId!).first())){
+        return false
+      }
 
     return (
       true
