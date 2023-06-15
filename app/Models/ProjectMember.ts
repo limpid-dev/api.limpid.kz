@@ -25,7 +25,7 @@ export default class ProjectMember extends BaseModel {
   @belongsTo(() => Profile)
   public profile: BelongsTo<typeof Profile>
 
-  @column.dateTime()
+  @column.dateTime({autoCreate:true})
   public appliedAt: DateTime
 
   @column.dateTime()
