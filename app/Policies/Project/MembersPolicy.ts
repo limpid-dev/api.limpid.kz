@@ -9,9 +9,15 @@ export default class MembersPolicy extends BasePolicy {
     return true
   }
   public async create(user: User, project: Project) {
+      if(user.selectedProfileId === project.profileId){
+        return false
+      }
+
+      if(await project.related('members').query().where('profileId', user.selectedProfileId!).first()){
+        return false
+      }
+
     return (
-      // user.selectedProfileId !== project.profileId &&
-      // !project.related('members').query().where('profileId', user.selectedProfileId!).first()
       true
     )
   }
