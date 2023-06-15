@@ -10,8 +10,9 @@ export default class MembersPolicy extends BasePolicy {
   }
   public async create(user: User, project: Project) {
     return (
-      user.selectedProfileId !== project.profileId &&
-      !project.related('members').query().where('profileId', user.selectedProfileId!).first()
+      // user.selectedProfileId !== project.profileId &&
+      // !project.related('members').query().where('profileId', user.selectedProfileId!).first()
+      true
     )
   }
   public async update(user: User, project: Project, member: ProjectMember) {
