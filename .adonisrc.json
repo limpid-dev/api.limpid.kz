@@ -22,7 +22,8 @@
     {
       "file": "./start/validator",
       "environment": ["web"]
-    }
+    },
+    "./start/events"
   ],
   "providers": [
     "./providers/AppProvider",

@@ -6,6 +6,7 @@ import PaginationValidator from 'App/Validators/PaginationValidator'
 import RejectValidator from 'App/Validators/Projects/Members/RejectValidator'
 import StoreValidator from 'App/Validators/Projects/Members/StoreValidator'
 import { DateTime } from 'luxon'
+import Event from '@ioc:Adonis/Core/Event'
 
 export default class ProjectMembersController {
   @bind()
@@ -27,6 +28,8 @@ export default class ProjectMembersController {
       profileId: auth.user!.selectedProfileId!,
       projectId: project.id,
     })
+
+    await Event.emit('project:new-member', [project, membership])
 
     return {
       data: membership,

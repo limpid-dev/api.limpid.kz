@@ -5,6 +5,10 @@
  * file.
  */
 
+import Project from 'App/Models/Project'
+import ProjectMember from 'App/Models/ProjectMember'
+import Tender from 'App/Models/Tender'
+
 declare module '@ioc:Adonis/Core/Event' {
   /*
   |--------------------------------------------------------------------------
@@ -26,6 +30,8 @@ declare module '@ioc:Adonis/Core/Event' {
   |
   */
   interface EventsList {
-    //
+    'project:new-member': [Project, ProjectMember]
+    'tender:started': Tender
+    'tender:finished': Tender
   }
 }

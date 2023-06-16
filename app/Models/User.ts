@@ -14,6 +14,7 @@ import ChatMessage from './ChatMessage'
 import Profile from './Profile'
 import ProfileMember from './ProfileMember'
 import Invoice from './Invoice'
+import Notification from './Notification'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -81,6 +82,9 @@ export default class User extends BaseModel {
 
   @hasMany(() => Invoice)
   public invoices: HasMany<typeof Invoice>
+
+  @hasMany(() => Notification)
+  public notifications: HasMany<typeof Notification>
 
   @beforeSave()
   public static async hashPassword(user: User) {

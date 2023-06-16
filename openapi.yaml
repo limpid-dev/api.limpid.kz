@@ -18,6 +18,7 @@ tags:
   - name: AuctionBids
   - name: Organizations
   - name: Tenders
+  - name: Notifications
 security:
   - bearerAuth: []
 paths:
@@ -2472,7 +2473,75 @@ paths:
       responses:
         '200':
           description: Tender is deleted
-
+  '/notifcations':
+    get:
+      tags:
+        - Notifications
+      parameters:
+        - in: query
+          name: page
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: per_page
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Notifications
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: '#/components/schemas/Pagination'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Notification'
+  '/notifcations/{notification_id}':
+    get:
+      tags:
+        - Notifications
+      parameters:
+        - in: path
+          name: notification_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Notification
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Notification'
+  '/notifcations/{notification_id}/read':
+    post:
+      tags:
+        - Notifications
+      parameters:
+        - in: path
+          name: notification_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Notification is read
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Notification'
 components:
   securitySchemes:
     bearerAuth:
@@ -2901,5 +2970,27 @@ components:
           type: string
           format: date-time
         updated_at:
+          type: string
+          format: date-time
+    Notification:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        title:
+          type: string
+        description:
+          type: string
+        type:
+          type: string
+        meta:
+          type: object
+        read_at:
+          type: string
+          format: date-time
+          nullable: true
+        send_at:
           type: string
           format: date-time
