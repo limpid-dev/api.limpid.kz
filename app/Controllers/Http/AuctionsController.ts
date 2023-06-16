@@ -98,7 +98,6 @@ export default class AuctionsController {
 
   @bind()
   public async update({ request, bouncer }: HttpContextContract, auction: Auction) {
-
     await bouncer.with('AuctionPolicy').allows('update', auction)
 
     const {

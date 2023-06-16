@@ -44,25 +44,22 @@ export default class AuctionBidsController {
 
   @bind()
   public async store({ request, auth, bouncer }: HttpContextContract, auction: Auction) {
-
     const now = DateTime.now()
 
     if (auction.finishedAt) {
-
       if (auction.finishedAt < now) {
+        const winnerBid = await AuctionBid.query()
+          .where('auctionId', auction.id)
+          .orderBy('price', 'desc')
+          .firstOrFail()
 
-      const winnerBid = await AuctionBid.query()
-      .where('auctionId', auction.id)
-      .orderBy('price', 'desc')
-      .firstOrFail()
-      
-      auction.merge({
-        wonAuctionBidId: winnerBid.id
-      })
+        auction.merge({
+          wonAuctionBidId: winnerBid.id,
+        })
 
-      auction.save()
+        auction.save()
 
-      return { data: auction }
+        return { data: auction }
       }
     }
 
@@ -147,25 +144,22 @@ export default class AuctionBidsController {
     auction: Auction,
     auctionBid: AuctionBid
   ) {
-
     const now = DateTime.now()
 
     if (auction.finishedAt) {
-
       if (auction.finishedAt < now) {
+        const winnerBid = await AuctionBid.query()
+          .where('auctionId', auction.id)
+          .orderBy('price', 'desc')
+          .firstOrFail()
 
-      const winnerBid = await AuctionBid.query()
-      .where('auctionId', auction.id)
-      .orderBy('price', 'desc')
-      .firstOrFail()
-      
-      auction.merge({
-        wonAuctionBidId: winnerBid.id
-      })
+        auction.merge({
+          wonAuctionBidId: winnerBid.id,
+        })
 
-      auction.save()
-      
-      return { data: auction }
+        auction.save()
+
+        return { data: auction }
       }
     }
 
@@ -186,7 +180,6 @@ export default class AuctionBidsController {
         data: auctionBid,
       }
     } else {
-
       auctionBid.merge({ price })
 
       await auctionBid.save()

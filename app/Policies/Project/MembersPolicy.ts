@@ -9,17 +9,21 @@ export default class MembersPolicy extends BasePolicy {
     return true
   }
   public async create(user: User, project: Project) {
-      if(user.selectedProfileId === project.profileId){
-        return false
-      }
+    if (user.selectedProfileId === project.profileId) {
+      return false
+    }
 
-      if(!!(await project.related('members').query().where('profileId', user.selectedProfileId!).first())){
-        return false
-      }
+    if (
+      !!(await project
+        .related('members')
+        .query()
+        .where('profileId', user.selectedProfileId!)
+        .first())
+    ) {
+      return false
+    }
 
-    return (
-      true
-    )
+    return true
   }
   public async update(user: User, project: Project, member: ProjectMember) {
     return user.selectedProfileId === project.profileId && member.status === 'pending'
