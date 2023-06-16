@@ -1,6 +1,7 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Tender from 'App/Models/Tender'
 import TenderBid from 'App/Models/TenderBid'
+import User from 'App/Models/User'
 import IndexValidator from 'App/Validators/TenderBids/IndexValidator'
 import StoreValidator from 'App/Validators/TenderBids/StoreValidator'
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
@@ -46,6 +47,8 @@ export default class TenderBidsController {
 
     await bouncer.with('TenderBidPolicy').allows('create', tender)
 
+    const user = await User.findOrFail(auth.user!.id)
+
     if (tender.startingPrice) {
       await request.validate({
         schema: schema.create({
@@ -58,6 +61,10 @@ export default class TenderBidsController {
       price,
       profileId: auth.user!.selectedProfileId!,
     })
+
+    user.auctions_attempts = user.auctions_attempts - 1
+
+    await user.save()
 
     return {
       data: tenderBid,

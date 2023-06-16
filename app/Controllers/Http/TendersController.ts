@@ -2,6 +2,7 @@ import { bind } from '@adonisjs/route-model-binding'
 import { Attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Tender from 'App/Models/Tender'
+import User from 'App/Models/User'
 import IndexValidator from 'App/Validators/Tenders/IndexValidator'
 import StoreValidator from 'App/Validators/Tenders/StoreValidator'
 import UpdateValidator from 'App/Validators/Tenders/UpdateValidator'
@@ -16,7 +17,7 @@ export default class TendersController {
     return tenders
   }
 
-  public async store({ request, auth }: HttpContextContract) {
+  public async store({ request, auth, bouncer }: HttpContextContract) {
     const {
       title: title,
       description: description,
@@ -24,6 +25,10 @@ export default class TendersController {
       duration: duration,
       technical_specification: technicalSpecification,
     } = await request.validate(StoreValidator)
+
+    await bouncer.with('AuctionPolicy').authorize('create')
+
+    const user = await User.findOrFail(auth.user!.id)
 
     const tender = new Tender()
 
@@ -40,6 +45,10 @@ export default class TendersController {
         technicalSpecification: Attachment.fromFile(technicalSpecification),
       })
     }
+
+    user.auctions_attempts = user.auctions_attempts - 1
+
+    await user.save()
 
     return {
       data: tender,

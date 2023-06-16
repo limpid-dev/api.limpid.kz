@@ -1,4 +1,4 @@
-import { BasePolicy } from '@ioc:Adonis/Addons/Bouncer'
+import Bouncer, { BasePolicy } from '@ioc:Adonis/Addons/Bouncer'
 import User from 'App/Models/User'
 import AuctionBid from 'App/Models/AuctionBid'
 import Auction from 'App/Models/Auction'
@@ -34,9 +34,18 @@ export default class AuctionBidPolicy extends BasePolicy {
   }
 
   public async create(user: User, auction: Auction) {
-    await auction.load('profile')
+    const now = DateTime.now()
+    if (now >= user.payment_start && now <= user.payment_end || user.payment_end === null)
+    {
+      if (user.auctions_attempts > 0) 
+      {
+      await auction.load('profile')
 
-    return !!auction.verifiedAt && user.id !== auction.profile.userId
+      return !!auction.verifiedAt && user.id !== auction.profile.userId
+      }
+      return Bouncer.deny('Number of attempts has ended', 403)
+    }
+    return Bouncer.deny('Tariff has expired', 403)
   }
 
   public async update(user: User, auction: Auction, auctionBid: AuctionBid) {

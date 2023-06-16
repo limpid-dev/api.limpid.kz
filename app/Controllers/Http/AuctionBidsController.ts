@@ -2,6 +2,7 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Auction from 'App/Models/Auction'
 import AuctionBid from 'App/Models/AuctionBid'
 import Chat from 'App/Models/Chat'
+import User from 'App/Models/User'
 import IndexValidator from 'App/Validators/AuctionBids/IndexValidator'
 import StoreValidator from 'App/Validators/AuctionBids/StoreValidator'
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
@@ -44,7 +45,10 @@ export default class AuctionBidsController {
 
   @bind()
   public async store({ request, auth, bouncer }: HttpContextContract, auction: Auction) {
+    
     const now = DateTime.now()
+
+    const user = await User.findOrFail(auth.user!.id)
 
     if (auction.finishedAt) {
       if (auction.finishedAt < now) {
@@ -65,7 +69,7 @@ export default class AuctionBidsController {
 
     const { price } = await request.validate(StoreValidator)
 
-    await bouncer.with('AuctionBidPolicy').allows('create', auction)
+    await bouncer.with('AuctionBidPolicy').authorize('create', auction)
 
     if (auction.startingPrice) {
       await request.validate({
@@ -82,6 +86,11 @@ export default class AuctionBidsController {
         price,
         profileId: auth.user!.selectedProfileId!,
       })
+      
+      user.auctions_attempts = user.auctions_attempts - 1
+
+      await user.save()
+
       return {
         data: auctionBid,
       }
@@ -91,11 +100,15 @@ export default class AuctionBidsController {
         profileId: auth.user!.selectedProfileId!,
       })
 
+      user.auctions_attempts = user.auctions_attempts - 1
+
       auction.merge({
         wonAuctionBidId: auctionBid.id,
       })
 
       await auction.save()
+
+      await user.save()
 
       const wonAuctionBid = await AuctionBid.findOrFail(auctionBid.id)
       const wonAuction = await Auction.findOrFail(auction.id)

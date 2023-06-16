@@ -1,6 +1,7 @@
 import { bind } from '@adonisjs/route-model-binding'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Auction from 'App/Models/Auction'
+import User from 'App/Models/User'
 import IndexValidator from 'App/Validators/Auctions/IndexValidator'
 import StoreValidator from 'App/Validators/Auctions/StoreValidator'
 import UpdateValidator from 'App/Validators/Auctions/UpdateValidator'
@@ -16,7 +17,7 @@ export default class AuctionsController {
     return auction
   }
 
-  public async store({ request, auth }: HttpContextContract) {
+  public async store({ request, auth, bouncer }: HttpContextContract) {
     const {
       title: title,
       description: description,
@@ -32,7 +33,11 @@ export default class AuctionsController {
       photo_five: photoFive,
     } = await request.validate(StoreValidator)
 
+    await bouncer.with('AuctionPolicy').authorize('create')
+
     const auction = new Auction()
+
+    const user = await User.findOrFail(auth.user!.id)
 
     auction.merge({
       title,
@@ -80,7 +85,11 @@ export default class AuctionsController {
       })
     }
 
+    user.auctions_attempts = user.auctions_attempts - 1
+
     await auction.save()
+
+    await user.save()
 
     return {
       data: auction,
