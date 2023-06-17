@@ -2776,6 +2776,9 @@ components:
           type: string
         updated_at:
           type: string
+        verified_at:
+          type: string
+          nullable: true
     Skill:
       type: object
       properties:
