@@ -4,6 +4,7 @@ import {
   BelongsTo,
   HasMany,
   HasOne,
+  beforeSave,
   belongsTo,
   column,
   hasMany,
@@ -80,6 +81,9 @@ export default class Project extends BaseModel {
   })
   public businessPlan: AttachmentContract | null
 
+  @column.dateTime()
+  public verifiedAt: DateTime | null
+
   @column.dateTime({ autoCreate: true })
   public createdAt: DateTime
 
@@ -94,4 +98,11 @@ export default class Project extends BaseModel {
 
   @hasMany(() => ProjectMember)
   public members: HasMany<typeof ProjectMember>
+
+  @beforeSave()
+  public static async unverify(project:Project) {
+    if (project.$isDirty) {
+      project.verifiedAt = null
+    }
+  }
 }
