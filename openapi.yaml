@@ -2887,6 +2887,9 @@ components:
           type: integer
         profile_id:
           type: integer
+        profile:
+          $ref: '#/components/schemas/Profile'
+          nullable: true
         application_message:
           type: string
         rejection_message:
