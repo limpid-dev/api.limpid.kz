@@ -15,12 +15,13 @@ export default class MessagesController {
   }
 
   @bind()
-  public async store({ bouncer, request }: HttpContextContract, chat: Chat) {
+  public async store({ bouncer, request,auth }: HttpContextContract, chat: Chat) {
     await bouncer.with('ChatMessagesPolicy').authorize('create', chat)
 
     const { message } = await request.validate(StoreValidator)
 
     const chatMessage = await chat.related('messages').create({
+      userId: auth.user!.id,
       message,
     })
 
