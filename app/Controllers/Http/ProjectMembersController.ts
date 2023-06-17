@@ -15,7 +15,7 @@ export default class ProjectMembersController {
 
     const { page, per_page: perPage } = await request.validate(PaginationValidator)
 
-    return project.related('members').query().paginate(page, perPage)
+    return project.related('members').query().preload('profile').paginate(page, perPage)
   }
 
   @bind()
