@@ -2,6 +2,7 @@ import { bind } from '@adonisjs/route-model-binding'
 import { Attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Chat from 'App/Models/Chat'
+import User from 'App/Models/User'
 import Project from 'App/Models/Project'
 import IndexValidator from 'App/Validators/Projects/IndexValidator'
 import StoreValidator from 'App/Validators/Projects/StoreValidator'
@@ -69,7 +70,7 @@ export default class ProjectsController {
     return projects
   }
 
-  public async store({ auth, request }: HttpContextContract) {
+  public async store({ auth, request, bouncer }: HttpContextContract) {
     const {
       title: title,
       description: description,
@@ -88,6 +89,10 @@ export default class ProjectsController {
       presentation: presentation,
       business_plan: businessPlan,
     } = await request.validate(StoreValidator)
+
+    await bouncer.with('ProjectPolicy').authorize('create')
+
+    const user = await User.findOrFail(auth.user!.id)
 
     const chat = await Chat.create({
       name: title,
@@ -132,6 +137,10 @@ export default class ProjectsController {
     }
 
     await project.save()
+
+    user.projects_attempts = user.projects_attempts - 1
+
+    await user.save()
 
     chat.merge({
       projectId: project.id,
