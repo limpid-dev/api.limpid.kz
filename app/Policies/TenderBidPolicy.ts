@@ -43,9 +43,9 @@ export default class TenderBidPolicy extends BasePolicy {
 
       return !!tender.verifiedAt && user.id !== tender.profile.userId
       }
-      return Bouncer.deny('Number of attempts has ended', 403)
+      return Bouncer.deny('Number of attempts has ended', 402)
     }
-    return Bouncer.deny('Tariff has expired', 403)
+    return Bouncer.deny('Tariff has expired', 402)
   }
 
   public async update(user: User, tender: Tender, tenderBid: TenderBid) {
