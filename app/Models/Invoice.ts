@@ -51,4 +51,10 @@ export default class Invoice extends BaseModel {
 
   @column()
   public cancelToken: string
+  
+  @column()
+  public checkUrl: string
+
+  @column()
+  public invoiceId: number
 }

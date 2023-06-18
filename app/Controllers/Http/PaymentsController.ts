@@ -10,7 +10,7 @@ import { DateTime } from 'luxon'
 
 export default class PaymentsController {
   public async show({ request, auth }: HttpContextContract) {
-    const invoiceID = Math.floor(Math.random() * Math.pow(10, 6 - 1) + Math.pow(10, 6 - 1))
+    const invoiceID = DateTime.local().toMillis()
 
     const invoice = new Invoice()
 
@@ -23,7 +23,7 @@ export default class PaymentsController {
     }
 
     invoice.merge({
-      id: invoiceID,
+      invoiceId: invoiceID,
       amount: plans.amount,
       userId: users.id,
       postLink: Env.get('EPAY_POST_LINK'),
@@ -39,7 +39,7 @@ export default class PaymentsController {
     formData.append('amount', plans.amount)
     formData.append('currency', 'KZT')
     formData.append('client_id', Env.get('EPAY_CLIENT_ID'))
-    formData.append('client_secret', Env.get('EPAY_CLIENT_SECRET'))
+    formData.append('client_secret', '8VPL0#e$by)ZLigx')
     formData.append('terminal', Env.get('EPAY_TERMINAL_ID'))
     formData.append('invoiceID', invoiceID)
     formData.append(
@@ -68,12 +68,56 @@ export default class PaymentsController {
 
     const user = await User.findOrFail(id)
 
+    //const token = await this.webKassaToken()
+
     const invoice = new Invoice()
+
+    const data = {
+      "Token": Env.get('WEBKASSA_TOKEN'),
+      "CashboxUniqueNumber": Env.get('WEBKASSA_UNIQUE_NUMBER'),
+      "OperationType": 2,
+      "Positions": [
+        {
+          "Count": 1,
+          "Price": request.input('amount'),
+          "TaxPercent": null,
+          "Tax": 0,
+          "TaxType": 0,
+          "PositionName": invoice.description,
+          "UnitCode": 796,
+          "GTIN": 0,
+          "ProductId": plan.id
+        }
+      ],
+      "Payments": [
+        {
+          "Sum": request.input('amount'),
+          "PaymentType": 1,
+        }
+      ],
+      "Change": 0,
+      "RoundType": 2,
+      "ExternalCheckNumber": request.input('invoiceId'),
+      "CustomerEmail": user.email
+    }
+
+    const response = await fetch(Env.get('WEBKASSA_CHECK_URL'), {
+      method: 'POST',
+      body: JSON.stringify(data),
+      headers: {
+        'Content-Type': 'application/json',
+        'X-API-KEY': Env.get('WEBKASSA_API_KEY'),
+      },
+    })
+
+    const check = await response.json()
+
+    //console.log(check)
 
     invoice.merge({
       status: 'accepted',
       payId: request.input('id'),
-      id: invoiceId,
+      invoiceId: invoiceId,
       amount: request.input('amount'),
       userId: user.id,
       postLink: Env.get('EPAY_POST_LINK'),
@@ -82,6 +126,7 @@ export default class PaymentsController {
       language: request.input('language'),
       description: request.input('description'),
       currency: request.input('currency'),
+      checkUrl: check.Data.TicketUrl,
     })
 
     user.merge({
@@ -95,6 +140,32 @@ export default class PaymentsController {
 
     await invoice.save()
   }
+
+  public async webKassaToken() {
+
+    const request = {
+      "Login": Env.get('WEBKASSA_LOGIN'),
+      "Password": Env.get('WEBKASSA_PASSWORD')
+    }
+    try {
+      const response = await fetch(Env.get('WEBKASSA_TOKEN_URL'), {
+        method: 'POST',
+        body: JSON.stringify(request),
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-KEY': 'WK-F4B2AC0E-6BE5-49BA-A1DB-D9E58FC75346'
+        },
+      })
+  
+      const data = await response.json()
+  
+      return data
+    } 
+    catch (error) {
+      console.error('Error:', error.message)
+    }
+  }
+
 
   private async cancelPaymentToken(id: number) {
     const invoice = await Invoice.query()
@@ -114,7 +185,7 @@ export default class PaymentsController {
 
     formData.append('client_id', Env.get('EPAY_CLIENT_ID'))
 
-    formData.append('client_secret', Env.get('EPAY_CLIENT_SECRET'))
+    formData.append('client_secret', '8VPL0#e$by)ZLigx')
 
     const response = await fetch(Env.get('EPAY_TOKEN_URL'), {
       method: 'POST',
@@ -122,7 +193,6 @@ export default class PaymentsController {
     })
 
     const data = await response.json()
-
     invoice.merge({
       cancelToken: data.access_token,
     })
@@ -160,6 +230,7 @@ export default class PaymentsController {
       users.auctions_attempts === plan.auctions_attempts &&
       users.projects_attempts === plan.projects_attempts
     ) {
+
       const url = `https://epay-api.homebank.kz/operation/${payId}/refund`
 
       const response = await fetch(url, {
@@ -177,6 +248,50 @@ export default class PaymentsController {
         auctions_attempts: 0,
         projects_attempts: 0,
       })
+
+      //const tokenCheck = await this.webKassaToken()
+
+      const dataCheck = {
+        "Token": Env.get('WEBKASSA_TOKEN'),
+        "CashboxUniqueNumber": Env.get('WEBKASSA_UNIQUE_NUMBER'),
+        "OperationType": 3,
+        "Positions": [
+          {
+            "Count": 1,
+            "Price": plan.amount,
+            "TaxPercent": 0,
+            "Tax": 0,
+            "TaxType": 0,
+            "PositionName": 'Возврат платежа по подписке',
+            "UnitCode": 796,
+            "GTIN": 0,
+            "ProductId": plan.id
+          }
+        ],
+        "Payments": [
+          {
+            "Sum": invoice.amount,
+            "PaymentType": 1,
+          }
+        ],
+        "Change": 0,
+        "RoundType": 2,
+        "ExternalCheckNumber": invoice.payId,
+        "CustomerEmail": users.email
+      }
+  
+      const res = await fetch(Env.get('WEBKASSA_CHECK_URL'), {
+        method: 'POST',
+        body: JSON.stringify(dataCheck),
+        headers: {
+          'Content-Type': 'application/json',
+          'X-API-KEY': Env.get('WEBKASSA_API_KEY'),
+        },
+      })
+  
+      const check = await res.json()
+
+      console.log(check)
 
       await invoice.save()
 
