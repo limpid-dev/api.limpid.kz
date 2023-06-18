@@ -50,15 +50,15 @@ export default class extends BaseSeeder {
       {
         name: 'premium_quarter',
         amount: 199900,
-        projects_attempts: 1000,
-        auctions_attempts: 1000,
+        projects_attempts: 10000,
+        auctions_attempts: 10000,
         duration: 90,
       },
       {
         name: 'premium_year',
         amount: 639900,
-        projects_attempts: 1000,
-        auctions_attempts: 1000,
+        projects_attempts: 10000,
+        auctions_attempts: 10000,
         duration: 365,
       },
       {
