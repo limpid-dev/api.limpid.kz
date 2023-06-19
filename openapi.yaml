@@ -1413,9 +1413,7 @@ paths:
                 type: object
                 properties:
                   data:
-                    $ref: '#/components/schemas/ProjectMembership'
-                    nullable: true
-                    
+                    $ref: '#/components/schemas/ProjectMember'
   '/chats':
     get:
       tags:
@@ -2980,6 +2978,9 @@ components:
         rejected_at:
           type: string
           nullable: true
+        status:
+          type: string
+          enum: [pending, accepted, rejected]
     OrganizationMember:
       type: object
       properties:
