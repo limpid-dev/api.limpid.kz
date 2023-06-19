@@ -177,6 +177,7 @@ Route.group(() => {
 }).prefix('/auctions/:auction')
 
 Route.get('/payments/:plan', 'PaymentsController.show').middleware(['auth'])
+Route.get('/payments', 'PaymentsController.index')
 Route.post('/payments', 'PaymentsController.store')
 Route.delete('/payments', 'PaymentsController.destroy').middleware(['auth'])
 

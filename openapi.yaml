@@ -19,6 +19,7 @@ tags:
   - name: Organizations
   - name: Tenders
   - name: Notifications
+  - name: Payments
 security:
   - bearerAuth: []
 paths:
@@ -2542,6 +2543,59 @@ paths:
                 properties:
                   data:
                     $ref: '#/components/schemas/Notification'
+  '/payments':
+    get:
+      tags:
+        - Payments
+      responses:
+        '200':
+          description: Sub_plans
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/SubPlans'
+    post:
+      tags:
+        - Payments
+      responses:
+        '200':
+          description: Invoices
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Invoices'
+  '/payments/{sub_plan_id}':
+    get:
+      tags:
+        - Payments
+      parameters:
+        - in: path
+          name: sub_plan_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Invoices
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Invoices'
 components:
   securitySchemes:
     bearerAuth:
@@ -3000,3 +3054,62 @@ components:
         send_at:
           type: string
           format: date-time
+    SubPlans:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+        amount:
+          type: integer
+        projects_attempts:
+          type: integer
+        auctions_attempts:
+          type: integer
+        duration:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+    Invoices:
+      type: object
+      properties:
+        id:
+          type: integer
+        user_id:
+          type: integer
+        plan_id:
+          type: integer
+        amount:
+          type: integer
+        currency:
+          type: string
+        description:
+          type: string
+        post_link:
+          type: string
+        language:
+          type: string
+        terminal:
+          type: string
+        status:
+          type: string
+        pay_id:
+          type: string
+        cancel_token:
+          type: string
+        check_url:
+          type: string
+        invoice_id:
+          type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
+

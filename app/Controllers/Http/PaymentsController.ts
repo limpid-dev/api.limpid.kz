@@ -9,6 +9,12 @@ import { bind } from '@adonisjs/route-model-binding'
 import { DateTime } from 'luxon'
 
 export default class PaymentsController {
+  public async index({}: HttpContextContract) {
+    const plans = await SubPlans.query()
+
+    return plans
+  }
+
   public async show({ request, auth }: HttpContextContract) {
     const invoiceID = DateTime.local().toMillis()
 
