@@ -127,6 +127,7 @@ Route.resource('projects', 'ProjectsController')
   })
 
 Route.group(() => {
+  Route.get('membership', 'ProjectMembersController.showMembership')
   Route.get('members', 'ProjectMembersController.index')
   Route.post('members', 'ProjectMembersController.store')
   Route.post('members/:>member/accept', 'ProjectMembersController.accept')

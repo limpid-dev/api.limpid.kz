@@ -1394,6 +1394,26 @@ paths:
                 properties:
                   data:
                     $ref: '#/components/schemas/ProjectMember'
+  '/projects/{project_id}/membership':
+    get:
+      tags:
+        - Projects
+      parameters:
+        - in: path
+          name: project_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Project's membership
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/ProjectMembership'
   '/chats':
     get:
       tags:

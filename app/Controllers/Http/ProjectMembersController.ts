@@ -10,6 +10,18 @@ import Event from '@ioc:Adonis/Core/Event'
 
 export default class ProjectMembersController {
   @bind()
+  public async showMembership({ auth }: HttpContextContract, project: Project) {
+    const member = await ProjectMember.query()
+      .where('profileId', auth.user!.selectedProfileId!)
+      .where('projectId', project.id)
+      .firstOrFail()
+
+    return {
+      data: member,
+    }
+  }
+
+  @bind()
   public async index({ request, bouncer }: HttpContextContract, project: Project) {
     await bouncer.with('ProjectMembersPolicy').authorize('viewList', project)
 
