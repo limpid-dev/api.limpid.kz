@@ -1414,6 +1414,8 @@ paths:
                 properties:
                   data:
                     $ref: '#/components/schemas/ProjectMembership'
+                    nullable: true
+                    
   '/chats':
     get:
       tags:

@@ -14,7 +14,7 @@ export default class ProjectMembersController {
     const member = await ProjectMember.query()
       .where('profileId', auth.user!.selectedProfileId!)
       .where('projectId', project.id)
-      .firstOrFail()
+      .first()
 
     return {
       data: member,
