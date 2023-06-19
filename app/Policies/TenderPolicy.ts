@@ -6,17 +6,15 @@ import { DateTime } from 'luxon'
 export default class TenderPolicy extends BasePolicy {
   public async create(user: User) {
     const now = DateTime.now()
-    if (now >= user.payment_start && now <= user.payment_end || user.payment_end === null)
-    {
-      if (user.auctions_attempts > 0) 
-      {
-      return true
+    if ((now >= user.payment_start && now <= user.payment_end) || user.payment_end === null) {
+      if (user.auctions_attempts > 0) {
+        return true
       }
-    return Bouncer.deny('Number of attempts has ended', 402)
+      return Bouncer.deny('Number of attempts has ended', 402)
     }
     return Bouncer.deny('Tariff has expired', 402)
   }
-  
+
   public async update(user: User, tender: Tender) {
     await tender.load('profile')
 

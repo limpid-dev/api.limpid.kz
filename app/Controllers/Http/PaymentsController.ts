@@ -79,32 +79,32 @@ export default class PaymentsController {
     const invoice = new Invoice()
 
     const data = {
-      "Token": Env.get('WEBKASSA_TOKEN'),
-      "CashboxUniqueNumber": Env.get('WEBKASSA_UNIQUE_NUMBER'),
-      "OperationType": 2,
-      "Positions": [
+      Token: Env.get('WEBKASSA_TOKEN'),
+      CashboxUniqueNumber: Env.get('WEBKASSA_UNIQUE_NUMBER'),
+      OperationType: 2,
+      Positions: [
         {
-          "Count": 1,
-          "Price": request.input('amount'),
-          "TaxPercent": null,
-          "Tax": 0,
-          "TaxType": 0,
-          "PositionName": invoice.description,
-          "UnitCode": 796,
-          "GTIN": 0,
-          "ProductId": plan.id
-        }
+          Count: 1,
+          Price: request.input('amount'),
+          TaxPercent: null,
+          Tax: 0,
+          TaxType: 0,
+          PositionName: invoice.description,
+          UnitCode: 796,
+          GTIN: 0,
+          ProductId: plan.id,
+        },
       ],
-      "Payments": [
+      Payments: [
         {
-          "Sum": request.input('amount'),
-          "PaymentType": 1,
-        }
+          Sum: request.input('amount'),
+          PaymentType: 1,
+        },
       ],
-      "Change": 0,
-      "RoundType": 2,
-      "ExternalCheckNumber": request.input('invoiceId'),
-      "CustomerEmail": user.email
+      Change: 0,
+      RoundType: 2,
+      ExternalCheckNumber: request.input('invoiceId'),
+      CustomerEmail: user.email,
     }
 
     const response = await fetch(Env.get('WEBKASSA_CHECK_URL'), {
@@ -148,10 +148,9 @@ export default class PaymentsController {
   }
 
   public async webKassaToken() {
-
     const request = {
-      "Login": Env.get('WEBKASSA_LOGIN'),
-      "Password": Env.get('WEBKASSA_PASSWORD')
+      Login: Env.get('WEBKASSA_LOGIN'),
+      Password: Env.get('WEBKASSA_PASSWORD'),
     }
     try {
       const response = await fetch(Env.get('WEBKASSA_TOKEN_URL'), {
@@ -159,19 +158,17 @@ export default class PaymentsController {
         body: JSON.stringify(request),
         headers: {
           'Content-Type': 'application/json',
-          'X-API-KEY': 'WK-F4B2AC0E-6BE5-49BA-A1DB-D9E58FC75346'
+          'X-API-KEY': 'WK-F4B2AC0E-6BE5-49BA-A1DB-D9E58FC75346',
         },
       })
-  
+
       const data = await response.json()
-  
+
       return data
-    } 
-    catch (error) {
+    } catch (error) {
       console.error('Error:', error.message)
     }
   }
-
 
   private async cancelPaymentToken(id: number) {
     const invoice = await Invoice.query()
@@ -236,7 +233,6 @@ export default class PaymentsController {
       users.auctions_attempts === plan.auctions_attempts &&
       users.projects_attempts === plan.projects_attempts
     ) {
-
       const url = `https://epay-api.homebank.kz/operation/${payId}/refund`
 
       const response = await fetch(url, {
@@ -258,34 +254,34 @@ export default class PaymentsController {
       //const tokenCheck = await this.webKassaToken()
 
       const dataCheck = {
-        "Token": Env.get('WEBKASSA_TOKEN'),
-        "CashboxUniqueNumber": Env.get('WEBKASSA_UNIQUE_NUMBER'),
-        "OperationType": 3,
-        "Positions": [
+        Token: Env.get('WEBKASSA_TOKEN'),
+        CashboxUniqueNumber: Env.get('WEBKASSA_UNIQUE_NUMBER'),
+        OperationType: 3,
+        Positions: [
           {
-            "Count": 1,
-            "Price": plan.amount,
-            "TaxPercent": 0,
-            "Tax": 0,
-            "TaxType": 0,
-            "PositionName": 'Возврат платежа по подписке',
-            "UnitCode": 796,
-            "GTIN": 0,
-            "ProductId": plan.id
-          }
+            Count: 1,
+            Price: plan.amount,
+            TaxPercent: 0,
+            Tax: 0,
+            TaxType: 0,
+            PositionName: 'Возврат платежа по подписке',
+            UnitCode: 796,
+            GTIN: 0,
+            ProductId: plan.id,
+          },
         ],
-        "Payments": [
+        Payments: [
           {
-            "Sum": invoice.amount,
-            "PaymentType": 1,
-          }
+            Sum: invoice.amount,
+            PaymentType: 1,
+          },
         ],
-        "Change": 0,
-        "RoundType": 2,
-        "ExternalCheckNumber": invoice.payId,
-        "CustomerEmail": users.email
+        Change: 0,
+        RoundType: 2,
+        ExternalCheckNumber: invoice.payId,
+        CustomerEmail: users.email,
       }
-  
+
       const res = await fetch(Env.get('WEBKASSA_CHECK_URL'), {
         method: 'POST',
         body: JSON.stringify(dataCheck),
@@ -294,7 +290,7 @@ export default class PaymentsController {
           'X-API-KEY': Env.get('WEBKASSA_API_KEY'),
         },
       })
-  
+
       const check = await res.json()
 
       console.log(check)

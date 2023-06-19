@@ -100,7 +100,7 @@ export default class Project extends BaseModel {
   public members: HasMany<typeof ProjectMember>
 
   @beforeSave()
-  public static async unverify(project:Project) {
+  public static async unverify(project: Project) {
     if (project.$isDirty) {
       project.verifiedAt = null
     }

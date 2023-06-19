@@ -45,7 +45,6 @@ export default class AuctionBidsController {
 
   @bind()
   public async store({ request, auth, bouncer }: HttpContextContract, auction: Auction) {
-    
     const now = DateTime.now()
 
     const user = await User.findOrFail(auth.user!.id)
@@ -86,7 +85,7 @@ export default class AuctionBidsController {
         price,
         profileId: auth.user!.selectedProfileId!,
       })
-      
+
       user.auctions_attempts = user.auctions_attempts - 1
 
       await user.save()

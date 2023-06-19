@@ -35,13 +35,11 @@ export default class AuctionBidPolicy extends BasePolicy {
 
   public async create(user: User, auction: Auction) {
     const now = DateTime.now()
-    if (now >= user.payment_start && now <= user.payment_end || user.payment_end === null)
-    {
-      if (user.auctions_attempts > 0) 
-      {
-      await auction.load('profile')
+    if ((now >= user.payment_start && now <= user.payment_end) || user.payment_end === null) {
+      if (user.auctions_attempts > 0) {
+        await auction.load('profile')
 
-      return !!auction.verifiedAt && user.id !== auction.profile.userId
+        return !!auction.verifiedAt && user.id !== auction.profile.userId
       }
       return Bouncer.deny('Number of attempts has ended', 402)
     }

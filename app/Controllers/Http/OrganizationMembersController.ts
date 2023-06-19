@@ -14,7 +14,12 @@ export default class OrganizationMembersController {
 
     const { page, per_page: perPage } = await request.validate(PaginationValidator)
 
-    return profile.related('members').query().preload('user').preload('profile').paginate(page, perPage)
+    return profile
+      .related('members')
+      .query()
+      .preload('user')
+      .preload('profile')
+      .paginate(page, perPage)
   }
 
   @bind()

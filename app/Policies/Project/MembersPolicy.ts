@@ -5,7 +5,14 @@ import ProjectMember from 'App/Models/ProjectMember'
 
 export default class MembersPolicy extends BasePolicy {
   public async viewList(user: User, project: Project) {
-    return user.selectedProfileId === project.profileId || !!(await project.related('members').query().where('profileId', user.selectedProfileId!).first())
+    return (
+      user.selectedProfileId === project.profileId ||
+      !!(await project
+        .related('members')
+        .query()
+        .where('profileId', user.selectedProfileId!)
+        .first())
+    )
   }
   public async create(user: User, project: Project) {
     if (user.selectedProfileId === project.profileId) {
