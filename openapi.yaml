@@ -1654,6 +1654,8 @@ paths:
                 photo_five:
                   type: string
                   format: binary
+                type:
+                  type: string
       responses:
         '200':
           description: Auction data
@@ -1714,6 +1716,8 @@ paths:
                   type: number
                 won_auction_bid_id:
                   type: integer
+                type:
+                  type: string
       responses:
         '200':
           description: Updated auctions's data
@@ -3030,6 +3034,8 @@ components:
         purchase_price:
           type: number
           nullable: true
+        type:
+          type: string
         technical_specification:
           $ref: '#/components/schemas/Attachment'
           nullable: true

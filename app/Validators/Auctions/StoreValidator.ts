@@ -32,6 +32,7 @@ export default class StoreValidator {
     ]),
     duration: schema.string({ trim: true }, [rules.duration()]),
     industry: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
+    type: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
     technical_specification: schema.file.optional({
       size: '64mb',
       extnames: ['pdf', 'docx'],

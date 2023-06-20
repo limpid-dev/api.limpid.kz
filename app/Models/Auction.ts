@@ -52,6 +52,9 @@ export default class Auction extends BaseModel {
   @column.dateTime()
   public verifiedAt: DateTime | null
 
+  @column()
+  public type: string
+
   @computed()
   public get startedAt() {
     return this.verifiedAt

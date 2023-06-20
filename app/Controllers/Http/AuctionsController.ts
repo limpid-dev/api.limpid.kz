@@ -31,6 +31,7 @@ export default class AuctionsController {
       photo_three: photoThree,
       photo_four: photoFour,
       photo_five: photoFive,
+      type: type,
     } = await request.validate(StoreValidator)
 
     await bouncer.with('AuctionPolicy').authorize('create')
@@ -47,6 +48,7 @@ export default class AuctionsController {
       industry,
       duration: Duration.fromISO(duration),
       profileId: auth.user!.selectedProfileId!,
+      type,
     })
 
     if (technicalSpecification) {
@@ -114,12 +116,14 @@ export default class AuctionsController {
       description: description,
       starting_price: startingPrice,
       duration: duration,
+      type: type,
     } = await request.validate(UpdateValidator)
 
     auction.merge({
       title,
       description,
       startingPrice,
+      type,
     })
 
     if (duration) {
