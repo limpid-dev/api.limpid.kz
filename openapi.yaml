@@ -2494,6 +2494,128 @@ paths:
       responses:
         '200':
           description: Tender is deleted
+  '/tenders/{tender_id}/bids':
+    get:
+      tags:
+        - Tenders
+      parameters:
+        - in: path
+          name: tender_id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: page
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: per_page
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: TenderBids
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: '#/components/schemas/Pagination'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/TenderBid'
+    post:
+      tags:
+        - Tenders
+      parameters:
+        - in: path
+          name: tender_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - price
+              properties:
+                price:
+                  type: number
+      responses:
+        '200':
+          description: TenderBid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/TenderBid'
+  '/tenders/{tender_id}/bids/{bid_id}':
+    get:
+      tags:
+        - Tenders
+      parameters:
+        - in: path
+          name: tender_id
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: bid_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: TenderBid
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/TenderBid'
+    patch:
+      tags:
+        - Tenders
+      parameters:
+        - in: path
+          name: tender_id
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: bid_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                price:
+                  type: number
+      responses:
+        '200':
+          description: Updated tender bid's data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/TenderBid'
   '/notifcations':
     get:
       tags:
