@@ -10,11 +10,37 @@ import { Attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 
 export default class AuctionsController {
   public async index({ request }: HttpContextContract) {
-    const { page, per_page: perPage } = await request.validate(IndexValidator)
+    const { 
+      page,
+      per_page: perPage,
+      industry,
+      search,
+      profile_id: profileId,
+    } = await request.validate(IndexValidator)
 
-    const auction = await Auction.query().preload('wonAuctionBid').preload('profile').paginate(page, perPage)
+    const query = Auction.query()
 
-    return auction
+    if (profileId) {
+      query.where('profileId', profileId)
+    }
+
+    if (industry) {
+      query.whereIn('industry', industry)
+    }
+
+    if (search) {
+      query.andWhere((query) => {
+        query
+          .whereLike('title', `%${search}%`)
+          .orWhereLike('description', `%${search}%`)
+      })
+    }
+
+    const auctions = await query.preload('wonAuctionBid').preload('profile').paginate(page, perPage)
+
+    auctions.queryString(request.qs())
+
+    return auctions
   }
 
   public async store({ request, auth, bouncer }: HttpContextContract) {
