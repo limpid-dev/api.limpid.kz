@@ -52,6 +52,8 @@ export default class TendersController {
 
     await user.save()
 
+    await tender.save()
+
     return {
       data: tender,
     }

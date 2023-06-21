@@ -12,7 +12,7 @@ export default class AuctionsController {
   public async index({ request }: HttpContextContract) {
     const { page, per_page: perPage } = await request.validate(IndexValidator)
 
-    const auction = await Auction.query().preload('wonAuctionBid').paginate(page, perPage)
+    const auction = await Auction.query().preload('wonAuctionBid').preload('profile').paginate(page, perPage)
 
     return auction
   }
@@ -117,6 +117,12 @@ export default class AuctionsController {
       starting_price: startingPrice,
       duration: duration,
       type: type,
+      technical_specification: technicalSpecification,
+      photo_one: photoOne,
+      photo_two: photoTwo,
+      photo_three: photoThree,
+      photo_four: photoFour,
+      photo_five: photoFive,
     } = await request.validate(UpdateValidator)
 
     auction.merge({
@@ -129,6 +135,42 @@ export default class AuctionsController {
     if (duration) {
       auction.merge({
         duration: Duration.fromISO(duration),
+      })
+    }
+
+    if (technicalSpecification) {
+      auction.merge({
+        technicalSpecification: Attachment.fromFile(technicalSpecification),
+      })
+    }
+
+    if (photoOne) {
+      auction.merge({
+        photoOne: Attachment.fromFile(photoOne),
+      })
+    }
+
+    if (photoTwo) {
+      auction.merge({
+        photoTwo: Attachment.fromFile(photoTwo),
+      })
+    }
+
+    if (photoThree) {
+      auction.merge({
+        photoThree: Attachment.fromFile(photoThree),
+      })
+    }
+
+    if (photoFour) {
+      auction.merge({
+        photoFour: Attachment.fromFile(photoFour),
+      })
+    }
+
+    if (photoFive) {
+      auction.merge({
+        photoFive: Attachment.fromFile(photoFive),
       })
     }
 

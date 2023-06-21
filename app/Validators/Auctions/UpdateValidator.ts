@@ -35,6 +35,30 @@ export default class UpdateValidator {
     ]),
     duration: schema.string.optional({ trim: true }, [rules.duration()]),
     type: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
+    technical_specification: schema.file.optional({
+      size: '64mb',
+      extnames: ['pdf', 'docx'],
+    }),
+    photo_one: schema.file.optional({
+      size: '1mb',
+      extnames: ['jpg', 'jpeg', 'png', 'webp'],
+    }),
+    photo_two: schema.file.optional({
+      size: '1mb',
+      extnames: ['jpg', 'jpeg', 'png', 'webp'],
+    }),
+    photo_three: schema.file.optional({
+      size: '1mb',
+      extnames: ['jpg', 'jpeg', 'png', 'webp'],
+    }),
+    photo_four: schema.file.optional({
+      size: '1mb',
+      extnames: ['jpg', 'jpeg', 'png', 'webp'],
+    }),
+    photo_five: schema.file.optional({
+      size: '1mb',
+      extnames: ['jpg', 'jpeg', 'png', 'webp'],
+    }),
   })
 
   /**
