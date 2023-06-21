@@ -173,7 +173,7 @@ Route.delete('/auctions/:auction', 'AuctionsController.destroy').middleware(['au
 Route.group(() => {
   Route.get('/bids', 'AuctionBidsController.index')
   Route.post('/bids', 'AuctionBidsController.store').middleware(['auth'])
-  Route.get('/bids/:auctionBid', 'AuctionBidsController.show')
+  Route.get('/bids/user', 'AuctionBidsController.show')
   Route.patch('/bids/:auctionBid', 'AuctionBidsController.update').middleware(['auth'])
 }).prefix('/auctions/:auction')
 

@@ -136,17 +136,15 @@ export default class AuctionBidsController {
   }
 
   @bind()
-  public async show({ bouncer }: HttpContextContract, auction: Auction, auctionBid: AuctionBid) {
-    const isAllowedToView = await bouncer
-      .with('AuctionBidPolicy')
-      .allows('view', auction, auctionBid)
-
-    if (isAllowedToView) {
-      return { data: auctionBid }
+  public async show({ auth }: HttpContextContract, auction: Auction) {
+    if (!auth.user!.selectedProfileId) {
+      throw new Error
     }
 
+    const auctionBidQuery = await AuctionBid.query().where('auctionId', auction.id).where('profileId', auth.user!.selectedProfileId).firstOrFail()
+
     return {
-      data: AuctionBidPolicy.stripRestrictedViewFieldsFromAuctionBid(auctionBid),
+      data: auctionBidQuery
     }
   }
 
