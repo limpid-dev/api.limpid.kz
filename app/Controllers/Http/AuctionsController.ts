@@ -100,10 +100,10 @@ export default class AuctionsController {
 
   @bind()
   public async show({}: HttpContextContract, auction: Auction) {
-    await auction.load('wonAuctionBid')
+    const auctions = await Auction.query().preload('wonAuctionBid').preload('profile').where('id', auction.id)
 
     return {
-      data: auction,
+      data: auctions,
     }
   }
 
