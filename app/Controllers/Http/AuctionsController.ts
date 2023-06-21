@@ -1,6 +1,7 @@
 import { bind } from '@adonisjs/route-model-binding'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Auction from 'App/Models/Auction'
+import AuctionBid from 'App/Models/AuctionBid'
 import User from 'App/Models/User'
 import IndexValidator from 'App/Validators/Auctions/IndexValidator'
 import StoreValidator from 'App/Validators/Auctions/StoreValidator'
@@ -100,10 +101,18 @@ export default class AuctionsController {
 
   @bind()
   public async show({}: HttpContextContract, auction: Auction) {
-    const auctions = await Auction.query().preload('wonAuctionBid').preload('profile').where('id', auction.id).firstOrFail()
-    
+    const auctions = await Auction.query().preload('profile').where('id', auction.id).firstOrFail()
+    if (auctions.wonAuctionBidId) {
+      const wonAuctionBid = await AuctionBid.findOrFail(auctions.wonAuctionBidId)
+
+      await wonAuctionBid.load('profile')
+
+      return {
+        data: auctions, wonAuctionBid
+      }
+    }
     return {
-      data: auctions,
+      data: auctions
     }
   }
 
