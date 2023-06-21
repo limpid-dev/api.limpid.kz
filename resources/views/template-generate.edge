@@ -1,0 +1,87 @@
+<style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 2px solid red;
+            padding: 8px;
+            text-align: left;
+        }
+        tr:nth-child(even) {
+            background-color: red;
+        }
+    </style>
+<h1>Техзадание</h1>
+<style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+        }
+        th, td {
+            border: 2px solid red;
+            padding: 8px;
+            text-align: left;
+        }
+        tr:nth-child(even) {
+            background-color: red;
+        }
+    </style>
+     <table>
+        <tr>
+            <th>Наименование</th>
+            <th>Значение</th>
+        </tr>
+        <tr>
+            <td>Наименование организации:</td>
+            <td>{{ name_of_organisation }}</td>
+        </tr>
+        <tr>
+            <td>БИН/ИНН Заказчика:</td>
+            <td>{{ customer_id_number }}</td>
+        </tr>
+        <tr>
+            <td>Наименование закупаемой услуги:</td>
+            <td>{{ name_of_service_to_be_purchased }}</td>
+        </tr>
+        <tr>
+            <td>Срок оказания услуги:</td>
+            <td>{{ service_delivery_time }}</td>
+        </tr>
+        <tr>
+            <td>Место оказания услуги:</td>
+            <td>{{ place_of_service_rendering }}</td>
+        </tr>
+        <tr>
+            <td>Размер авансового платежа:</td>
+            <td>{{ amount_of_advance_payment }}</td>
+        </tr>
+        <tr>
+            <td>Условия оплаты:</td>
+            <td>{{ payment_terms }}</td>
+        </tr>
+        <tr>
+            <td>Гарантийный срок (в месяцах):</td>
+            <td>{{ guarantee_period }}</td>
+        </tr>
+        <tr>
+            <td>Подробное описание услуг и требований:</td>
+            <td>{{ detailed_description_of_service_requirements }}</td>
+        </tr>
+        <tr>
+            <td>Исходные данные:</td>
+            <td>{{ input_data }}</td>
+        </tr>
+        <tr>
+            <td>Квалификационные требования к Потенциальным поставщикам:</td>
+            <td>{{ qualification_requirements_for_prospective_vendors }}</td>
+        </tr>
+        <tr>
+            <td>Обеспечение исполнения договора:</td>
+            <td>{{ performance_security }}</td>
+        </tr>
+        <tr>
+            <td>Специальные условия договора:</td>
+            <td>{{ special_contract_conditions }}</td>
+        </tr>
+    </table>

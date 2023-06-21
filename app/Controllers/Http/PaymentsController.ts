@@ -9,10 +9,10 @@ import { bind } from '@adonisjs/route-model-binding'
 import { DateTime } from 'luxon'
 
 export default class PaymentsController {
-  public async index({}: HttpContextContract) {
-    const plans = await SubPlans.query()
+  public async index({ auth }: HttpContextContract) {
+    const userInfo = await Invoice.query().where('userId', auth.user!.id).where('status', 'accepted').preload('users').firstOrFail()
 
-    return plans
+    return userInfo
   }
 
   public async show({ request, auth }: HttpContextContract) {

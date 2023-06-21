@@ -178,10 +178,12 @@ Route.group(() => {
 }).prefix('/auctions/:auction')
 
 Route.get('/payments/:plan', 'PaymentsController.show').middleware(['auth'])
-Route.get('/payments', 'PaymentsController.index')
+Route.get('/payments', 'PaymentsController.index').middleware(['auth'])
 Route.post('/payments', 'PaymentsController.store')
 Route.delete('/payments', 'PaymentsController.destroy').middleware(['auth'])
 
 Route.get('/notifications', 'NotificationsController.index').middleware(['auth'])
 Route.get('/notifications/:notification', 'NotificationsController.show').middleware(['auth'])
 Route.post('/notifications/:notification/read', 'NotificationsController.read').middleware(['auth'])
+
+Route.post('templates/:template', 'TemplatesController.store')

@@ -67,6 +67,7 @@
     "@adonisjs/route-model-binding": "^1.0.1",
     "@adonisjs/view": "^6.2.0",
     "form-data": "^4.0.0",
+    "gotenberg-js-client": "^0.7.4",
     "luxon": "^3.3.0",
     "otpauth": "^9.1.2",
     "pg": "^8.11.0",
