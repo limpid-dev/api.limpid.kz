@@ -8,7 +8,7 @@ export default class TemplatesController {
 
     const payload = await request.validate(StoreValidator)
 
-    const htmlContent = await view.render('template.html', payload)
+    const htmlContent = await view.render('template-generate', payload)
 
       const toPDF = pipe(
         gotenberg(''),
