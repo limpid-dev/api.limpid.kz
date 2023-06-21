@@ -1718,6 +1718,21 @@ paths:
                   type: integer
                 type:
                   type: string
+                photo_one:
+                  type: string
+                  format: binary
+                photo_two:
+                  type: string
+                  format: binary
+                photo_three:
+                  type: string
+                  format: binary
+                photo_four:
+                  type: string
+                  format: binary
+                photo_five:
+                  type: string
+                  format: binary
       responses:
         '200':
           description: Updated auctions's data
