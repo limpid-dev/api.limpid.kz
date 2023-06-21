@@ -37,10 +37,6 @@
             <td>{{ name_of_organisation }}</td>
         </tr>
         <tr>
-            <td>БИН/ИНН Заказчика:</td>
-            <td>{{ customer_id_number }}</td>
-        </tr>
-        <tr>
             <td>Наименование закупаемой услуги:</td>
             <td>{{ name_of_service_to_be_purchased }}</td>
         </tr>
@@ -68,20 +64,28 @@
             <td>Подробное описание услуг и требований:</td>
             <td>{{ detailed_description_of_service_requirements }}</td>
         </tr>
+        @if(input_data)
         <tr>
             <td>Исходные данные:</td>
             <td>{{ input_data }}</td>
         </tr>
+        @end
+        @if(qualification_requirements_for_prospective_vendors)
         <tr>
             <td>Квалификационные требования к Потенциальным поставщикам:</td>
             <td>{{ qualification_requirements_for_prospective_vendors }}</td>
         </tr>
+        @end
+        @if(performance_security)
         <tr>
             <td>Обеспечение исполнения договора:</td>
             <td>{{ performance_security }}</td>
         </tr>
+        @end
+        @if(special_contract_conditions)
         <tr>
             <td>Специальные условия договора:</td>
             <td>{{ special_contract_conditions }}</td>
         </tr>
+        @end
     </table>
