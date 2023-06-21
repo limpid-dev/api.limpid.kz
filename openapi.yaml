@@ -2407,6 +2407,7 @@ paths:
                 - description
                 - starting_price
                 - duration
+                - purchase_type
               properties:
                 title:
                   type: string
@@ -2414,6 +2415,8 @@ paths:
                   type: string
                 starting_price:
                   type: integer
+                purchase_type:
+                  type: string
                 duration:
                   type: integer
                 tecnical_specification:
@@ -2476,6 +2479,8 @@ paths:
                 tecnical_specification:
                   type: string
                   format: binary
+                purchase_type:
+                  type: string
       responses:
         '200':
           description: Updated tender's data
@@ -3152,6 +3157,8 @@ components:
         starting_price:
           type: number
           nullable: true
+        purchase_type:
+          type: string
         duration:
           type: string
         technical_specification:
