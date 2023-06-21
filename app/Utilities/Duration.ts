@@ -15,7 +15,7 @@ export const duration: DurationDecorator = (options) => {
     Model.$addColumn(property, {
       consume: (value) => (value ? Duration.fromISO(value) : null),
       prepare: (value) => (value ? value.toISO() : null),
-      serialize: (value) => (value ? value.toJSON() : null),
+      serialize: (value) => (value ? value.toObject() : null),
       ...columnOptions,
     })
   }
