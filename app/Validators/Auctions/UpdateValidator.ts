@@ -31,7 +31,7 @@ export default class UpdateValidator {
     ]),
     starting_price: schema.number.optional([rules.range(1, Number.MAX_SAFE_INTEGER)]),
     purchase_price: schema.number.optional([
-      rules.range(this.ctx.request.input('startingPrice'), Number.MAX_SAFE_INTEGER),
+      rules.range(this.ctx.request.input('startingPrice', 1), Number.MAX_SAFE_INTEGER),
     ]),
     duration: schema.string.optional({ trim: true }, [rules.duration()]),
     type: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
