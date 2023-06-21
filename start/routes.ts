@@ -21,7 +21,7 @@
 import Route from '@ioc:Adonis/Core/Route'
 import Application from '@ioc:Adonis/Core/Application'
 
-Route.on('/').render('swagger')
+Route.on('/').render('documentation')
 
 Route.get('/openapi.yaml', ({ response }) =>
   response.download(Application.makePath('openapi.yaml'))
