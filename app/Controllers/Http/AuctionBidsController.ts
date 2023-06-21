@@ -17,7 +17,7 @@ export default class AuctionBidsController {
   public async index({ request, bouncer }: HttpContextContract, auction: Auction) {
     const { page, per_page: perPage } = await request.validate(IndexValidator)
 
-    const auctionBidQuery = AuctionBid.query().where('auctionId', auction.id)
+    const auctionBidQuery = AuctionBid.query().where('auctionId', auction.id).preload('profile')
 
     const auctionBids = await auctionBidQuery.paginate(page, perPage)
 
