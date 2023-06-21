@@ -108,7 +108,7 @@ export default class AuctionsController {
       await wonAuctionBid.load('profile')
 
       return {
-        data: auctions, wonAuctionBid
+        data: {auctions, wonAuctionBid}
       }
     }
     return {
