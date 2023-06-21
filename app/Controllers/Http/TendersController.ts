@@ -24,6 +24,7 @@ export default class TendersController {
       starting_price: startingPrice,
       duration: duration,
       technical_specification: technicalSpecification,
+      purchase_type: purchaseType,
     } = await request.validate(StoreValidator)
 
     await bouncer.with('AuctionPolicy').authorize('create')
@@ -38,6 +39,7 @@ export default class TendersController {
       startingPrice,
       duration: Duration.fromISO(duration),
       profileId: auth.user!.selectedProfileId!,
+      purchaseType,
     })
 
     if (technicalSpecification) {
@@ -106,12 +108,14 @@ export default class TendersController {
       starting_price: startingPrice,
       duration: duration,
       technical_specification: technicalSpecification,
+      purchase_type: purchaseType,
     } = await request.validate(UpdateValidator)
 
     tender.merge({
       title,
       description,
       startingPrice,
+      purchaseType,
     })
 
     if (duration) {

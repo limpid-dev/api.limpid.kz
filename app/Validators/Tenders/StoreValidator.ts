@@ -27,6 +27,7 @@ export default class StoreValidator {
     title: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
     description: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(2048)]),
     starting_price: schema.number.optional([rules.range(1, Number.MAX_SAFE_INTEGER)]),
+    purchase_type: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
     duration: schema.string({ trim: true }, [rules.duration()]),
     technical_specification: schema.file.optional({
       size: '8mb',

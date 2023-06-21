@@ -43,6 +43,9 @@ export default class Tender extends BaseModel {
   @column()
   public startingPrice: number | null
 
+  @column()
+  public purchaseType: string
+
   @duration()
   public duration: Duration
 

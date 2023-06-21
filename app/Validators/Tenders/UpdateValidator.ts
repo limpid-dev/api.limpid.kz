@@ -30,6 +30,10 @@ export default class UpdateValidator {
       rules.maxLength(2048),
     ]),
     starting_price: schema.number.optional([rules.range(1, Number.MAX_SAFE_INTEGER)]),
+    purchase_type: schema.string.optional({ trim: true }, [
+      rules.minLength(1),
+      rules.maxLength(255),
+    ]),
     duration: schema.string.optional({ trim: true }, [rules.duration()]),
     technical_specification: schema.file.optional({
       size: '8mb',
