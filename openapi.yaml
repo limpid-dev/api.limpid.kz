@@ -2433,7 +2433,7 @@ paths:
                 purchase_type:
                   type: string
                 duration:
-                  type: integer
+                  type: string
                 tecnical_specification:
                   type: string
                   format: binary
@@ -2490,7 +2490,7 @@ paths:
                 starting_price:
                   type: integer
                 duration:
-                  type: integer
+                  type: string
                 tecnical_specification:
                   type: string
                   format: binary
@@ -3047,7 +3047,7 @@ components:
         industry:
           type: string
         duration:
-          type: string
+          $ref: '#/components/schemas/Duration'
         starting_price:
           type: number
           nullable: true
@@ -3175,7 +3175,7 @@ components:
         purchase_type:
           type: string
         duration:
-          type: string
+          $ref: '#/components/schemas/Duration'
         technical_specification:
           $ref: '#/components/schemas/Attachment'
           nullable: true
@@ -3285,3 +3285,24 @@ components:
         updated_at:
           type: string
           format: date-time
+    Duration:
+      type: object
+      properties:
+        years:
+          type: integer
+          nullable: true
+        months:
+          type: integer
+          nullable: true
+        days:
+          type: integer
+          nullable: true
+        hours:
+          type: integer
+          nullable: true
+        minutes:
+          type: integer
+          nullable: true
+        seconds:
+          type: integer
+          nullable: true
