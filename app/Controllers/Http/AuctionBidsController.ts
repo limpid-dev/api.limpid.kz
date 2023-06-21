@@ -64,7 +64,7 @@ export default class AuctionBidsController {
 
         return { data: auction }
       }
-    }
+    
 
     const { price } = await request.validate(StoreValidator)
 
@@ -80,7 +80,7 @@ export default class AuctionBidsController {
       })
     }
 
-    if (price !== auction.purchasePrice) {
+    if (price != auction.purchasePrice) {
       const auctionBid = auction.related('bids').create({
         price,
         profileId: auth.user!.selectedProfileId!,
@@ -93,7 +93,8 @@ export default class AuctionBidsController {
       return {
         data: auctionBid,
       }
-    } else {
+    } 
+    if (price == auction.purchasePrice) {
       const auctionBid = await auction.related('bids').create({
         price,
         profileId: auth.user!.selectedProfileId!,
@@ -130,8 +131,9 @@ export default class AuctionBidsController {
           { userId: wonAuctionBid.profile.user.id },
         ])
       return {
-        data: auction,
+        data: auction, wonAuctionBid
       }
+    }
     }
   }
 
@@ -171,7 +173,6 @@ export default class AuctionBidsController {
 
         return { data: auction }
       }
-    }
 
     await bouncer.with('AuctionBidPolicy').allows('update', auction, auctionBid)
 
@@ -181,7 +182,7 @@ export default class AuctionBidsController {
       }),
     })
 
-    if (price !== auction.purchasePrice) {
+    if (price != auction.purchasePrice) {
       auctionBid.merge({ price })
 
       await auctionBid.save()
@@ -189,7 +190,8 @@ export default class AuctionBidsController {
       return {
         data: auctionBid,
       }
-    } else {
+    }  
+    if (price == auction.purchasePrice) {
       auctionBid.merge({ price })
 
       await auctionBid.save()
@@ -223,8 +225,8 @@ export default class AuctionBidsController {
           { userId: wonAuctionBid.profile.user.id },
         ])
       return {
-        data: auction,
+        data: auction, wonAuctionBid
       }
-    }
+    }}
   }
 }
