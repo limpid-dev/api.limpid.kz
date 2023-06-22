@@ -42,7 +42,7 @@ export default class UpdateValidator {
       rules.minLength(1),
       rules.maxLength(2048),
     ]),
-    tin: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
+    // tin: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
     is_visible: schema.boolean.optional(),
     avatar: schema.file.optional({
       size: '1mb',
