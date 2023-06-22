@@ -33,6 +33,7 @@ export default class StoreValidator {
       size: '8mb',
       extnames: ['pdf', 'docx'],
     }),
+    industry: schema.string({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
   })
 
   /**

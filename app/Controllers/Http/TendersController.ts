@@ -25,6 +25,7 @@ export default class TendersController {
       duration: duration,
       technical_specification: technicalSpecification,
       purchase_type: purchaseType,
+      industry,
     } = await request.validate(StoreValidator)
 
     await bouncer.with('AuctionPolicy').authorize('create')
@@ -40,6 +41,7 @@ export default class TendersController {
       duration: Duration.fromISO(duration),
       profileId: auth.user!.selectedProfileId!,
       purchaseType,
+      industry,
     })
 
     if (technicalSpecification) {

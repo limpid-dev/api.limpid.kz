@@ -2423,6 +2423,7 @@ paths:
                 - starting_price
                 - duration
                 - purchase_type
+                - industry
               properties:
                 title:
                   type: string
@@ -2430,6 +2431,8 @@ paths:
                   type: string
                 starting_price:
                   type: integer
+                industry:
+                  type: string
                 purchase_type:
                   type: string
                 duration:
@@ -2489,6 +2492,8 @@ paths:
                   type: string
                 starting_price:
                   type: integer
+                industry:
+                  type: string
                 duration:
                   type: string
                 tecnical_specification:
