@@ -1,5 +1,6 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Profile from 'App/Models/Profile'
+import SubPlans from 'App/Models/SubPlans'
 import ProfilesPolicy from 'App/Policies/ProfilesPolicy'
 import IndexValidator from 'App/Validators/Profiles/IndexValidator'
 import StoreValidator from 'App/Validators/Profiles/StoreValidator'
@@ -104,6 +105,20 @@ export default class ProfilesController {
       twoGisUrl,
     })
 
+    const planName = ['light_month', 'light_quarter', 'light_year', 'create_auction_attempt', 'create_project_attempt']
+    if ( auth.user!.planId )
+    {
+      const plan = await SubPlans.findOrFail(auth.user!.planId)
+      if (!planName.includes(plan.name)) {
+      profile.isVisible = isVisible
+    } 
+    else {
+      profile.isVisible = true
+    }} 
+    else {
+      profile.isVisible = true
+    }
+
     if (avatar) {
       profile.merge({
         avatar: Attachment.fromFile(avatar),
@@ -139,7 +154,7 @@ export default class ProfilesController {
   }
 
   @bind()
-  public async update({ request, bouncer }: HttpContextContract, profile: Profile) {
+  public async update({ request, bouncer, auth }: HttpContextContract, profile: Profile) {
     await bouncer.with('ProfilesPolicy').authorize('update', profile)
 
     const {
@@ -174,6 +189,20 @@ export default class ProfilesController {
       telegramUrl,
       twoGisUrl,
     })
+
+    const planName = ['light_month', 'light_quarter', 'light_year', 'create_auction_attempt', 'create_project_attempt']
+    if ( auth.user!.planId )
+    {
+      const plan = await SubPlans.findOrFail(auth.user!.planId)
+      if (!planName.includes(plan.name)) {
+      profile.isVisible = profile.isVisible
+    } 
+    else {
+      profile.isVisible = true
+    }} 
+    else {
+      profile.isVisible = true
+    }
 
     if (avatar) {
       profile.merge({

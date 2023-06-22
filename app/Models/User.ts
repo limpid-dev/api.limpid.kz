@@ -7,6 +7,8 @@ import {
   column,
   hasMany,
   hasOne,
+  BelongsTo, 
+  belongsTo,
 } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'
 import ChatMember from './ChatMember'
@@ -15,6 +17,7 @@ import Profile from './Profile'
 import ProfileMember from './ProfileMember'
 import Invoice from './Invoice'
 import Notification from './Notification'
+import SubPlans from './SubPlans'
 
 export default class User extends BaseModel {
   @column({ isPrimary: true })
@@ -56,6 +59,9 @@ export default class User extends BaseModel {
   @column.dateTime()
   public payment_end: DateTime
 
+  @column()
+  public planId: number
+
   @column.dateTime()
   public emailVerifiedAt: DateTime | null
 
@@ -85,6 +91,9 @@ export default class User extends BaseModel {
 
   @hasMany(() => Notification)
   public notifications: HasMany<typeof Notification>
+
+  @belongsTo(() => SubPlans)
+  public plans: BelongsTo<typeof SubPlans>
 
   @beforeSave()
   public static async hashPassword(user: User) {

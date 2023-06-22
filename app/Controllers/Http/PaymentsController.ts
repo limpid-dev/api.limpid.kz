@@ -136,6 +136,7 @@ export default class PaymentsController {
     })
 
     user.merge({
+      planId: plan.id,
       payment_start: DateTime.now(),
       payment_end: DateTime.now().plus({ days: plan.duration }),
       projects_attempts: plan.projects_attempts,
