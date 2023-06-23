@@ -1831,7 +1831,7 @@ paths:
                 properties:
                   data:
                     $ref: '#/components/schemas/AuctionBid'
-  '/auctions/{auction_id}/bids/{auction_bid_id}':
+  '/auctions/{auction_id}/bids/user':
     get:
       tags:
         - AuctionBids
@@ -1841,14 +1841,9 @@ paths:
           required: true
           schema:
             type: integer
-        - in: path
-          name: auction_bid_id
-          required: true
-          schema:
-            type: integer
       responses:
         '200':
-          description: AuctionBid data
+          description: One participant's AuctionBid data
           content:
             application/json:
               schema:
@@ -1856,6 +1851,7 @@ paths:
                 properties:
                   data:
                     $ref: '#/components/schemas/AuctionBid'
+  '/auctions/{auction_id}/bids/{auction_bid_id}':
     patch:
       tags:
         - AuctionBids
