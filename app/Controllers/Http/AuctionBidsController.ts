@@ -80,25 +80,35 @@ export default class AuctionBidsController {
       })
     }
 
-    if (price !== auction.purchasePrice) {
-      const auctionBid = auction.related('bids').create({
-        price,
+    if (price != auction.purchasePrice) {
+
+      const auctionBid = new AuctionBid()
+
+      auctionBid.merge({
+        price: price,
         profileId: auth.user!.selectedProfileId!,
+        auctionId: auction.id
       })
 
       user.auctions_attempts = user.auctions_attempts - 1
 
+      await auctionBid.save()
+
       await user.save()
 
       return {
-        data: auctionBid,
+        data: auctionBid
       }
     } 
-    if (price === auction.purchasePrice) {
-      const auctionBid = await auction.related('bids').create({
-        price,
+    else {
+
+      const auctionBid = new AuctionBid()
+      auctionBid.merge({
+        price: price,
         profileId: auth.user!.selectedProfileId!,
+        auctionId: auction.id
       })
+      await auctionBid.save()
 
       user.auctions_attempts = user.auctions_attempts - 1
 
@@ -110,28 +120,18 @@ export default class AuctionBidsController {
 
       await user.save()
 
-      const wonAuctionBid = await AuctionBid.findOrFail(auctionBid.id)
+      user.auctions_attempts = user.auctions_attempts - 1
+
       const wonAuction = await Auction.findOrFail(auction.id)
+      const wonAuctionBid = await Auction.findOrFail(auctionBid.id)
+
 
       await wonAuctionBid.load('profile')
 
-      await wonAuctionBid.profile.load('user')
       await wonAuction.load('profile')
 
-      await wonAuction.profile.load('user')
-
-      const chat = await Chat.create({
-        name: `${wonAuction.profile.user.firstName} ${wonAuction.profile.user.lastName}, ${wonAuctionBid.profile.user.firstName} ${wonAuctionBid.profile.user.lastName}`,
-      })
-
-      await chat
-        .related('members')
-        .createMany([
-          { userId: wonAuction.profile.user.id },
-          { userId: wonAuctionBid.profile.user.id },
-        ])
       return {
-        data: auction, wonAuctionBid
+        data: wonAuction, wonAuctionBid
       }
     }
     }
@@ -182,7 +182,7 @@ export default class AuctionBidsController {
       }),
     })
 
-    if (price !== auction.purchasePrice) {
+    if (price != auction.purchasePrice) {
       auctionBid.merge({ price })
 
       await auctionBid.save()
@@ -191,7 +191,7 @@ export default class AuctionBidsController {
         data: auctionBid,
       }
     }  
-    if (price === auction.purchasePrice) {
+    if (price == auction.purchasePrice) {
       auctionBid.merge({ price })
 
       await auctionBid.save()
@@ -225,7 +225,7 @@ export default class AuctionBidsController {
           { userId: wonAuctionBid.profile.user.id },
         ])
       return {
-        data: auction, wonAuctionBid
+        data: wonAuction, wonAuctionBid
       }
     }}
   }
