@@ -7,33 +7,39 @@ import IndexValidator from 'App/Validators/AuctionBids/IndexValidator'
 import StoreValidator from 'App/Validators/AuctionBids/StoreValidator'
 import { rules, schema } from '@ioc:Adonis/Core/Validator'
 import { bind } from '@adonisjs/route-model-binding'
-//import AuctionBidPolicy from 'App/Policies/AuctionBidPolicy'
+import AuctionBidPolicy from 'App/Policies/AuctionBidPolicy'
 import { DateTime } from 'luxon'
 
 const PRICE_MODIFIER = 1.01
 
 export default class AuctionBidsController {
   @bind()
-  public async index({ request }: HttpContextContract, auction: Auction) {
+  public async index({ request, bouncer }: HttpContextContract, auction: Auction) {
     const { page, per_page: perPage } = await request.validate(IndexValidator)
 
-    if (auction.wonAuctionBidId !== null)
-    {
-      const auctionBidQuery = AuctionBid.query().where('auctionId', auction.id).preload('profile')
-      .preload('auction', (profileQuery) => {
-        profileQuery.preload('profile')
-      })
+    const auctionBidQuery = AuctionBid.query().where('auctionId', auction.id).preload('profile')
 
-      const auctionBids = await auctionBidQuery.paginate(page, perPage)
-      auctionBids.queryString(request.qs())
-      return auctionBids
-    }
-    else {
-      const auctionBidQuery = AuctionBid.query().where('auctionId', auction.id).preload('profile')
-      const auctionBids = await auctionBidQuery.paginate(page, perPage)
-      auctionBids.queryString(request.qs())
-      return auctionBids
-    } 
+    const auctionBids = await auctionBidQuery.paginate(page, perPage)
+
+    auctionBids.queryString(request.qs())
+
+    const allowedToViewAuctionBids = await Promise.all(
+      auctionBids.map(async (auctionBid) => {
+        const isAllowedToView = await bouncer
+          .with('AuctionBidPolicy')
+          .allows('view', auction, auctionBid)
+
+        if (isAllowedToView) {
+          return auctionBid
+        }
+
+        return AuctionBidPolicy.stripRestrictedViewFieldsFromAuctionBid(auctionBid)
+      })
+    )
+    return {
+      meta: auctionBids.getMeta(),
+      data: allowedToViewAuctionBids,
+  }
   }
 
   @bind()
@@ -73,7 +79,8 @@ export default class AuctionBidsController {
       })
     }
 
-    if (price !== auction.purchasePrice) {
+    if (auction.purchasePrice) {
+    if (price < auction.purchasePrice) {
 
       const auctionBid = new AuctionBid()
 
@@ -93,7 +100,7 @@ export default class AuctionBidsController {
         data: auctionBid
       }
     } 
-    else {
+    if (price == auction.purchasePrice || price > auction.purchasePrice) {
 
       const auctionBid = new AuctionBid()
       auctionBid.merge({
@@ -126,6 +133,17 @@ export default class AuctionBidsController {
       return {
         data: wonAuction, wonAuctionBid
       }
+    } }
+    else {
+      const auctionBid = new AuctionBid()
+
+      auctionBid.merge({
+        price: price,
+        profileId: auth.user!.selectedProfileId!,
+        auctionId: auction.id
+      })
+
+      await auctionBid.save()
     }
     }
   }
@@ -175,7 +193,8 @@ export default class AuctionBidsController {
       }),
     })
 
-    if (price != auction.purchasePrice) {
+    if (auction.purchasePrice) {
+    if (price < auction.purchasePrice) {
       auctionBid.merge({ price })
 
       await auctionBid.save()
@@ -184,7 +203,7 @@ export default class AuctionBidsController {
         data: auctionBid,
       }
     }  
-    if (price == auction.purchasePrice) {
+    if (price == auction.purchasePrice || price > auction.purchasePrice) {
       auctionBid.merge({ price })
 
       await auctionBid.save()
@@ -221,5 +240,11 @@ export default class AuctionBidsController {
         data: wonAuction, wonAuctionBid
       }
     }}
+    else {
+      auctionBid.merge({ price })
+
+      await auctionBid.save()
+    }
+  }
   }
 }
