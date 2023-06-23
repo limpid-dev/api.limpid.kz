@@ -80,7 +80,7 @@ export default class AuctionBidsController {
       })
     }
 
-    if (price != auction.purchasePrice) {
+    if (price !== auction.purchasePrice) {
 
       const auctionBid = new AuctionBid()
 
