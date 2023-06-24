@@ -145,9 +145,9 @@ Route.delete('/tenders/:tender', 'TendersController.destroy').middleware('auth')
 
 Route.group(() => {
   Route.get('/bids', 'TenderBidsController.index')
-  Route.post('/bids', 'TenderBidsController.store').middleware('auth')
-  Route.get('/bids/:tenderBid', 'TenderBidsController.show')
-  Route.patch('/bids/:tenderBid', 'TenderBidsController.update').middleware('auth')
+  Route.post('/bid', 'TenderBidsController.store').middleware('auth')
+  Route.get('/bid', 'TenderBidsController.show')
+  Route.patch('/bid', 'TenderBidsController.update').middleware('auth')
 }).prefix('/tenders/:tender')
 
 Route.get('/chats', 'ChatsController.index').middleware('auth')

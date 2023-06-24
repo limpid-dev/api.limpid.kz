@@ -72,24 +72,21 @@ export default class TenderBidsController {
   }
 
   @bind()
-  public async show({ bouncer }: HttpContextContract, tender: Tender, tenderBid: TenderBid) {
-    const isAllowedToView = await bouncer.with('TenderBidPolicy').allows('view', tender, tenderBid)
-
-    if (isAllowedToView) {
-      return { data: tenderBid }
-    }
+  public async show({auth }: HttpContextContract, tender: Tender) {
+    const tenderBid = await tender.related('bids').query().where('profileId',auth.user!.selectedProfileId!).firstOrFail()
 
     return {
-      data: TenderBidPolicy.stripRestrictedViewFieldsFromTenderBid(tenderBid),
+      data: tenderBid,
     }
   }
 
   @bind()
   public async update(
-    { bouncer, request }: HttpContextContract,
+    { bouncer, request,auth }: HttpContextContract,
     tender: Tender,
-    tenderBid: TenderBid
   ) {
+    const tenderBid = await tender.related('bids').query().where('profileId',auth.user!.selectedProfileId!).firstOrFail()
+
     await bouncer.with('TenderBidPolicy').allows('update', tender, tenderBid)
 
     const { price } = await request.validate({
