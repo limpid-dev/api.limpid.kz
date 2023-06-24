@@ -10,7 +10,11 @@ import { DateTime } from 'luxon'
 
 export default class PaymentsController {
   public async index({ auth }: HttpContextContract) {
-    const userInfo = await Invoice.query().where('userId', auth.user!.id).where('status', 'accepted').preload('users').firstOrFail()
+    const userInfo = await Invoice.query()
+      .where('userId', auth.user!.id)
+      .where('status', 'accepted')
+      .preload('users')
+      .firstOrFail()
 
     return userInfo
   }

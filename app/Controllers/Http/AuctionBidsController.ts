@@ -17,22 +17,22 @@ export default class AuctionBidsController {
   public async index({ request }: HttpContextContract, auction: Auction) {
     const { page, per_page: perPage } = await request.validate(IndexValidator)
 
-    if (auction.wonAuctionBidId !== null)
-    {
+    if (auction.wonAuctionBidId !== null) {
+      const auctionBidQuery = AuctionBid.query()
+        .where('auctionId', auction.id)
+        .preload('profile')
+        .preload('auction', (profileQuery) => {
+          profileQuery.preload('profile')
+        })
+      const auctionBids = await auctionBidQuery.paginate(page, perPage)
+      auctionBids.queryString(request.qs())
+      return auctionBids
+    } else {
       const auctionBidQuery = AuctionBid.query().where('auctionId', auction.id).preload('profile')
-      .preload('auction', (profileQuery) => {
-        profileQuery.preload('profile')
-      })
       const auctionBids = await auctionBidQuery.paginate(page, perPage)
       auctionBids.queryString(request.qs())
       return auctionBids
     }
-    else {
-      const auctionBidQuery = AuctionBid.query().where('auctionId', auction.id).preload('profile')
-      const auctionBids = await auctionBidQuery.paginate(page, perPage)
-      auctionBids.queryString(request.qs())
-      return auctionBids
-    } 
   }
 
   @bind()
@@ -56,101 +56,101 @@ export default class AuctionBidsController {
 
         return { data: auction }
       }
-    
 
-    const { price } = await request.validate(StoreValidator)
+      const { price } = await request.validate(StoreValidator)
 
-    await bouncer.with('AuctionBidPolicy').authorize('create', auction)
+      await bouncer.with('AuctionBidPolicy').authorize('create', auction)
 
-    if (auction.startingPrice) {
-      await request.validate({
-        schema: schema.create({
-          price: schema.number([
-            rules.range(auction.startingPrice * PRICE_MODIFIER, Number.MAX_SAFE_INTEGER),
-          ]),
-        }),
-      })
-    }
-
-    if (auction.purchasePrice) {
-    if (price < auction.purchasePrice) {
-
-      const auctionBid = new AuctionBid()
-
-      auctionBid.merge({
-        price: price,
-        profileId: auth.user!.selectedProfileId!,
-        auctionId: auction.id
-      })
-
-      user.auctions_attempts = user.auctions_attempts - 1
-
-      await auctionBid.save()
-
-      await user.save()
-
-      return {
-        data: auctionBid
+      if (auction.startingPrice) {
+        await request.validate({
+          schema: schema.create({
+            price: schema.number([
+              rules.range(auction.startingPrice * PRICE_MODIFIER, Number.MAX_SAFE_INTEGER),
+            ]),
+          }),
+        })
       }
-    } 
-    if (price == auction.purchasePrice || price > auction.purchasePrice) {
 
-      const auctionBid = new AuctionBid()
-      auctionBid.merge({
-        price: price,
-        profileId: auth.user!.selectedProfileId!,
-        auctionId: auction.id
-      })
-      await auctionBid.save()
+      if (auction.purchasePrice) {
+        if (price < auction.purchasePrice) {
+          const auctionBid = new AuctionBid()
 
-      user.auctions_attempts = user.auctions_attempts - 1
+          auctionBid.merge({
+            price: price,
+            profileId: auth.user!.selectedProfileId!,
+            auctionId: auction.id,
+          })
 
-      auction.merge({
-        wonAuctionBidId: auctionBid.id,
-      })
+          user.auctions_attempts = user.auctions_attempts - 1
 
-      await auction.save()
+          await auctionBid.save()
 
-      await user.save()
+          await user.save()
 
-      user.auctions_attempts = user.auctions_attempts - 1
+          return {
+            data: auctionBid,
+          }
+        }
+        if (price === auction.purchasePrice || price > auction.purchasePrice) {
+          const auctionBid = new AuctionBid()
+          auctionBid.merge({
+            price: price,
+            profileId: auth.user!.selectedProfileId!,
+            auctionId: auction.id,
+          })
+          await auctionBid.save()
 
-      const wonAuction = await Auction.findOrFail(auction.id)
-      const wonAuctionBid = await Auction.findOrFail(auctionBid.id)
+          user.auctions_attempts = user.auctions_attempts - 1
 
+          auction.merge({
+            wonAuctionBidId: auctionBid.id,
+          })
 
-      await wonAuctionBid.load('profile')
+          await auction.save()
 
-      await wonAuction.load('profile')
+          await user.save()
 
-      return {
-        data: wonAuction, wonAuctionBid
+          user.auctions_attempts = user.auctions_attempts - 1
+
+          const wonAuction = await Auction.findOrFail(auction.id)
+          const wonAuctionBid = await Auction.findOrFail(auctionBid.id)
+
+          await wonAuctionBid.load('profile')
+
+          await wonAuction.load('profile')
+
+          return {
+            data: wonAuction,
+            wonAuctionBid,
+          }
+        }
+      } else {
+        const auctionBid = new AuctionBid()
+
+        auctionBid.merge({
+          price: price,
+          profileId: auth.user!.selectedProfileId!,
+          auctionId: auction.id,
+        })
+
+        await auctionBid.save()
       }
-    } }
-    else {
-      const auctionBid = new AuctionBid()
-
-      auctionBid.merge({
-        price: price,
-        profileId: auth.user!.selectedProfileId!,
-        auctionId: auction.id
-      })
-
-      await auctionBid.save()
-    }
     }
   }
 
   @bind()
   public async show({ auth }: HttpContextContract, auction: Auction) {
     if (!auth.user!.selectedProfileId) {
-      throw new Error
+      throw new Error()
     }
 
-    const auctionBidQuery = await AuctionBid.query().where('auctionId', auction.id).where('profileId', auth.user!.selectedProfileId).firstOrFail()
+    const auctionBidQuery = await AuctionBid.query()
+      .where('auctionId', auction.id)
+      .where('profileId', auth.user!.selectedProfileId)
+      .firstOrFail()
 
     return {
-      data: auctionBidQuery
+      data: auctionBidQuery,
     }
   }
 
@@ -178,66 +178,67 @@ export default class AuctionBidsController {
         return { data: auction }
       }
 
-    await bouncer.with('AuctionBidPolicy').allows('update', auction, auctionBid)
+      await bouncer.with('AuctionBidPolicy').allows('update', auction, auctionBid)
 
-    const { price } = await request.validate({
-      schema: schema.create({
-        price: schema.number([rules.range(auctionBid.price * 1.01, Number.MAX_SAFE_INTEGER)]),
-      }),
-    })
-
-    if (auction.purchasePrice) {
-    if (price < auction.purchasePrice) {
-      auctionBid.merge({ price })
-
-      await auctionBid.save()
-
-      return {
-        data: auctionBid,
-      }
-    }  
-    if (price == auction.purchasePrice || price > auction.purchasePrice) {
-      auctionBid.merge({ price })
-
-      await auctionBid.save()
-
-      auction.merge({
-        wonAuctionBidId: auctionBid.id,
+      const { price } = await request.validate({
+        schema: schema.create({
+          price: schema.number([rules.range(auctionBid.price * 1.01, Number.MAX_SAFE_INTEGER)]),
+        }),
       })
 
-      await auction.save()
+      if (auction.purchasePrice) {
+        if (price < auction.purchasePrice) {
+          auctionBid.merge({ price })
 
-      const wonAuctionBid = await AuctionBid.findOrFail(auctionBid.id)
+          await auctionBid.save()
 
-      const wonAuction = await Auction.findOrFail(auction.id)
+          return {
+            data: auctionBid,
+          }
+        }
+        if (price === auction.purchasePrice || price > auction.purchasePrice) {
+          auctionBid.merge({ price })
 
-      await wonAuctionBid.load('profile')
+          await auctionBid.save()
 
-      await wonAuctionBid.profile.load('user')
+          auction.merge({
+            wonAuctionBidId: auctionBid.id,
+          })
 
-      await wonAuction.load('profile')
+          await auction.save()
 
-      await wonAuction.profile.load('user')
+          const wonAuctionBid = await AuctionBid.findOrFail(auctionBid.id)
 
-      const chat = await Chat.create({
-        name: `${wonAuction.profile.user.firstName} ${wonAuction.profile.user.lastName}, ${wonAuctionBid.profile.user.firstName} ${wonAuctionBid.profile.user.lastName}`,
-      })
+          const wonAuction = await Auction.findOrFail(auction.id)
 
-      await chat
-        .related('members')
-        .createMany([
-          { userId: wonAuction.profile.user.id },
-          { userId: wonAuctionBid.profile.user.id },
-        ])
-      return {
-        data: wonAuction, wonAuctionBid
+          await wonAuctionBid.load('profile')
+
+          await wonAuctionBid.profile.load('user')
+
+          await wonAuction.load('profile')
+
+          await wonAuction.profile.load('user')
+
+          const chat = await Chat.create({
+            name: `${wonAuction.profile.user.firstName} ${wonAuction.profile.user.lastName}, ${wonAuctionBid.profile.user.firstName} ${wonAuctionBid.profile.user.lastName}`,
+          })
+
+          await chat
+            .related('members')
+            .createMany([
+              { userId: wonAuction.profile.user.id },
+              { userId: wonAuctionBid.profile.user.id },
+            ])
+          return {
+            data: wonAuction,
+            wonAuctionBid,
+          }
+        }
+      } else {
+        auctionBid.merge({ price })
+
+        await auctionBid.save()
       }
-    }}
-    else {
-      auctionBid.merge({ price })
-
-      await auctionBid.save()
     }
-  }
   }
 }

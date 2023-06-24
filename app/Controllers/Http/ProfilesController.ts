@@ -105,17 +105,21 @@ export default class ProfilesController {
       twoGisUrl,
     })
 
-    const planName = ['light_month', 'light_quarter', 'light_year', 'create_auction_attempt', 'create_project_attempt']
-    if ( auth.user!.planId )
-    {
+    const planName = [
+      'light_month',
+      'light_quarter',
+      'light_year',
+      'create_auction_attempt',
+      'create_project_attempt',
+    ]
+    if (auth.user!.planId) {
       const plan = await SubPlans.findOrFail(auth.user!.planId)
       if (!planName.includes(plan.name)) {
-      profile.isVisible = isVisible
-    } 
-    else {
-      profile.isVisible = true
-    }} 
-    else {
+        profile.isVisible = isVisible
+      } else {
+        profile.isVisible = true
+      }
+    } else {
       profile.isVisible = true
     }
 
@@ -190,17 +194,19 @@ export default class ProfilesController {
       twoGisUrl,
     })
 
-    const planName = ['light_month', 'light_quarter', 'light_year', 'create_auction_attempt', 'create_project_attempt']
-    if ( auth.user!.planId )
-    {
+    const planName = [
+      'light_month',
+      'light_quarter',
+      'light_year',
+      'create_auction_attempt',
+      'create_project_attempt',
+    ]
+    if (auth.user!.planId) {
       const plan = await SubPlans.findOrFail(auth.user!.planId)
-      if (!planName.includes(plan.name)) {
-      profile.isVisible = profile.isVisible
-    } 
-    else {
-      profile.isVisible = true
-    }} 
-    else {
+      if (planName.includes(plan.name)) {
+        profile.isVisible = true
+      }
+    } else {
       profile.isVisible = true
     }
 

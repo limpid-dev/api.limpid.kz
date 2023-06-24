@@ -10,7 +10,7 @@ import { Attachment } from '@ioc:Adonis/Addons/AttachmentLite'
 
 export default class AuctionsController {
   public async index({ request }: HttpContextContract) {
-    const { 
+    const {
       page,
       per_page: perPage,
       industry,
@@ -30,9 +30,7 @@ export default class AuctionsController {
 
     if (search) {
       query.andWhere((query) => {
-        query
-          .whereLike('title', `%${search}%`)
-          .orWhereLike('description', `%${search}%`)
+        query.whereLike('title', `%${search}%`).orWhereLike('description', `%${search}%`)
       })
     }
 
@@ -126,19 +124,27 @@ export default class AuctionsController {
 
   @bind()
   public async show({}: HttpContextContract, auction: Auction) {
-    if (auction.wonAuctionBidId !== null)
-    {const auctions = await Auction.query().preload('wonAuctionBid', (profileQuery) => {
-      profileQuery.preload('profile')
-    }).preload('profile').where('id', auction.id).firstOrFail()
-    return {
-      data: auctions
-    }}
-    else {
-      const auctions = await Auction.query().preload('bids', (profileQuery) => {
-        profileQuery.preload('profile')
-      }).preload('profile').where('id', auction.id).firstOrFail()
+    if (auction.wonAuctionBidId !== null) {
+      const auctions = await Auction.query()
+        .preload('wonAuctionBid', (profileQuery) => {
+          profileQuery.preload('profile')
+        })
+        .preload('profile')
+        .where('id', auction.id)
+        .firstOrFail()
       return {
-        data: auctions
+        data: auctions,
+      }
+    } else {
+      const auctions = await Auction.query()
+        .preload('bids', (profileQuery) => {
+          profileQuery.preload('profile')
+        })
+        .preload('profile')
+        .where('id', auction.id)
+        .firstOrFail()
+      return {
+        data: auctions,
       }
     }
   }

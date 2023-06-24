@@ -7,7 +7,7 @@ import {
   column,
   hasMany,
   hasOne,
-  BelongsTo, 
+  BelongsTo,
   belongsTo,
 } from '@ioc:Adonis/Lucid/Orm'
 import { DateTime } from 'luxon'

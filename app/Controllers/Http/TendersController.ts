@@ -63,7 +63,7 @@ export default class TendersController {
 
   @bind()
   public async show({}: HttpContextContract, tender: Tender) {
-    await tender.load('wonTenderBid',(query)=>query.preload('profile'))
+    await tender.load('wonTenderBid', (query) => query.preload('profile'))
     await tender.load('profile')
 
     return {
