@@ -91,7 +91,7 @@ export default class AuctionBidsController {
             data: auctionBid,
           }
         }
-        if (price === auction.purchasePrice || price > auction.purchasePrice) {
+        if (price >= auction.purchasePrice) {
           const auctionBid = new AuctionBid()
           auctionBid.merge({
             price: price,
@@ -196,7 +196,7 @@ export default class AuctionBidsController {
             data: auctionBid,
           }
         }
-        if (price === auction.purchasePrice || price > auction.purchasePrice) {
+        if (price >= auction.purchasePrice) {
           auctionBid.merge({ price })
 
           await auctionBid.save()
