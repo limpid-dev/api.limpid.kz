@@ -114,6 +114,19 @@ export default class TendersController {
   }
 
   @bind()
+  public async showWinner({}, tender: Tender) {
+    tender.load('wonTenderBid', (q) => {
+      q.preload('profile', (q) => {
+        q.preload('user')
+      })
+    })
+
+    return {
+      data: tender.wonTenderBid,
+    }
+  }
+
+  @bind()
   public async updateWinner({ request, bouncer, auth }: HttpContextContract, tender: Tender) {
     await bouncer.with('TenderPolicy').allows('updateWinner', tender)
 

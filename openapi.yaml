@@ -2520,6 +2520,25 @@ paths:
         '200':
           description: Tender is deleted
   '/tenders/{tender_id}/winner':
+    get:
+      tags:
+        - Tenders
+      parameters:
+        - in: path
+          name: tender_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Tender winner
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/TenderBid'
     patch:
       tags:
         - Tenders
@@ -2956,6 +2975,9 @@ components:
           type: string
         updated_at:
           type: string
+        user:
+          $ref: '#/components/schemas/User'
+          nullable: true
     Attachment:
       type: object
       properties:
@@ -3285,6 +3307,9 @@ components:
         updated_at:
           type: string
           format: date-time
+        profile:
+          $ref: '#/components/schemas/Profile'
+          nullable: true
     Notification:
       type: object
       properties:
