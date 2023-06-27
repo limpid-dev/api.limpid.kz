@@ -4,7 +4,7 @@ import { DateTime } from 'luxon'
 
 export default class extends BaseSeeder {
   public static environment = ['development']
-  public async run () {
+  public async run() {
     await Profile.createMany([
       {
         userId: 1,

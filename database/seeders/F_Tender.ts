@@ -4,7 +4,7 @@ import { Duration, DateTime } from 'luxon'
 
 export default class extends BaseSeeder {
   public static environment = ['development']
-  public async run () {
+  public async run() {
     const duration = 'P20D'
     await Tender.createMany([
       {

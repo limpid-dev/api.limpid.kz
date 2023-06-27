@@ -4,13 +4,14 @@ import { DateTime } from 'luxon'
 
 export default class extends BaseSeeder {
   public static environment = ['development']
-  public async run () {
+  public async run() {
     await User.createMany([
       {
         email: 'example1@example.com',
         selectedProfileId: null,
         password: 'password1',
-        secret: 'OOIRB5KJHL3CTDFT4ROS47ZFZXRGV2YRGCSHT2YWBAVFTLIHZT2F3WRPIBC3EQQBB7UFY65F6447QXW3JSZQRB62S4UYFPIL2IQO2EY',
+        secret:
+          'OOIRB5KJHL3CTDFT4ROS47ZFZXRGV2YRGCSHT2YWBAVFTLIHZT2F3WRPIBC3EQQBB7UFY65F6447QXW3JSZQRB62S4UYFPIL2IQO2EY',
         firstName: 'John',
         lastName: 'Doe',
         patronymic: null,
@@ -26,7 +27,8 @@ export default class extends BaseSeeder {
         email: 'example2@example.com',
         selectedProfileId: null,
         password: 'password2',
-        secret: 'GHKDVOUYJV3OMJVVSIUTIF2RLXGFMPLCY6UPYRKHUZYAATXLQXXTFNRWFZPJQ22KHFEYWBWDPYIPSM4OKY73PKR63GUPX2ATSJLCV3Y',
+        secret:
+          'GHKDVOUYJV3OMJVVSIUTIF2RLXGFMPLCY6UPYRKHUZYAATXLQXXTFNRWFZPJQ22KHFEYWBWDPYIPSM4OKY73PKR63GUPX2ATSJLCV3Y',
         firstName: 'Jane',
         lastName: 'Smith',
         patronymic: null,
@@ -42,7 +44,8 @@ export default class extends BaseSeeder {
         email: 'example3@example.com',
         selectedProfileId: null,
         password: 'password3',
-        secret: '3F4SSLENLAUCN7TD7CKDR3K2ZUGNFHFWLVIHUUMESRU7JB5LIKTNDBZUDU2RVHLWGS5QGE4D3BYQW6DQFVZRP2G3OTU24DUVPU6MFXI',
+        secret:
+          '3F4SSLENLAUCN7TD7CKDR3K2ZUGNFHFWLVIHUUMESRU7JB5LIKTNDBZUDU2RVHLWGS5QGE4D3BYQW6DQFVZRP2G3OTU24DUVPU6MFXI',
         firstName: 'Alex',
         lastName: 'Johnson',
         patronymic: null,
@@ -58,7 +61,8 @@ export default class extends BaseSeeder {
         email: 'example4@example.com',
         selectedProfileId: null,
         password: 'password4',
-        secret: 'SQW3333TZ2UMOETDXLSQMYS3PINPHHGPZXZSHUT6O6H4TY6H5OFRH2FEBGKGR7OBMKVN3AJBXA7AF2F6ACYP7IUYUI6I3JTQE64R7EI',
+        secret:
+          'SQW3333TZ2UMOETDXLSQMYS3PINPHHGPZXZSHUT6O6H4TY6H5OFRH2FEBGKGR7OBMKVN3AJBXA7AF2F6ACYP7IUYUI6I3JTQE64R7EI',
         firstName: 'Michael',
         lastName: 'Brown',
         patronymic: null,
@@ -71,7 +75,8 @@ export default class extends BaseSeeder {
         email: 'example5@example.com',
         selectedProfileId: null,
         password: 'password5',
-        secret: 'TVO4YYJ74B3CYDLJZWZQ7JB7LBOGAFN7WP3NUUVHDBOYOY7IXCUGEIGLTMLABALUEDEQ4EAL3QYOESGPXABRLW7OUKUQCDZE7JGFCEQ',
+        secret:
+          'TVO4YYJ74B3CYDLJZWZQ7JB7LBOGAFN7WP3NUUVHDBOYOY7IXCUGEIGLTMLABALUEDEQ4EAL3QYOESGPXABRLW7OUKUQCDZE7JGFCEQ',
         firstName: 'Ernest',
         lastName: 'Gray',
         patronymic: null,
@@ -87,7 +92,8 @@ export default class extends BaseSeeder {
         email: 'example6@example.com',
         selectedProfileId: null,
         password: 'password5',
-        secret: 'JXPNRXUTJMBDEBR4V27KHVPSVWYAUYOBROSCVPL2ZC4GQHOWD7ATXKBNAIGUTYYT2O35QVGF5UXAM2RSMOLEWYTWRI6AO42R2QBWCJY',
+        secret:
+          'JXPNRXUTJMBDEBR4V27KHVPSVWYAUYOBROSCVPL2ZC4GQHOWD7ATXKBNAIGUTYYT2O35QVGF5UXAM2RSMOLEWYTWRI6AO42R2QBWCJY',
         firstName: 'Emma',
         lastName: 'Wilson',
         patronymic: null,
@@ -103,7 +109,8 @@ export default class extends BaseSeeder {
         email: 'example7@example.com',
         selectedProfileId: null,
         password: 'password6',
-        secret: 'ZMKJZXNQC7AAHZK4S6EQTPOTNCCEU36PEMJR4ABDK6F443AKD3LLFEOTOFAKXDGNSZ23SGXUK74MIBQMUDEYHJNSDATLSDKBZFGFVBY',
+        secret:
+          'ZMKJZXNQC7AAHZK4S6EQTPOTNCCEU36PEMJR4ABDK6F443AKD3LLFEOTOFAKXDGNSZ23SGXUK74MIBQMUDEYHJNSDATLSDKBZFGFVBY',
         firstName: 'Oliver',
         lastName: 'Wilson',
         patronymic: null,
@@ -119,7 +126,8 @@ export default class extends BaseSeeder {
         email: 'example8@example.com',
         selectedProfileId: null,
         password: 'password7',
-        secret: 'A5QR6MFEQ3SI7NWZZB3P3IVEZR353M65UU7ROW5SESICGACNNG6SA5VTH6KOTWBET3FVUJZJ22PJUPQGTAMU4KX34KOYYKITZKZAK2A',
+        secret:
+          'A5QR6MFEQ3SI7NWZZB3P3IVEZR353M65UU7ROW5SESICGACNNG6SA5VTH6KOTWBET3FVUJZJ22PJUPQGTAMU4KX34KOYYKITZKZAK2A',
         firstName: 'Sophia',
         lastName: 'Adams',
         patronymic: null,
@@ -135,7 +143,8 @@ export default class extends BaseSeeder {
         email: 'example9@example.com',
         selectedProfileId: null,
         password: 'password8',
-        secret: 'VCXIIRQYQMITMAVKMLEFO56BRUFULWSDOASFRT2Y4HK24HGKPZWT47CPQ7GEVK73GTIQ6J6GVVZJZXT7QJU5SAHUGL4AP43CNGGYFFY',
+        secret:
+          'VCXIIRQYQMITMAVKMLEFO56BRUFULWSDOASFRT2Y4HK24HGKPZWT47CPQ7GEVK73GTIQ6J6GVVZJZXT7QJU5SAHUGL4AP43CNGGYFFY',
         firstName: 'David',
         lastName: 'Lee',
         patronymic: null,

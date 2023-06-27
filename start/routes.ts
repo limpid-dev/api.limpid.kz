@@ -141,6 +141,7 @@ Route.get('/tenders', 'TendersController.index')
 Route.post('/tenders', 'TendersController.store').middleware('auth')
 Route.get('/tenders/:tender', 'TendersController.show')
 Route.patch('/tenders/:tender', 'TendersController.update').middleware('auth')
+Route.get('/tenders/:tender/winner', 'TendersController.showWinner').middleware('auth')
 Route.patch('/tenders/:tender/winner', 'TendersController.updateWinner').middleware('auth')
 Route.delete('/tenders/:tender', 'TendersController.destroy').middleware('auth')
 
