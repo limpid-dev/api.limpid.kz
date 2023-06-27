@@ -141,12 +141,13 @@ Route.get('/tenders', 'TendersController.index')
 Route.post('/tenders', 'TendersController.store').middleware('auth')
 Route.get('/tenders/:tender', 'TendersController.show')
 Route.patch('/tenders/:tender', 'TendersController.update').middleware('auth')
+Route.patch('/tenders/:tender/winner', 'TendersController.updateWinner').middleware('auth')
 Route.delete('/tenders/:tender', 'TendersController.destroy').middleware('auth')
 
 Route.group(() => {
   Route.get('/bids', 'TenderBidsController.index')
   Route.post('/bid', 'TenderBidsController.store').middleware('auth')
-  Route.get('/bid', 'TenderBidsController.show')
+  Route.get('/bid', 'TenderBidsController.show').middleware('auth')
   Route.patch('/bid', 'TenderBidsController.update').middleware('auth')
 }).prefix('/tenders/:tender')
 

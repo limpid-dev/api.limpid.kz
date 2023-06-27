@@ -2519,6 +2519,37 @@ paths:
       responses:
         '200':
           description: Tender is deleted
+  '/tenders/{tender_id}/winner':
+    patch:
+      tags:
+        - Tenders
+      parameters:
+        - in: path
+          name: tender_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - won_tender_bid_id
+              properties:
+                won_tender_bid_id:
+                  type: integer
+      responses:
+        '200':
+          description: Updated tender's data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Tender'
   '/tenders/{tender_id}/bids':
     get:
       tags:
@@ -2558,11 +2589,11 @@ paths:
       tags:
         - Tenders
       parameters:
-      - in: path
-        name: tender_id
-        required: true
-        schema:
-          type: integer
+        - in: path
+          name: tender_id
+          required: true
+          schema:
+            type: integer
       requestBody:
         required: true
         content:
@@ -2588,11 +2619,11 @@ paths:
       tags:
         - Tenders
       parameters:
-      - in: path
-        name: tender_id
-        required: true
-        schema:
-          type: integer
+        - in: path
+          name: tender_id
+          required: true
+          schema:
+            type: integer
       responses:
         '200':
           description: TenderBid
@@ -2607,11 +2638,11 @@ paths:
       tags:
         - Tenders
       parameters:
-      - in: path
-        name: tender_id
-        required: true
-        schema:
-          type: integer
+        - in: path
+          name: tender_id
+          required: true
+          schema:
+            type: integer
       requestBody:
         required: true
         content:
