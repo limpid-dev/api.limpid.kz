@@ -189,4 +189,4 @@ Route.post('/notifications/:notification/read', 'NotificationsController.read').
 
 Route.post('templates/', 'TemplatesController.store')
 
-Route.get('profiles/:profile/winner', 'ProfilesController.showProfile').middleware('auth')
+Route.get('profiles/:profile/winner', 'ProfilesController.showWinner').middleware('auth')

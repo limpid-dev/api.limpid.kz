@@ -139,7 +139,7 @@ export default class ProfilesController {
   }
 
   @bind()
-  public async showProfile({ auth }: HttpContextContract, profile: Profile) {
+  public async showWinner({ auth }: HttpContextContract, profile: Profile) {
 
     await profile.load('user')
 
