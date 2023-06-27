@@ -2784,6 +2784,64 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/Invoices'
+  '/templates/':
+    post:
+      tags:
+        - Templates
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - name_of_organisation
+                - name_of_service_to_be_purchased
+                - service_delivery_time
+                - place_of_service_rendering
+                - amount_of_advance_payment
+                - payment_terms
+                - guarantee_period
+                - detailed_description_of_service_requirements
+              properties:
+                name_of_organisation:
+                  type: string
+                name_of_service_to_be_purchased:
+                  type: string
+                service_delivery_time:
+                  type: string
+                place_of_service_rendering:
+                  type: string
+                amount_of_advance_payment:
+                  type: string
+                payment_terms:
+                  type: string
+                guarantee_period:
+                  type: string
+                detailed_description_of_service_requirements:
+                  type: string
+                input_data:
+                  type: string
+                  nullable: true
+                qualification_requirements_for_prospective_vendors:
+                  type: string
+                  nullable: true
+                performance_security:
+                  type: string
+                  nullable: true
+                special_contract_conditions:
+                  type: string
+                  nullable: true
+      responses:
+        '200':
+          description: Templates Generator
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Templates'
 components:
   securitySchemes:
     bearerAuth:
@@ -3327,4 +3385,35 @@ components:
           nullable: true
         seconds:
           type: integer
+          nullable: true
+    Templates:
+      type: object
+      properties:
+        name_of_organisation:
+          type: string
+        name_of_service_to_be_purchased:
+          type: string
+        service_delivery_time:
+          type: string
+        place_of_service_rendering:
+          type: string
+        amount_of_advance_payment:
+          type: string
+        payment_terms:
+          type: string
+        guarantee_period:
+          type: string
+        detailed_description_of_service_requirements:
+          type: string
+        input_data:
+          type: string
+          nullable: true
+        qualification_requirements_for_prospective_vendors:
+          type: string
+          nullable: true
+        performance_security:
+          type: string
+          nullable: true
+        special_contract_conditions:
+          type: string
           nullable: true
