@@ -187,4 +187,4 @@ Route.get('/notifications', 'NotificationsController.index').middleware(['auth']
 Route.get('/notifications/:notification', 'NotificationsController.show').middleware(['auth'])
 Route.post('/notifications/:notification/read', 'NotificationsController.read').middleware(['auth'])
 
-Route.post('templates/:template', 'TemplatesController.store')
+Route.post('templates/', 'TemplatesController.store')
