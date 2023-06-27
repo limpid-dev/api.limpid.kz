@@ -2553,10 +2553,16 @@ paths:
                     type: array
                     items:
                       $ref: '#/components/schemas/TenderBid'
-  '/tenders/bid':
+  '/tenders/{tender_id}/bid':
     post:
       tags:
         - Tenders
+      parameters:
+      - in: path
+        name: tender_id
+        required: true
+        schema:
+          type: integer
       requestBody:
         required: true
         content:
@@ -2581,6 +2587,12 @@ paths:
     get:
       tags:
         - Tenders
+      parameters:
+      - in: path
+        name: tender_id
+        required: true
+        schema:
+          type: integer
       responses:
         '200':
           description: TenderBid
@@ -2594,6 +2606,12 @@ paths:
     patch:
       tags:
         - Tenders
+      parameters:
+      - in: path
+        name: tender_id
+        required: true
+        schema:
+          type: integer
       requestBody:
         required: true
         content:
