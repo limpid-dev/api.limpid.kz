@@ -2861,6 +2861,30 @@ paths:
                 properties:
                   data:
                     $ref: '#/components/schemas/Templates'
+  '/profiles/{profile_id}/winner':
+    get:
+      tags:
+        - Profiles
+      parameters:
+        - in: path
+          name: profile_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Profile data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Profile'
+                    type: object
+                    properties:
+                      user:
+                        $ref: '#/components/schemas/User'
 components:
   securitySchemes:
     bearerAuth:
