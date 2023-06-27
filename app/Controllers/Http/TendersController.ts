@@ -66,11 +66,28 @@ export default class TendersController {
 
   @bind()
   public async show({}: HttpContextContract, tender: Tender) {
-    await tender.load('wonTenderBid', (query) => query.preload('profile'))
-    await tender.load('profile')
-
-    return {
-      data: tender,
+    if (tender.wonTenderBidId !== null) {
+      const tenders = await Tender.query()
+        .preload('wonTenderBid', (profileQuery) => {
+          profileQuery.preload('profile')
+        })
+        .preload('profile')
+        .where('id', tender.id)
+        .firstOrFail()
+      return {
+        data: tenders,
+      }
+    } else {
+      const tenders = await Tender.query()
+        .preload('bids', (profileQuery) => {
+          profileQuery.preload('profile')
+        })
+        .preload('profile')
+        .where('id', tender.id)
+        .firstOrFail()
+      return {
+        data: tenders,
+      }
     }
   }
 
