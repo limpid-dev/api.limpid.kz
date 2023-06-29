@@ -53,7 +53,7 @@ export default class TendersController {
       })
     }
 
-    user.auctions_attempts = user.auctions_attempts - 1
+    user.auctionsAttempts = user.auctionsAttempts - 1
 
     await user.save()
 

@@ -81,7 +81,7 @@ export default class AuctionBidsController {
             auctionId: auction.id,
           })
 
-          user.auctions_attempts = user.auctions_attempts - 1
+          user.auctionsAttempts = user.auctionsAttempts - 1
 
           await auctionBid.save()
 
@@ -100,7 +100,7 @@ export default class AuctionBidsController {
           })
           await auctionBid.save()
 
-          user.auctions_attempts = user.auctions_attempts - 1
+          user.auctionsAttempts = user.auctionsAttempts - 1
 
           auction.merge({
             wonAuctionBidId: auctionBid.id,
@@ -110,7 +110,7 @@ export default class AuctionBidsController {
 
           await user.save()
 
-          user.auctions_attempts = user.auctions_attempts - 1
+          user.auctionsAttempts = user.auctionsAttempts - 1
 
           const wonAuction = await Auction.findOrFail(auction.id)
           const wonAuctionBid = await Auction.findOrFail(auctionBid.id)
