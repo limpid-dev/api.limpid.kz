@@ -26,6 +26,14 @@ export default class IndexValidator {
   public schema = schema.create({
     page: schema.number([rules.unsigned()]),
     per_page: schema.number.optional([rules.unsigned()]),
+    profile_id: schema.number.optional([
+      rules.exists({
+        table: 'profiles',
+        column: 'id',
+      }),
+    ]),
+    industry: schema.array.optional().members(schema.string()),
+    search: schema.string.optional(),
   })
 
   /**

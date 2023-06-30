@@ -2390,6 +2390,23 @@ paths:
           required: false
           schema:
             type: integer
+        - in: query
+          name: profile_id
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: industry
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+        - in: query
+          name: search
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: Tenders
