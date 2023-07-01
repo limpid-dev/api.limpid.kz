@@ -28,7 +28,7 @@ export default class ChatsController {
 
     const set = new Set(userIds)
 
-    const allChats = await Chat.query().preload('members').exec()
+    const allChats = await Chat.query().preload('members').whereNull('projectId').exec()
 
     const maybeChat = allChats.find((chat) => {
       const s = new Set(chat.members.map(a=>a.userId))
