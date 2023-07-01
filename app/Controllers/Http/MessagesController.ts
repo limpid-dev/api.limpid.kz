@@ -9,9 +9,10 @@ export default class MessagesController {
   public async index({ bouncer, request }: HttpContextContract, chat: Chat) {
     await bouncer.with('ChatMessagesPolicy').authorize('viewList', chat)
 
-    const { page, per_page: perPage } = await request.validate(IndexValidator)
-
-    return chat.related('messages').query().preload('user').paginate(page, perPage)
+    const ms= await chat.related('messages').query().preload('user').exec()
+    return {
+      data:ms
+    }
   }
 
   @bind()

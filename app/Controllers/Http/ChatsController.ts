@@ -2,22 +2,19 @@ import { bind } from '@adonisjs/route-model-binding'
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Chat from 'App/Models/Chat'
 import ChatMember from 'App/Models/ChatMember'
-import IndexValidator from 'App/Validators/Chats/IndexValidator'
 import StoreValidator from 'App/Validators/Chats/StoreValidator'
 
 export default class ChatsController {
-  public async index({ request, auth }: HttpContextContract) {
-    const { page, per_page: perPage } = await request.validate(IndexValidator)
-
+  public async index({  auth }: HttpContextContract) {
     const chatsMemberships = await ChatMember.query()
       .where('userId', auth.user!.id)
-      .preload('chat')
-      .paginate(page, perPage)
+      .preload('chat',(q)=>{
+        q.preload('messages')
+      })
 
-    const chats = chatsMemberships.map((chatsMembership) => chatsMembership.chat)
+    const chats = chatsMemberships.map((c)=>c.toJSON().chat)
 
     return {
-      meta: chatsMemberships.getMeta(),
       data: chats,
     }
   }
@@ -25,11 +22,28 @@ export default class ChatsController {
   public async store({ request }: HttpContextContract) {
     const { user_ids: userIds, name } = await request.validate(StoreValidator)
 
+    const set = new Set(userIds)
+
+    const allChats = await Chat.all()
+
+    const maybeChat = allChats.find(async (chat)=>{
+      await chat.load('members')
+      return chat.members.every((member)=>{
+          return userIds.includes(member.userId)
+      })
+    })
+
+    if(maybeChat){
+      return {
+        data:maybeChat
+      }
+    }
+
     const chat = await Chat.create({
       name,
     })
 
-    await chat.related('members').createMany(userIds.map((id) => ({ userId: id })))
+    await chat.related('members').createMany(Array.from(set).map((id) => ({ userId: id })))
 
     return {
       data: chat,
