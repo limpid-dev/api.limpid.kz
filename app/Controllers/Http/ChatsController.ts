@@ -5,14 +5,14 @@ import ChatMember from 'App/Models/ChatMember'
 import StoreValidator from 'App/Validators/Chats/StoreValidator'
 
 export default class ChatsController {
-  public async index({  auth }: HttpContextContract) {
+  public async index({ auth }: HttpContextContract) {
     const chatsMemberships = await ChatMember.query()
       .where('userId', auth.user!.id)
-      .preload('chat',(q)=>{
+      .preload('chat', (q) => {
         q.preload('messages')
       })
 
-    const chats = chatsMemberships.map((c)=>c.toJSON().chat)
+    const chats = chatsMemberships.map((c) => c.toJSON().chat)
 
     return {
       data: chats,
@@ -26,16 +26,16 @@ export default class ChatsController {
 
     const allChats = await Chat.all()
 
-    const maybeChat = allChats.find(async (chat)=>{
+    const maybeChat = allChats.find(async (chat) => {
       await chat.load('members')
-      return chat.members.every((member)=>{
-          return userIds.includes(member.userId)
+      return chat.members.every((member) => {
+        return userIds.includes(member.userId)
       })
     })
 
-    if(maybeChat){
+    if (maybeChat) {
       return {
-        data:maybeChat
+        data: maybeChat,
       }
     }
 
