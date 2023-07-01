@@ -29,7 +29,7 @@ export default class ChatsController {
     const maybeChat = allChats.find(async (chat) => {
       await chat.load('members')
       return chat.members.every((member) => {
-        return userIds.includes(member.userId)
+        return Array.from(set).includes(member.userId)
       })
     })
 
