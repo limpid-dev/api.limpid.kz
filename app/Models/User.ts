@@ -48,16 +48,16 @@ export default class User extends BaseModel {
   public patronymic: string | null
 
   @column()
-  public projects_attempts: number
+  public projectsAttempts: number
 
   @column()
-  public auctions_attempts: number
+  public auctionsAttempts: number
 
   @column.dateTime({ autoCreate: true })
-  public payment_start: DateTime
+  public paymentStart: DateTime
 
   @column.dateTime()
-  public payment_end: DateTime
+  public paymentEnd: DateTime
 
   @column()
   public planId: number

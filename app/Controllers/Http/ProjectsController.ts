@@ -138,7 +138,7 @@ export default class ProjectsController {
 
     await project.save()
 
-    user.projects_attempts = user.projects_attempts - 1
+    user.projectsAttempts = user.projectsAttempts - 1
 
     await user.save()
 

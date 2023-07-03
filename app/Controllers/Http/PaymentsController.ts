@@ -141,10 +141,10 @@ export default class PaymentsController {
 
     user.merge({
       planId: plan.id,
-      payment_start: DateTime.now(),
-      payment_end: DateTime.now().plus({ days: plan.duration }),
-      projects_attempts: plan.projects_attempts,
-      auctions_attempts: plan.auctions_attempts,
+      paymentStart: DateTime.now(),
+      paymentEnd: DateTime.now().plus({ days: plan.duration }),
+      projectsAttempts: plan.projectsAttempts,
+      auctionsAttempts: plan.auctionsAttempts,
     })
 
     await user.save()
@@ -235,8 +235,8 @@ export default class PaymentsController {
     }
 
     if (
-      users.auctions_attempts === plan.auctions_attempts &&
-      users.projects_attempts === plan.projects_attempts
+      users.auctionsAttempts === plan.auctionsAttempts &&
+      users.projectsAttempts === plan.projectsAttempts
     ) {
       const url = `https://epay-api.homebank.kz/operation/${payId}/refund`
 
@@ -252,8 +252,8 @@ export default class PaymentsController {
       })
 
       users.merge({
-        auctions_attempts: 0,
-        projects_attempts: 0,
+        auctionsAttempts: 0,
+        projectsAttempts: 0,
       })
 
       //const tokenCheck = await this.webKassaToken()

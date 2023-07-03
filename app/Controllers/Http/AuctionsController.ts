@@ -111,7 +111,7 @@ export default class AuctionsController {
       })
     }
 
-    user.auctions_attempts = user.auctions_attempts - 1
+    user.auctionsAttempts = user.auctionsAttempts - 1
 
     await auction.save()
 

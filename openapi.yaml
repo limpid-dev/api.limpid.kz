@@ -1418,17 +1418,6 @@ paths:
     get:
       tags:
         - Chats
-      parameters:
-        - in: query
-          name: page
-          required: true
-          schema:
-            type: integer
-        - in: query
-          name: per_page
-          required: false
-          schema:
-            type: integer
       responses:
         '200':
           description: Chats
@@ -1437,8 +1426,6 @@ paths:
               schema:
                 type: object
                 properties:
-                  meta:
-                    $ref: '#/components/schemas/Pagination'
                   data:
                     type: array
                     items:
@@ -1462,6 +1449,16 @@ paths:
                     type: integer
                 name:
                   type: string
+      responses:
+        '200':
+          description: Chat
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Chat'
   '/chats/{chat_id}':
     get:
       tags:
@@ -1504,16 +1501,6 @@ paths:
           required: true
           schema:
             type: integer
-        - in: query
-          name: page
-          required: true
-          schema:
-            type: integer
-        - in: query
-          name: per_page
-          required: false
-          schema:
-            type: integer
       responses:
         '200':
           description: Messages
@@ -1522,8 +1509,6 @@ paths:
               schema:
                 type: object
                 properties:
-                  meta:
-                    $ref: '#/components/schemas/Pagination'
                   data:
                     type: array
                     items:
@@ -2390,6 +2375,23 @@ paths:
           required: false
           schema:
             type: integer
+        - in: query
+          name: profile_id
+          required: false
+          schema:
+            type: integer
+        - in: query
+          name: industry
+          required: false
+          schema:
+            type: array
+            items:
+              type: string
+        - in: query
+          name: search
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: Tenders

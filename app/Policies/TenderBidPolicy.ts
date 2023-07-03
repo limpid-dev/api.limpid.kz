@@ -38,8 +38,8 @@ export default class TenderBidPolicy extends BasePolicy {
       return Bouncer.deny('Profile required', 422)
     }
     const now = DateTime.now()
-    if ((now >= user.payment_start && now <= user.payment_end) || user.payment_end === null) {
-      if (user.auctions_attempts > 0) {
+    if ((now >= user.paymentStart && now <= user.paymentEnd) || user.paymentEnd === null) {
+      if (user.auctionsAttempts > 0) {
         await tender.load('profile')
 
         return !!tender.verifiedAt && user.id !== tender.profile.userId

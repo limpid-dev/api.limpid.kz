@@ -58,12 +58,18 @@ export default class TenderBidsController {
       })
     }
 
-    const tenderBid = tender.related('bids').create({
+    const tenderBid = new TenderBid()
+
+    tenderBid.merge({
       price,
       profileId: auth.user!.selectedProfileId!,
+      tenderId: tender.id,
     })
 
-    user.auctions_attempts = user.auctions_attempts - 1
+    await tenderBid.save()
+    await tenderBid.related('tender').associate(tender)
+
+    user.auctionsAttempts = user.auctionsAttempts - 1
 
     await user.save()
 

@@ -13,9 +13,37 @@ import { Duration } from 'luxon'
 
 export default class TendersController {
   public async index({ request }: HttpContextContract) {
-    const { page, per_page: perPage } = await request.validate(IndexValidator)
+    const {
+      page,
+      per_page: perPage,
+      industry,
+      profile_id: profileId,
+      search,
+    } = await request.validate(IndexValidator)
 
-    const tenders = await Tender.query().preload('wonTenderBid').paginate(page, perPage)
+    const query = Tender.query()
+
+    if (profileId) {
+      query.where('profileId', profileId)
+    }
+
+    if (industry) {
+      query.whereIn('industry', industry)
+    }
+
+    if (search) {
+      query.andWhere((query) => {
+        query.whereLike('title', `%${search}%`).orWhereLike('description', `%${search}%`)
+      })
+    }
+
+    const tenders = await query
+      .preload('profile', (q) => {
+        q.preload('user')
+      })
+      .paginate(page, perPage)
+
+    tenders.queryString(request.qs())
 
     return tenders
   }
@@ -53,7 +81,7 @@ export default class TendersController {
       })
     }
 
-    user.auctions_attempts = user.auctions_attempts - 1
+    user.auctionsAttempts = user.auctionsAttempts - 1
 
     await user.save()
 
@@ -66,11 +94,28 @@ export default class TendersController {
 
   @bind()
   public async show({}: HttpContextContract, tender: Tender) {
-    await tender.load('wonTenderBid', (query) => query.preload('profile'))
-    await tender.load('profile')
-
-    return {
-      data: tender,
+    if (tender.wonTenderBidId !== null) {
+      const tenders = await Tender.query()
+        .preload('wonTenderBid', (profileQuery) => {
+          profileQuery.preload('profile')
+        })
+        .preload('profile')
+        .where('id', tender.id)
+        .firstOrFail()
+      return {
+        data: tenders,
+      }
+    } else {
+      const tenders = await Tender.query()
+        .preload('bids', (profileQuery) => {
+          profileQuery.preload('profile')
+        })
+        .preload('profile')
+        .where('id', tender.id)
+        .firstOrFail()
+      return {
+        data: tenders,
+      }
     }
   }
 
