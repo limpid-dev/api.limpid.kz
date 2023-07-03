@@ -60,7 +60,7 @@ export default class User extends BaseModel {
   public paymentEnd: DateTime
 
   @column()
-  public planId: number
+  public subPlansId: number | null
 
   @column.dateTime()
   public emailVerifiedAt: DateTime | null
@@ -93,7 +93,7 @@ export default class User extends BaseModel {
   public notifications: HasMany<typeof Notification>
 
   @belongsTo(() => SubPlans)
-  public plans: BelongsTo<typeof SubPlans>
+  public subPlans: BelongsTo<typeof SubPlans>
 
   @beforeSave()
   public static async hashPassword(user: User) {

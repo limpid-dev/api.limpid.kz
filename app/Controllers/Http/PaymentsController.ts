@@ -140,7 +140,7 @@ export default class PaymentsController {
     })
 
     user.merge({
-      planId: plan.id,
+      subPlansId: plan.id,
       paymentStart: DateTime.now(),
       paymentEnd: DateTime.now().plus({ days: plan.duration }),
       projectsAttempts: plan.projectsAttempts,
@@ -254,6 +254,7 @@ export default class PaymentsController {
       users.merge({
         auctionsAttempts: 0,
         projectsAttempts: 0,
+        subPlansId: null,
       })
 
       //const tokenCheck = await this.webKassaToken()

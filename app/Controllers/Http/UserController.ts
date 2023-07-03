@@ -1,8 +1,15 @@
 import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import UpdateValidator from 'App/Validators/User/UpdateValidator'
+import User from 'App/Models/User'
 
 export default class UserController {
   public async show({ auth }: HttpContextContract) {
+    if (auth.user?.subPlansId) {
+      const user = await User.query().preload('subPlans').where('id', auth.user.id)
+      return {
+      data: user, 
+      }
+    }
     return {
       data: auth.user,
     }
