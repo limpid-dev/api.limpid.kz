@@ -15,6 +15,13 @@ export default class ProjectPolicy extends BasePolicy {
     return Bouncer.deny('Tariff has expired', 402)
   }
 
+  public async show(user: User, project: Project) {
+    if (user.planId || user.selectedProfileId === project.profileId) {
+      return true
+    }
+    return Bouncer.deny('You have no permission', 402)
+  }
+
   public async update(user: User, project: Project) {
     return user.selectedProfileId === project.profileId
   }

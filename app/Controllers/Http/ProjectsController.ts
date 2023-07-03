@@ -158,7 +158,8 @@ export default class ProjectsController {
   }
 
   @bind()
-  public async show({}: HttpContextContract, project: Project) {
+  public async show({ bouncer }: HttpContextContract, project: Project) {
+    await bouncer.with('ProjectPolicy').authorize('show', project)
     return {
       data: project,
     }
