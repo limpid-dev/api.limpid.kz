@@ -56,7 +56,9 @@ Route.group(() => {
   .middleware('auth')
 
 Route.resource('profiles', 'ProfilesController').apiOnly().as('profiles').middleware({
-  '*': 'auth',
+  store: 'auth',
+  update: 'auth',
+  destroy: 'auth',
 })
 
 Route.group(() => {
@@ -64,35 +66,63 @@ Route.group(() => {
     .apiOnly()
     .as('profiles.certificates')
     .paramFor('certificates', '>certificate')
+    .middleware({
+      store: 'auth',
+      update: 'auth',
+      destroy: 'auth',
+    })
   Route.resource('educations', 'EducationsController')
     .apiOnly()
     .as('profiles.educations')
     .paramFor('educations', '>education')
+    .middleware({
+      store: 'auth',
+      update: 'auth',
+      destroy: 'auth',
+    })
   Route.resource('skills', 'SkillsController')
     .apiOnly()
     .as('profiles.skills')
     .paramFor('skills', '>skill')
+    .middleware({
+      store: 'auth',
+      update: 'auth',
+      destroy: 'auth',
+    })
   Route.resource('experiences', 'ExperiencesController')
     .apiOnly()
     .as('profiles.experiences')
     .paramFor('experiences', '>experience')
+    .middleware({
+      store: 'auth',
+      update: 'auth',
+      destroy: 'auth',
+    })
 
-  Route.get('project-memberships', 'ProjectMembershipsController.index')
-  Route.get('project-memberships/:>projectMembership', 'ProjectMembershipsController.show')
-  Route.delete('project-memberships/:>projectMembership', 'ProjectMembershipsController.destroy')
+  Route.get('project-memberships', 'ProjectMembershipsController.index').middleware('auth')
 
-  Route.get('tender-bids', 'ProfileTenderBidsController.index')
+  Route.get(
+    'project-memberships/:>projectMembership',
+    'ProjectMembershipsController.show'
+  ).middleware('auth')
 
-  Route.get('auction-bids', 'ProfileAuctionBidsController.index')
-})
-  .prefix('profiles/:profile')
-  .middleware('auth')
+  Route.delete(
+    'project-memberships/:>projectMembership',
+    'ProjectMembershipsController.destroy'
+  ).middleware('auth')
+
+  Route.get('tender-bids', 'ProfileTenderBidsController.index').middleware('auth')
+
+  Route.get('auction-bids', 'ProfileAuctionBidsController.index').middleware('auth')
+}).prefix('profiles/:profile')
 
 Route.resource('organizations', 'OrganizationsController')
   .apiOnly()
   .as('organizations')
   .middleware({
-    '*': 'auth',
+    store: 'auth',
+    update: 'auth',
+    destroy: 'auth',
   })
   .paramFor('organizations', 'organization')
 
@@ -123,7 +153,9 @@ Route.resource('projects', 'ProjectsController')
   .apiOnly()
   .paramFor('projects', 'project')
   .middleware({
-    '*': 'auth',
+    store: 'auth',
+    update: 'auth',
+    destroy: 'auth',
   })
 
 Route.group(() => {

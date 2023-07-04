@@ -4,9 +4,7 @@ import Chat from 'App/Models/Chat'
 import ChatMember from 'App/Models/ChatMember'
 import StoreValidator from 'App/Validators/Chats/StoreValidator'
 
-const eqSet = (xs, ys) =>
-    xs.size === ys.size &&
-    [...xs].every((x) => ys.has(x));
+const eqSet = (xs, ys) => xs.size === ys.size && [...xs].every((x) => ys.has(x))
 
 export default class ChatsController {
   public async index({ auth }: HttpContextContract) {
@@ -31,9 +29,9 @@ export default class ChatsController {
     const allChats = await Chat.query().preload('members').whereNull('projectId').exec()
 
     const maybeChat = allChats.find((chat) => {
-      const s = new Set(chat.members.map(a=>a.userId))
+      const s = new Set(chat.members.map((a) => a.userId))
 
-      return eqSet(set,s)
+      return eqSet(set, s)
     })
 
     if (maybeChat) {

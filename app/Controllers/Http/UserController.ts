@@ -7,7 +7,7 @@ export default class UserController {
     if (auth.user?.subPlansId) {
       const user = await User.query().preload('subPlans').where('id', auth.user.id)
       return {
-      data: user, 
+        data: user,
       }
     }
     return {
