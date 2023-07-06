@@ -24,6 +24,7 @@ export default class UserController {
       patronymic,
       born_at: bornAt,
       selected_profile_id: selectedProfileId,
+      is_product_tour_completed: isProductTourCompleted,
     } = await request.validate(UpdateValidator)
 
     auth.user!.merge({
@@ -34,6 +35,7 @@ export default class UserController {
       patronymic,
       bornAt,
       selectedProfileId,
+      isProductTourCompleted,
     })
 
     await auth.user!.save()

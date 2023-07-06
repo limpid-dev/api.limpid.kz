@@ -39,6 +39,7 @@ export default class UpdateValidator {
     selected_profile_id: schema.number.optional([
       rules.exists({ table: 'profiles', column: 'id' }),
     ]),
+    is_product_tour_completed: schema.boolean.optional(),
   })
 
   /**

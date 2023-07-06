@@ -222,6 +222,9 @@ paths:
                 selected_profile_id:
                   type: integer
                   nullable: true
+                is_product_tour_completed:
+                  type: integer
+                  nullable: true
       responses:
         '200':
           description: Updated user's data
@@ -2918,6 +2921,8 @@ components:
           type: string
         updated_at:
           type: string
+        is_product_tour_completed:
+          type: boolean
     Profile:
       type: object
       properties:
