@@ -12,6 +12,7 @@ import TenderBid from './TenderBid'
 import User from './User'
 import Auction from './Auction'
 import AuctionBid from './AuctionBid'
+import Rating from './Rating'
 
 export default class Profile extends BaseModel {
   @column({ isPrimary: true })
@@ -109,6 +110,9 @@ export default class Profile extends BaseModel {
 
   @hasMany(() => Auction)
   public auctions: HasMany<typeof Auction>
+
+  @hasMany(() => Rating)
+  public ratings: HasMany<typeof Rating>
 
   @hasMany(() => AuctionBid)
   public auctionBids: HasMany<typeof AuctionBid>
