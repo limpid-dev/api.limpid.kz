@@ -8,7 +8,7 @@ export default class NotificationsController {
   public async index({ request, auth }: HttpContextContract) {
     const { page, per_page: perPage } = await request.validate(PaginationValidator)
 
-    return auth.user?.related('notifications').query().paginate(page, perPage)
+    return auth.user?.related('notifications').query().whereNull('readAt').paginate(page, perPage)
   }
 
   @bind()
