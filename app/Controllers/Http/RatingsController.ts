@@ -15,7 +15,6 @@ export default class RatingsController {
       rated_role: ratedRole,
       cooperation_url: cooperationUrl,
       rating_number: ratingNumber,
-      
     } = await request.validate(StoreValidator)
 
     await bouncer.with('RatingPolicy').authorize('create', profile)
@@ -41,8 +40,10 @@ export default class RatingsController {
   }
 
   @bind()
-  public async show({ }: HttpContextContract, profile: Profile) {
-    const review = await Rating.query().where('ratedProfileId', profile.id).whereNotNull('verifiedAt')
+  public async show({}: HttpContextContract, profile: Profile) {
+    const review = await Rating.query()
+      .where('ratedProfileId', profile.id)
+      .whereNotNull('verifiedAt')
 
     return {
       data: review,
@@ -50,18 +51,20 @@ export default class RatingsController {
   }
 
   @bind()
-  public async showRating({ }: HttpContextContract, profile: Profile) {
+  public async showRating({}: HttpContextContract, profile: Profile) {
     const review = await Rating.query().where('ratedProfileId', profile.id).whereNull('verifiedAt')
-    const averageRating = await Rating.query().where('ratedProfileId', profile.id)
-    .whereNull('verifiedAt').avg('rating_number as ratingNumber')
+    const averageRating = await Rating.query()
+      .where('ratedProfileId', profile.id)
+      .whereNull('verifiedAt')
+      .avg('rating_number as ratingNumber')
     const length = review.length
 
     const avg = averageRating.map((average) => {
-      return {average: average.$extras.ratingNumber}
+      return { average: average.$extras.ratingNumber }
     })
     const averageNumber = avg[0].average
     return {
-      data: {averageNumber, length}
+      data: { averageNumber, length },
     }
   }
 
@@ -77,7 +80,7 @@ export default class RatingsController {
     } = await request.validate(UpdateValidator)
 
     await bouncer.with('RatingPolicy').authorize('update', rating)
-    
+
     const review = new Rating()
 
     review.merge({

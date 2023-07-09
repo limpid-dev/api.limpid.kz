@@ -25,10 +25,19 @@ export default class UpdateValidator {
    */
   public schema = schema.create({
     comment: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(2048)]),
-    cooperation_type: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
-    ranking_role: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
+    cooperation_type: schema.string.optional({ trim: true }, [
+      rules.minLength(1),
+      rules.maxLength(255),
+    ]),
+    ranking_role: schema.string.optional({ trim: true }, [
+      rules.minLength(1),
+      rules.maxLength(255),
+    ]),
     rated_role: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(255)]),
-    cooperation_url: schema.string.optional({ trim: true }, [rules.minLength(1), rules.maxLength(2048)]),
+    cooperation_url: schema.string.optional({ trim: true }, [
+      rules.minLength(1),
+      rules.maxLength(2048),
+    ]),
     rating_number: schema.number.optional([rules.range(1, 5)]),
   })
 
