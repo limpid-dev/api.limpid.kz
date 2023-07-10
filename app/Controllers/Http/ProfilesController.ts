@@ -139,6 +139,22 @@ export default class ProfilesController {
   }
 
   @bind()
+  public async showProfile({ auth }: HttpContextContract, profile: Profile) {
+
+    await profile.load('user')
+
+    if (auth.user?.id !== profile.user.id) {
+      profile.views += 1
+
+      await profile.save()
+    }
+
+      return {
+        data: profile,
+      }
+    } 
+
+  @bind()
   public async update({ request, bouncer }: HttpContextContract, profile: Profile) {
     await bouncer.with('ProfilesPolicy').authorize('update', profile)
 

@@ -229,3 +229,5 @@ Route.group(() => {
   Route.patch('/ratings/:rating', 'RatingsController.update').middleware(['auth'])
   Route.delete('/ratings/:rating', 'RatingsController.destroy').middleware(['auth'])
 }).prefix('/profiles/:profile')
+
+Route.get('profiles/:profile/winner', 'ProfilesController.showProfile').middleware('auth')
