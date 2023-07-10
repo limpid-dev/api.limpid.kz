@@ -1042,6 +1042,160 @@ paths:
       responses:
         '200':
           description: Skill is deleted
+  '/profiles/{profile_id}/ratings':
+    get:
+      tags:
+        - Profiles
+      parameters:
+        - in: path
+          name: profile_id
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: page
+          required: true
+          schema:
+            type: integer
+        - in: query
+          name: per_page
+          required: false
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Profile's ratings
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  meta:
+                    $ref: '#/components/schemas/Pagination'
+                  data:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Rating'
+    post:
+      tags:
+        - Profiles
+      parameters:
+        - in: path
+          name: profile_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              required:
+                - comment
+                - cooperation_type
+                - ranking_role
+                - rated_role
+                - cooperation_url
+                - rating_number
+              properties:
+                comment:
+                  type: string
+                cooperation_type:
+                  type: string
+                ranking_role:
+                  type: string
+                rated_role:
+                  type: string
+                cooperation_url:
+                  type: string
+                rating_number:
+                  type: integer
+  '/profiles/{profile_id}/ratings/{rating_id}':
+    get:
+      tags:
+        - Profiles
+      parameters:
+        - in: path
+          name: profile_id
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: rating_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Rating data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Rating'
+    patch:
+      tags:
+        - Profiles
+      parameters:
+        - in: path
+          name: profile_id
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: rating_id
+          required: true
+          schema:
+            type: integer
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              type: object
+              properties:
+                comment:
+                  type: string
+                cooperation_type:
+                  type: string
+                ranking_role:
+                  type: string
+                rated_role:
+                  type: string
+                cooperation_url:
+                  type: string
+                rating_number:
+                  type: integer
+      responses:
+        '200':
+          description: Updated rating's data
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  data:
+                    $ref: '#/components/schemas/Rating'
+    delete:
+      tags:
+        - Profiles
+      parameters:
+        - in: path
+          name: profile_id
+          required: true
+          schema:
+            type: integer
+        - in: path
+          name: rating_id
+          required: true
+          schema:
+            type: integer
+      responses:
+        '200':
+          description: Rating is deleted
   '/projects':
     get:
       tags:
@@ -3449,3 +3603,31 @@ components:
         special_contract_conditions:
           type: string
           nullable: true
+    Rating:
+      type: object
+      properties:
+        ratedProfileId:
+          type: integer
+        ranking_profile_id:
+          type: integer
+        comment:
+          type: string
+        cooperation_type:
+          type: string
+        ranking_role:
+          type: string
+        rated_role:
+          type: string
+        cooperation_url:
+          type: string
+        rating_number:
+          type: integer
+        verified_at:
+          type: string
+          format: date-time
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time

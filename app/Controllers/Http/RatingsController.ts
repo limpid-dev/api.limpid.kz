@@ -2,10 +2,28 @@ import type { HttpContextContract } from '@ioc:Adonis/Core/HttpContext'
 import Rating from 'App/Models/Rating'
 import Profile from 'App/Models/Profile'
 import { bind } from '@adonisjs/route-model-binding'
+import IndexValidator from 'App/Validators/Ratings/IndexValidator'
 import StoreValidator from 'App/Validators/Ratings/StoreValidator'
 import UpdateValidator from 'App/Validators/Ratings/UpdateValidator'
 
 export default class RatingsController {
+  @bind()
+  public async index({ request }: HttpContextContract, profile: Profile) {
+    const {
+      page,
+      per_page: perPage,
+    } = await request.validate(IndexValidator)
+
+    const review = await Rating.query()
+      .where('ratedProfileId', profile.id)
+      .whereNotNull('verifiedAt')
+      .paginate(page, perPage)
+
+    review.queryString(request.qs())
+
+    return review
+  }
+
   @bind()
   public async store({ auth, bouncer, request }: HttpContextContract, profile: Profile) {
     const {
@@ -40,10 +58,11 @@ export default class RatingsController {
   }
 
   @bind()
-  public async show({}: HttpContextContract, profile: Profile) {
+  public async show({}: HttpContextContract, profile: Profile, rating: Rating) {
     const review = await Rating.query()
       .where('ratedProfileId', profile.id)
       .whereNotNull('verifiedAt')
+      .where('id', rating.id)
 
     return {
       data: review,

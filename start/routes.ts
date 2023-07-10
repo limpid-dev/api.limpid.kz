@@ -223,7 +223,8 @@ Route.post('/notifications/:notification/read', 'NotificationsController.read').
 Route.post('templates/', 'TemplatesController.store')
 
 Route.group(() => {
-  Route.get('/ratings', 'RatingsController.showRating')
+  Route.get('/ratings', 'RatingsController.index')
+  Route.get('/ratings/:rating', 'RatingsController.show')
   Route.post('/ratings', 'RatingsController.store').middleware(['auth'])
   Route.patch('/ratings/:rating', 'RatingsController.update').middleware(['auth'])
   Route.delete('/ratings/:rating', 'RatingsController.destroy').middleware(['auth'])
