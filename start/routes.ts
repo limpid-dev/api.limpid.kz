@@ -224,6 +224,7 @@ Route.post('templates/', 'TemplatesController.store')
 
 Route.group(() => {
   Route.get('/ratings', 'RatingsController.index')
+  Route.get('/ratings/info', 'RatingsController.showRating')
   Route.get('/ratings/:rating', 'RatingsController.show')
   Route.post('/ratings', 'RatingsController.store').middleware(['auth'])
   Route.patch('/ratings/:rating', 'RatingsController.update').middleware(['auth'])

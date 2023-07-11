@@ -12,7 +12,9 @@ export default class Rating extends BaseModel {
   @column()
   public ratedProfileId: number
 
-  @belongsTo(() => Profile)
+  @belongsTo(() => Profile, {
+    foreignKey: 'rankingProfileId'
+  })
   public rankingProfile: BelongsTo<typeof Profile>
 
   @belongsTo(() => Profile)

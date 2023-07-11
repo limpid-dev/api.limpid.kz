@@ -13,12 +13,12 @@ export default class RatingsController {
       page,
       per_page: perPage,
     } = await request.validate(IndexValidator)
-
-    const review = await Rating.query()
+    
+    const review  = await Rating.query()
       .where('ratedProfileId', profile.id)
-      .whereNotNull('verifiedAt')
+      .preload('rankingProfile')
       .paginate(page, perPage)
-
+      
     review.queryString(request.qs())
 
     return review
@@ -71,19 +71,22 @@ export default class RatingsController {
 
   @bind()
   public async showRating({}: HttpContextContract, profile: Profile) {
-    const review = await Rating.query().where('ratedProfileId', profile.id).whereNull('verifiedAt')
+    const review = await Rating.query().where('ratedProfileId', profile.id)
+
     const averageRating = await Rating.query()
       .where('ratedProfileId', profile.id)
-      .whereNull('verifiedAt')
       .avg('rating_number as ratingNumber')
-    const length = review.length
+
+    const total = review.length
 
     const avg = averageRating.map((average) => {
-      return { average: average.$extras.ratingNumber }
+      return {average: average.$extras.ratingNumber}
     })
-    const averageNumber = avg[0].average
+
+    const average = avg[0].average
+
     return {
-      data: { averageNumber, length },
+      data: { average, total }
     }
   }
 
